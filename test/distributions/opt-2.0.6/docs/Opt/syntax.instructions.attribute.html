@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:attribute - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:attribute</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.attribute.html">opt:attribute</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.1. opt:attribute</dt><dd class="prev">3.7. Instructions<br/><a href="syntax.instructions.html">&laquo; Previous</a></dd><dd class="next">3.7.2. opt:block<br/><a href="syntax.instructions.block.html">Next &raquo;</a></dd></dl>	<h1>3.7.1. opt:attribute</h1><p><code>opt:attribute</code> defines a new, dynamic attribute in the parent tag. It does not have a content, but takes two attributes that identify the name and the value of the new attribute:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>name</td>
+  <td>Expression</td>
+  <td>Yes</td>
+  <td align="left">New attribute name</td>
+</tr>
+<tr>
+  <td>value</td>
+  <td>Expression</td>
+  <td>Yes</td>
+  <td align="left">New attribute value</td>
+</tr>
+<tr>
+  <td>ns</td>
+  <td>Expression</td>
+  <td>No</td>
+  <td align="left">Attribute namespace</td>
+</tr>
+</tbody>
+</table>
+
+<p>Below, you can find an example that allows to define a new attribute for <code>&lt;div&gt;</code> whose name is read from the variable:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;$attributeName&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;$attributeValue&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    Content
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The instruction cooperates with OPT instruction attributes. If we wish to read the attribute list from a section, we can use the following solution:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;$attributes.name&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;$attributes.value&quot;</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;attributes&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    Content
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="error">
+  <p><code>opt:attribute</code> cannot add attributes to other OPT instructions, except for <code>opt:tag</code>.</p>
+</blockquote>
+
+<p>If the attribute already exists in the tag or has been defined with the previous instance of <code>opt:attribute</code>, the instruction throws an exception.</p>
+
+<h3>Conditional attributes</h3>
+
+<p><code>opt:attribute</code> can also cooperate with <a href="syntax.attributes.if.html" title="3.8.6. opt:if">opt:if</a> attribute to add an attribute to the parent tag conditionally.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;class&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;highlight&quot;</span> <span style="color: #000066;">opt:if</span>=<span style="color: #ff0000;">&quot;$highlightDiv&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    Content
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h3>Handling namespaces</h3>
+
+<p>The optional attribute <code>ns</code> can be used to set the attribute namespace. The value may be loaded from a variable or specified manually, for example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">str:ns</span>=<span style="color: #ff0000;">&quot;xml&quot;</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;$attrName&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;$attrValue&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">ns</span>=<span style="color: #ff0000;">&quot;$ns&quot;</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;$attrValue&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="help">
+  <p>The <code>ns</code> attribute accepts empty values. The namespace part is not generated then.</p>
+</blockquote>
+
+<h3>Conditional attribute values</h3>
+
+<p>Since OPT 2.0.2 it is possible to create elegant conditional value selector:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Value 1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Value 2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Value 3<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Default value<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:attribute<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>OPT will check, which condition is passed and select the appropriate value for the attribute. If we do not specify the <code>test</code> attribute in <code>opt:value</code>, it becomes the default attribute value. The default attribute value can be also defined with <code>value</code> attribute in the main tag:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Default value&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Value 1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Value 2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Value 3<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:attribute<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="error">
+  <p>There must not be either two <code>opt:value</code> tags without the <code>test</code> attribute or a <code>opt:value</code> without <code>test</code> attribute and `value attribute in the instruction at the same time.</p>
+</blockquote>
+
+<p>As you can see, the value is defined as a tag value, not as an attribute. Contrary to other instruction, OPT forces here some limitations. <code>opt:value</code> must not contain any other tag, including the instruction. The following construct is forbidden:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Text <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> ... <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> text<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Note that you can still use ordinary OPT expressions:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:value</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$condition&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Text {$expression} text<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:value<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The value list can be loaded from a <a href="syntax.instructions.snippet.html" title="3.7.23. opt:snippet">snippet</a> with <a href="syntax.attributes.use.html" title="3.8.11. opt:use">opt:use</a> attribute.</p>
+
+<blockquote class="information">
+  <p>If there is no default value and the instruction cannot select any other value (none of the conditions is true), the entire attribute is not displayed.</p>
+</blockquote>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.tag.html">3.7.24. opt:tag</a></li></ul><dl class="location location-bottom"><dt>3.7.1. opt:attribute<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.html">&laquo; Previous</a><br/>3.7. Instructions</dd><dd class="next"><a href="syntax.instructions.block.html">Next &raquo;</a><br/>3.7.2. opt:block</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

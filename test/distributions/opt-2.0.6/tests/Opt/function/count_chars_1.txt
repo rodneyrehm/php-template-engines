@@ -1,0 +1,15 @@
+Testing the countChars() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{countChars('hi universe')}
+{countChars('open power template 2')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+11
+21

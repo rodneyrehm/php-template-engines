@@ -1,0 +1,23 @@
+Check if extending snippets work.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="content_snippet">
+<opt:snippet name="foo">
+SNIPPET-VALUE
+</opt:snippet>
+
+<opt:snippet name="content_snippet">
+BEGIN
+<opt:insert snippet="foo"/>
+END
+</opt:snippet>
+</opt:extend>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BEGIN
+SNIPPET-VALUE
+END

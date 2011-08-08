@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>getOutputBuffers() - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>getOutputBuffers()</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-view.html">Opt_View</a> &raquo; <a href="api.opt-view.get-output-buffers.html">Opt_View::getOutputBuffers()</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.opt-view.html">7.2. Opt_View class</a><br/>7.2.19. getOutputBuffers()</dt><dd class="prev">7.2.18. getGlobal()<br/><a href="api.opt-view.get-global.html">&laquo; Previous</a></dd><dd class="next">7.2.20. getTemplate()<br/><a href="api.opt-view.get-template.html">Next &raquo;</a></dd></dl>	<h1>7.2.19. getOutputBuffers()</h1><div class="tf_reference"><table><tr><th>Construct</th><td>Method</td></tr><tr><th>Visibility</th><td>public</td></tr><tr><th>Reference</th><td><code>array getOutputBuffers()</code></td></tr><tr><th>Returned value</th><td>The static parts of the template.</td></tr><tr><th>Versions</th><td>since <code>2.0.1</code></td></tr>
+</table><hr/></div><p>This method is used in the caching systems to support the <a href="syntax.instructions.dynamic.html" title="3.7.6. opt:dynamic">opt:dynamic</a> tag in the cached views. It returns the list of cached parts of the executed template, except the last one which must be closed manually.</p>
+
+<p>The dynamic part of the cached template is saved by the compiler in the file with the <code>.dyn</code> extension in the compilation directory. It is a serialized array of PHP code snippets which should be mingled with the static data returned by this method. Below, you can see a sample mingling algorithm:</p>
+
+<pre class="php"><span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">hasDynamicContent</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$list</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getOutputBuffers</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$dynamic</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/unserialize"><span style="color: #990000;">unserialize</span></a><span style="color: #009900;">&#40;</span><a href="http://www.php.net/file_get_contents"><span style="color: #990000;">file_get_contents</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">compileDir</span><span style="color: #339933;">.</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span>_convert<span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getTemplate</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'.dyn'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">''</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$i</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span> <span style="color: #339933;">&lt;</span> <a href="http://www.php.net/sizeof"><span style="color: #990000;">sizeof</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$list</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span><span style="color: #339933;">++</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$output</span> <span style="color: #339933;">.=</span> <span style="color: #000088;">$list</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$i</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'&lt;'</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'?php '</span><span style="color: #339933;">.</span><span style="color: #000088;">$dynamic</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$i</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">' ?&gt;'</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #000088;">$output</span> <span style="color: #339933;">.=</span> <a href="http://www.php.net/ob_get_flush"><span style="color: #990000;">ob_get_flush</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<blockquote class="error">
+  <p>In order to get the content of the last buffer, you must use <code>ob_get_flush()</code>, as the returned code must also appear in the browser.</p>
+</blockquote>
+<h4>See also:</h4><ul><li><a href="api.opt-view.has-dynamic-content.html">7.2.22. Opt_View::hasDynamicContent()</a></li><li><a href="extending.caching-systems.html">5.6. New caching systems</a></li></ul><dl class="location location-bottom"><dt>7.2.19. getOutputBuffers()<br/><a href="api.opt-view.html">7.2. Opt_View class</a></dt><dd class="prev"><a href="api.opt-view.get-global.html">&laquo; Previous</a><br/>7.2.18. getGlobal()</dd><dd class="next"><a href="api.opt-view.get-template.html">Next &raquo;</a><br/>7.2.20. getTemplate()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:insert - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:insert</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.insert.html">opt:insert</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.13. opt:insert</dt><dd class="prev">3.7.12. opt:include<br/><a href="syntax.instructions.include.html">&laquo; Previous</a></dd><dd class="next">3.7.14. opt:literal<br/><a href="syntax.instructions.literal.html">Next &raquo;</a></dd></dl>	<h1>3.7.13. opt:insert</h1><p><code>opt:insert</code> allows to place the template snippets in the specified place. It is a part of the template inheritance feature.</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>snippet</td>
+  <td>hard string</td>
+  <td>Yes</td>
+  <td align="left">The name of the snippet</td>
+</tr>
+<tr>
+  <td>ignoredefault</td>
+  <td>option</td>
+  <td>No</td>
+  <td align="left">If set to <em>yes</em>, the default value of <code>opt:insert</code> is not treated as the snippet parent.</td>
+</tr>
+</tbody>
+</table>
+
+<p>An example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>I am your snippet.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Contrary to <code>opt:capture</code>, the inserted code remains fully functional. In the following example we change the value of the variable displayed in the snippet. We see that the value also changes in the output, between two inserts of the same code.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Value: {@hoo}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    {@hoo is 1}
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+    {@hoo is 2}
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Value: 1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Value: 2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>The default content</h2>
+
+<p><code>opt:insert</code> allows to define the default content in case the snippet does not exist:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Oops, one snippet is missing.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>By default, if the snippet contains the <code>opt:parent</code> tag and does not overload any other snippet, the default content of <code>opt:insert</code> will be treated as the parent:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a snippet code.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a default code.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a snippet code.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a default code.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We can turn this off by setting the attribute <code>ignoredefault</code> to <em>yes</em> in <code>opt:insert</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a snippet code.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000066;">ignoredefault</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a default code.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a snippet code.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Now, the default content will never appear, if there is any snippet named <em>foo</em>.</p>
+
+<h2>Inserting the content from opt:capture</h2>
+
+<p><code>opt:insert</code> may also display the content captured by <code>opt:capture</code>. Contrary to the <code>$system</code> variable, the captured part can be chosen dynamically. The instruction takes only one attribute then:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>captured</td>
+  <td>Expression</td>
+  <td>Yes</td>
+  <td align="left">The name of the captured part</td>
+</tr>
+</tbody>
+</table>
+
+<p>If the tag contains some content, it is treated as a default content and displayed, if the specified captured part does not exist:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:capture</span> <span style="color: #000066;">as</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+Some content here...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:capture<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+{@captured is 'foo'}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">captured</span>=<span style="color: #ff0000;">&quot;@captured&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+The default content.
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.snippet.html">3.7.23. opt:snippet</a></li><li><a href="syntax.instructions.extend.html">3.7.7. opt:extend</a></li><li><a href="syntax.attributes.use.html">3.8.11. opt:use</a></li></ul><dl class="location location-bottom"><dt>3.7.13. opt:insert<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.include.html">&laquo; Previous</a><br/>3.7.12. opt:include</dd><dd class="next"><a href="syntax.instructions.literal.html">Next &raquo;</a><br/>3.7.14. opt:literal</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

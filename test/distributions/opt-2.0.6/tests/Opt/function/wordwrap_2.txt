@@ -1,0 +1,18 @@
+Check the wordwrap() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@text is 'This is a veeeeeeeeeeeeeeeeeeeeeery long text that needs to be truncated'}
+{u:wordWrap(@text, 17, '&lt;br /&gt;', true)}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+This is a<br />
+veeeeeeeeeeeeeeee<br />
+eeeeeery long<br />
+text that needs<br />
+to be truncated

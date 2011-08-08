@@ -1,0 +1,43 @@
+Test the conditional attribute value.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="class">
+	<opt:value test="$val1 == 'foo'">a</opt:value>
+	<opt:value test="$val1 == 'bar'">b</opt:value>
+	<opt:value>c</opt:value>
+</opt:attribute>
+</foo>
+<foo>
+<opt:attribute name="class">
+	<opt:value test="$val2 == 'foo'">a</opt:value>
+	<opt:value test="$val2 == 'bar'">b</opt:value>
+	<opt:value>c</opt:value>
+</opt:attribute>
+</foo>
+<foo>
+<opt:attribute name="class">
+	<opt:value test="$val3 == 'foo'">a</opt:value>
+	<opt:value test="$val3 == 'bar'">b</opt:value>
+	<opt:value>c</opt:value>
+</opt:attribute>
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->val1 = 'foo';
+$view->val2 = 'bar';
+$view->val3 = 'joe';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo class="a">
+</foo>
+<foo class="b">
+</foo>
+<foo class="c">
+</foo>

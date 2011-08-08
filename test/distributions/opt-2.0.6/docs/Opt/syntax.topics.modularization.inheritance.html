@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Template inheritance - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Template inheritance</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.topics.html">Topics</a> &raquo; <a href="syntax.topics.modularization.html">Template modularization</a> &raquo; <a href="syntax.topics.modularization.inheritance.html">Template inheritance</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.topics.modularization.html">3.9.4. Template modularization</a><br/>3.9.4.2. Template inheritance</dt><dd class="prev">3.9.4.1. Template inclusion<br/><a href="syntax.topics.modularization.inclusion.html">&laquo; Previous</a></dd><dd class="next">3.9.5. Quirks mode<br/><a href="syntax.topics.quirks.html">Next &raquo;</a></dd></dl>	<h1>3.9.4.2. Template inheritance</h1><p>Template inheritance is a relatively new concept of modularizing the templates. It offers you another way to compose the output document from several template files and is very similar to the concepts that can be found in the object-oriented programming. In this chapter we are going to describe the implementation of template inheritance in Open Power Template.</p>
+
+<h2>General concepts</h2>
+
+<p>Below, you can find a picture that illustrates how the inheritance really works.</p>
+
+<p><img src="media/inheritance.png" alt="Template inheritance in OPT" title="Template inheritance in OPT" /></p>
+
+<p>The picture shows the situation with two templates. The first one, called <em>base template</em>, defines the structure of the output code and leaves spare placeholders. The placeholders may be filled with the default content. If we used the base template directly, we would see no absolutely no difference, when compared to the case without the placeholders. However, the things change if we run the template inheritance. Here, another template (called <em>main template</em>), <em>extends</em> the base template and defines the snippets with a new content for the placeholders. After the compilation, we get a complete output. The extended placeholders are filled with the new content from <em>main template</em>, whereas the rest of the placeholders and the output code structure is taken from the <em>base template</em>.</p>
+
+<p>If you already know object-oriented programming, you should see many familiar issues here. The snippets can be treated as methods, and the template as a normal class.</p>
+
+<h2>Template inheritance in OPT</h2>
+
+<p>Template inheritance can be processed at the two different stages: the compilation and the execution. Both of them have their advantages and disadvantages. OPT features the first model. The compiler produces only one file with the inherited templates already concatenated. The benefits of this model are:</p>
+
+<ul>
+<li>Inherited templates are executed <em>faster</em> that their counterparts constructed with <a href="syntax.instructions.include.html" title="3.7.12. opt:include">opt:include</a> instruction.</li>
+<li>The snippets from the extending template actually see and can interact with the code structure in the base template. For example, if a snippet with a section is put in the placeholder that lies in another section, the sections will be connected with a relationship.</li>
+<li>The templates in the inheritance chain share the same set of local template variables.</li>
+</ul>
+
+<p>The disadvantage is that the name of the extended template must be known before the compilation and cannot be changed later. In other words, we cannot load the name from a variable or generate dynamically. Fortunately, OPT is free of these drawbacks and in spite of processing the inheritance during the compilation, the overall process can be still dynamic and your script may choose the template to be inherited at any moment.</p>
+
+<p>The template inheritance chain may be as long as you want. You may create a template that extends a template that extends another template. Moreover, we do not need to extend a physical template file, because OPT supports also extending snippets.</p>
+
+<h2>Template inheritance in practice</h2>
+
+<p>So far, we have been introduced the theory of OPT inheritance model and we are now ready to see, how to use it in real templates. The inheritance uses the two basic instructions for copying a part of the source template into another place: <a href="syntax.instructions.snippet.html" title="3.7.23. opt:snippet">opt:snippet</a> and <a href="syntax.instructions.insert.html" title="3.7.13. opt:insert">opt:insert</a>. First, let's build the base template <code>base.tpl</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website - {$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Sorry, no content defined.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Copyright You {range(2009)}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>This template defines two placeholders: <code>header</code> and <code>content</code>, so we can overwrite the standard header and content. The news module may fill them with custom content in the template <code>news.tpl</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;base.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;hello_text&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">parse:id</span>=<span style="color: #ff0000;">&quot;'e'~$news.id&quot;</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;news&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.body}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Once we compile and execute this template, we should get something like this:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website - News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;e2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>New articles<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Today, the new articles have been published. We encourage you
+            to read them, because they are really brilliant!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;e1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hello world!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Welcome to my new website!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Copyright You 2009<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>However, please notice that <code>news.tpl</code> defines another placeholder in the snippet, <code>hello_text</code>. Let's think, how we could possibly use it. So far, we can create a template for the news module, but now we want to publish them also on the index page. Suppose that you wish to display some form of invitation with the website users above the news list, but you do not want it to appear, if the user visited the news module directly. To achieve this, we may extend <code>news.tpl</code> with <code>index.tpl</code> and define the content for <code>hello_text</code> placeholder. Moreover, we will modify the header a bit:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;news.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;hello_text&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Welcome to my website!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hi everyone!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Now, if the user reads the news through the index page, he or she should see the following content:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website - News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hi everyone!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Welcome to my website!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;e2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>New articles<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Today, the new articles have been published. We encourage you
+            to read them, because they are really brilliant!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;e1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hello world!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Welcome to my new website!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Copyright You 2009<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="information">
+  <p>Remember that you can modify any template in the inheritance chain at any time. The templates that depend on it will notice the change automatically and recompile.</p>
+</blockquote>
+
+<h2>Overwriting the snippets</h2>
+
+<p>Suppose that the author of <code>news.tpl</code> template forgot to create a placeholder <code>hello_text</code> in it, he went off on a long holiday and left us alone. We would rather not touch his code, but still want to display the introductory text. Don't worry, there is still a way to do this. Our <code>index.tpl</code> may overwrite the snippet <code>content</code> from the <code>news.tpl</code> file, but its content is not lost. Using <code>opt:parent</code> tag, we can still access it:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;news.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Welcome to my website!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hi everyone!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The effect will be exactly the same. What if the <code>content</code> snippet is not overwritten? There are two possible behaviors. If the placeholder does not define a default content, <code>opt:parent</code> does nothing. Otherwise, OPT inserts the default placeholder content on <code>opt:parent</code>. Sometimes, this is not a behavior we would expect, so we can disable it in the placeholder:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;content&quot;</span> <span style="color: #000066;">ignoredefault</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>The default content is not accessible with opt:parent anymore.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Dynamic inheritance</h2>
+
+<p>As we mentioned in the introduction, OPT provides a dynamic inheritance and the script may freely choose at any moment of time, what our template must extend. There are two mechanisms: <em>branches</em> and <em>custom selection</em>.</p>
+
+<h3>Branches</h3>
+
+<p>Branches are simply alternative inheritance chains that templates may define. The templates still decide, what template files they use, but the script may choose now from more than one offered case. Let's get back to our example with <code>news.tpl</code>. We can display it on the main website, but our users ask for a printable, low-resource version. Branches are the perfect tool to achieve this effect. We need another base template; this time it will be optimized for printer devices, <code>print.tpl</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website - {$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website - {$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Sorry, no content defined.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Then, we teach <code>news.tpl</code>, how to use it:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;base.tpl&quot;</span> <span style="color: #000066;">print</span>=<span style="color: #ff0000;">&quot;print.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;hello_text&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">parse:id</span>=<span style="color: #ff0000;">&quot;'e '~$news.id&quot;</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;news&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.body}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We have defined the second inheritance branch called <em>print</em>. If the script decides to use it, our news will appear in the more printer-friendly environment. In the complex inheritance chains, there may occur a situation where the script requests a branch, but the template does not define a file for it. In this case, OPT follows the file pointed in the <code>file</code> attribute.</p>
+
+<h3>Custom selection</h3>
+
+<p>In custom selection, we let the script to choose the template we inherit for us. The template side does not require much effort:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;base.tpl&quot;</span> <span style="color: #000066;">dynamic</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;hello_text&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">parse:id</span>=<span style="color: #ff0000;">&quot;'e'~$news.id&quot;</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;news&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.body}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>By adding the <code>dynamic</code> attribute, we allow the script to manipulate the extended template for us. However, if the script does not use this feature, OPT will follow to the default file pointed by <code>file</code> attribute.</p>
+
+<h2>Extending snippets</h2>
+
+<p>Sometimes we do not want to extend a particular template, but rather leave this as an optional choice to the programmer. In this case, we do not need to define a separate template with the default structure, because <code>opt:extend</code> may also extend already existing snippets. Below, you can find a sample:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;base_form&quot;</span> <span style="color: #000066;">dynamic</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #808080; font-style: italic;">&lt;!-- the form definition (using components) --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;form_body&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:input</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;first_name&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;form_item_layout&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;First name&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:input<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:input</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;last_name&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;form_item_layout&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Last name&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:input<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #808080; font-style: italic;">&lt;!-- the default structure for displaying the form --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;base_form&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form</span> <span style="color: #000066;">method</span>=<span style="color: #ff0000;">&quot;post&quot;</span> <span style="color: #000066;">action</span>=<span style="color: #ff0000;">&quot;somewhere.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;form_body&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>        
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;buttons&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;input</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;submit&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;Send&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Such file is very flexible. If we do not want to use the template inheritance, it behaves like an ordinary file and uses the snippet <code>base_form</code> as a <em>base template</em> without the need to move it to a separate file. However, the script may choose a custom base template thanks to the presence of <code>dynamic</code> attribute.</p>
+
+<h2>Inheritance and HTML escaping</h2>
+
+<p>Like <code>opt:root</code>, <code>opt:extend</code> also allows to specify the default HTML escaping policy for the template. In this case, the snippets defined in this template keep these setting in other templates. The example is shown in the <a href="syntax.instructions.extend.html" title="3.7.7. opt:extend">opt:extend</a> reference.</p>
+
+<h2>opt:root and inclusion</h2>
+
+<p>Sometimes we also want <a href="syntax.instructions.root.html" title="3.7.18. opt:root">opt:root</a> instruction in the base template to load some snippets. They may define the default layouts for the form fields or the pagination and it would be nice to load them without using the template inheritance, which could be a bit tricky and inconvenient. In this case we may employ the <code>include</code> attribute:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">include</span>=<span style="color: #ff0000;">&quot;form_snippets.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website - {$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Sorry, no content defined.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Copyright You {range(2009)}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="warning">
+  <p>If a certain snippet is defined both in the inheriting template and included by <code>include</code> attribute from the base template, the snippets from the inheriting template always overwrite the second one.</p>
+</blockquote>
+
+<h2>Limitations and resource usage</h2>
+
+<p>The template inheritance is not a good choice, when we want to display the content of more than one module in the page content, as it does not have real loops. Of course, this could be achieved by dynamic inheritance and lengthening the inheritance chain, but we must be also aware of the resource usage. During the compilation, OPT must load all these template structures to the memory and process it. Very long chains may require huge amounts of memory and time to compile to store all the snippets and put them in the placeholders. If it reaches the PHP resource limits, the script will obviously crash before finishing its job.</p>
+
+<h2>Conclusion</h2>
+
+<p>OPT provides a powerful template inheritance system. It can be used alone, or combined with the modularization techniques described in the previous chapter featuring <a href="syntax.instructions.include.html" title="3.7.12. opt:include">opt:include</a> instruction. We especially recommend it to deal with HTML forms, because it offers a really advanced and flexible way to manage them.</p>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.snippet.html">3.7.23. opt:snippet</a></li><li><a href="syntax.instructions.include.html">3.7.12. opt:include</a></li><li><a href="syntax.instructions.extend.html">3.7.7. opt:extend</a></li></ul><dl class="location location-bottom"><dt>3.9.4.2. Template inheritance<br/><a href="syntax.topics.modularization.html">3.9.4. Template modularization</a></dt><dd class="prev"><a href="syntax.topics.modularization.inclusion.html">&laquo; Previous</a><br/>3.9.4.1. Template inclusion</dd><dd class="next"><a href="syntax.topics.quirks.html">Next &raquo;</a><br/>3.9.5. Quirks mode</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

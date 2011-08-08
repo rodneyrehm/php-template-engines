@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>New output systems - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>New output systems</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.output-systems.html">New output systems</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.html">5. Extending OPT</a><br/>5.5. New output systems</dt><dd class="prev">5.4. New components<br/><a href="extending.components.html">&laquo; Previous</a></dd><dd class="next">5.6. New caching systems<br/><a href="extending.caching-systems.html">Next &raquo;</a></dd></dl>	<h1>5.5. New output systems</h1><p>Output systems decide, what to do with the output document produced from a view. By default, OPT provides two output systems:</p>
+
+<ol>
+<li>HTTP - sends the document to the browser.</li>
+<li>Return - returns the document code back to the script.</li>
+</ol>
+
+<p>Output systems are very easy to write. They are represented as classes implementing <code>Opt_Output_Interface</code>. The interface provides two methods:</p>
+
+<ul>
+<li><code>getName()</code> which should return the output system name.</li>
+<li><code>render()</code> which renders the view and sends the result somewhere.</li>
+</ul>
+
+<p>Below, you can find an implementation of <code>Opt_Output_Return</code> used in OPT:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> Opt_Output_Return implements Opt_Output_Interface
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #009933; font-style: italic;">/**
+     * Returns the output name.
+     *
+     * @return String
+     */</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> getName<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'Return'</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end getName();</span>
+&nbsp;
+    <span style="color: #009933; font-style: italic;">/**
+     * Executes the specified view and return the results back
+     * to the script.
+     *
+     * @param Opt_View $view The rendered view
+     * @return String
+     */</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> render<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <a href="http://www.php.net/ob_start"><span style="color: #990000;">ob_start</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span>_parse<span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">return</span> <a href="http://www.php.net/ob_get_clean"><span style="color: #990000;">ob_get_clean</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end render();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opt_Output_Return;</span></pre>
+
+<p>The <code>getName()</code> method simply returns the output system name. The <code>render()</code> method takes the view object as an argument. In order to parse the view, we call the internal <code>_parse()</code> method, passing a reference to the output system itself. This method takes also an optional second argument: <code>$exception = true</code> which controls the error handling. If the argument is set to <strong>false</strong>, the missing template is not reported as an exception. In order to capture the result, we use <code>ob_start()</code> and <code>ob_get_clean()</code> PHP functions.</p>
+
+<h2>Tips and tricks</h2>
+
+<h3>Obtaining the <code>Opt_Class</code> object</h3>
+
+<p>The <code>Opt_Class</code> object can be obtained from the Open Power Libs registry:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> Opl_Registry<span style="color: #339933;">::</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>This entry is always initialized, if the main object is created.</p>
+
+<h3>Template modes</h3>
+
+<p>The templates in OPT can work in three (technically two) modes:</p>
+
+<ol>
+<li>XML mode</li>
+<li>HTML mode</li>
+<li>Quirks mode</li>
+</ol>
+
+<p>If your output system needs to know the mode of the executed view, you can obtain it directly from the view object:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> render<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$mode</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getMode</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #666666; font-style: italic;">// ...</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end render();</span></pre>
+
+<p>The mode is represented by <code>Opt_Class</code> constants <code>XML_MODE</code> and <code>QUIRKS_MODE</code>.</p>
+
+<blockquote class="warning">
+  <p>Some output systems may find this information necessary. For example, sending two different XML templates to the browser would lead to produce a response with invalid XML document. If your output systems is vulnerable to this problem, it should throw the <code>Opt_OutputOverloaded_Exception</code> after the second attempt to parse an XML view. See the <code>Output/Http.php</code> implementation for details.</p>
+</blockquote>
+
+<h3>Caching engines</h3>
+
+<p>The output system <strong>should not</strong> deal with caching. To see, how to implement a caching engine for OPT, see <a href="guide.cache.html" title="4.11. Caching">Guide: Caching</a>.</p>
+<h4>See also:</h4><ul><li><a href="api.opt-output-interface.html">7.24. Opt_Output_Interface</a></li></ul><dl class="location location-bottom"><dt>5.5. New output systems<br/><a href="extending.html">5. Extending OPT</a></dt><dd class="prev"><a href="extending.components.html">&laquo; Previous</a><br/>5.4. New components</dd><dd class="next"><a href="extending.caching-systems.html">Next &raquo;</a><br/>5.6. New caching systems</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

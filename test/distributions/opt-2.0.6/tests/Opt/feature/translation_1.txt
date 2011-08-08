@@ -1,0 +1,19 @@
+Check the translation interface cooperation with OPT.
+
+>>>>templates/test.tpl
+{$foo@bar}
+{$foo@joe}
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+$this->tpl->singleRootNode = false;
+require_once(FEAT_DIR.'translationInterface.php');
+$this->tpl->setTranslationInterface(new translationInterface());
+$view->variable = 'Variable value';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Value 1
+Value 2

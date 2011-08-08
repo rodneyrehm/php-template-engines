@@ -1,0 +1,24 @@
+The test checks the attribute loops.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="$attributes.name" value="$attributes.value" opt:section="attributes" />
+bar
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->attributes = array(0 =>
+	array('name' => 'abc', 'value' => 'def'),
+	array('name' => 'ghi', 'value' => 'jkm')
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo abc="def" ghi="jkm">
+bar
+</foo>

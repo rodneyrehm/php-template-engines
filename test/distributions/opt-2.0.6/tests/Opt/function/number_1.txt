@@ -1,0 +1,20 @@
+Testing the number() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{number(1234.56)}
+{number(1234.32)}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$this->tpl->numberDecimals = 1;
+$this->tpl->numberDecPoint = ';';
+$this->tpl->numberThousandSep = '}';
+
+>>>>result.txt
+1}234;6
+1}234;3

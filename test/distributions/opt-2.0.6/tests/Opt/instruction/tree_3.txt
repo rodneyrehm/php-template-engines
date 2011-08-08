@@ -1,0 +1,25 @@
+The test checks the opt:treeelse instruction.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:tree name="tree">
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.title} START:
+<opt:content />
+NODE {$tree.title} END
+</opt:node>
+<opt:treeelse>NO DATA</opt:treeelse>
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+NO DATA

@@ -1,0 +1,25 @@
+Test checks the basic iteration features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Print "foo" ten times with separator -->
+<opt:root>
+<opt:repeat times="10" str:separator="::">
+foo
+</opt:repeat>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+foo::
+foo::
+foo::
+foo::
+foo::
+foo::
+foo::
+foo::
+foo::
+foo

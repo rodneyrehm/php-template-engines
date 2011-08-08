@@ -1,0 +1,21 @@
+Testing the firstof() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{firstof($foo, $bar, $joe)}
+{firstof($foo, $bar, $joe, $goo)}
+{firstof(null, $goo)}
+</opt:root>
+
+>>>>data.php
+$view->joe = 'joe';
+$view->goo = 'goo';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+joe
+joe
+goo

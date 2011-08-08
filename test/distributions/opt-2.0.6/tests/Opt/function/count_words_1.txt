@@ -1,0 +1,15 @@
+Testing the countWords() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{countWords('hi universe')}
+{countWords('open power template')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+2
+3

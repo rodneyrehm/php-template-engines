@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Working with views - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Working with views</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.views.html">Working with views</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.html">4. Programmer's Guide</a><br/>4.2. Working with views</dt><dd class="prev">4.1.1. List of configuration options<br/><a href="guide.initialization.configuration.html">&laquo; Previous</a></dd><dd class="next">4.3. Working with output systems<br/><a href="guide.output-systems.html">Next &raquo;</a></dd></dl>	<h1>4.2. Working with views</h1><p>In Open Power Template, the script works on <em>views</em>. A view can be seen as a template with some script data and settings associated to it. Your website may create several views during the HTTP request processing. For example, you will create a separate view for a template that defines the overall website layout, and another view for the currently loaded content.</p>
+
+<h2>Creating views</h2>
+
+<p>To create a view, you simply create a new object of <code>Opt_View</code> class:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'some_template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>In the constructor, you can provide the template name. OPT will look for this template in the directory specified by the <code>sourceDir</code> directive. If you do not want or do not know the template name, you can always set it later with <code>setTemplate()</code> method:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setTemplate</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'some_template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<h2>Template paths</h2>
+
+<p>In the <code>Opt_View</code> constructor we specify the template file name which is stored in the directory pointed by the <code>sourceDir</code> option. The template name may contain some subdirectories, if they are present in the <code>sourceDir</code> directory:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">sourceDir</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'./templates/'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Gives './templates/template.tpl'</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Gives './templates/subdirectory/template.tpl'</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'subdirectory/template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Note that you must not follow the template name with a slash, because it is automatically added to the <code>sourceDir</code> paths.</p>
+
+<p>OPT supports PHP streams, allowing to register multiple template paths within a <code>sourceDir</code> option. Each path must be given an unique name and the default one should be called <code>file</code>. We select the requested path in the view constructor by following the template name with the path name and a colon:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">sourceDir</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'file'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./templates/'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'database'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'db://database/'</span>  <span style="color: #666666; font-style: italic;">// a sample database stream handler</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// File from the disk</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'file.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Another file from the disk</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'file:file.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// File from the database</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'database:template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The detailed requirements for template names depend on the selected PHP stream. For more information about streams, please visit the corresponding chapter in the <a href="http://docs.php.net/streams">PHP manual</a>.</p>
+
+<blockquote class="information">
+  <p>In Open Power Template 2.1 template path handling will be programmable via inflectors. They will allow to handle more complex path resolving rules that are very common in a modular software (i.e. CMS-es).</p>
+</blockquote>
+
+<h2>Assigning the data</h2>
+
+<p>In order to show the results of the script with a template engine, we need to assign them to at least one view. They automatically become template variables. Consider the following example. We have a template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$page.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+{$page.content}</pre>
+
+<p>Assigning the data to the template variables is very easy:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'my_template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">page</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'title'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Some title'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'content'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Some content'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The <code>Opt_View</code> class provides several different methods to assign the data to a view. They allow for example to assign a variable by reference or to extract an associative array as a list of variables:</p>
+
+<pre class="php"><span style="color: #000088;">$bigText</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'This is a very long and big text.'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assignRef</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'content'</span><span style="color: #339933;">,</span> <span style="color: #000088;">$bigText</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assignGroup</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'foo'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'abc'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'bar'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'def'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'joe'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'ghi'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>By default, the template variables are local. This means that our view does not see the variables of other views and vice versa. Moreover, different views can use the same variable name to represent different data:</p>
+
+<pre class="php"><span style="color: #000088;">$view1</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template1.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view2</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template2.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$view1</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">variable</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Foo'</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view2</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">variable</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Bar'</span><span style="color: #339933;">;</span></pre>
+
+<p>However, sometimes this is not exactly what we want. Perhaps you would like to create a container of global settings that must be accessible in all the view templates. Fortunately, the global variables are supported, too:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Local variable: {$variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Global variable: {$global.variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>On the script-side, we can create global template variables, using the static methods from <code>Opt_View</code>:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">variable</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Foo'</span><span style="color: #339933;">;</span>
+Opt_View<span style="color: #339933;">::</span><span style="color: #004000;">assignGlobal</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'Bar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Basically speaking, the names of the methods that affect global variables are ended with the word <em>Global</em> and all the local variable methods have their equivalents for global variables.</p>
+
+<h2>Managing the view data</h2>
+
+<p>The <code>Opt_View</code> class provides also some methods to manage the data that have been already assigned to the view. We can always check, whether the variable was defined:</p>
+
+<pre class="php"><span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">defined</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">echo</span> <span style="color: #0000ff;">'The variable has been defined!'</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">variable</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">echo</span> <span style="color: #0000ff;">'The variable has been defined!'</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>It is also possible to remove an existing variable with <code>remove()</code> method or read its current value with <code>read()</code>.</p>
+
+<h2>Creating views for the website</h2>
+
+<p>Now it's time for the practice. As we previously said, your website will be probably composed of more than one view. It is very important to organize the views in a clear way in order not to get lost. Below, we provide the description of the recommended template structure for a website:</p>
+
+<ol>
+<li>In the file <code>layout.tpl</code> we will keep the structure of our HTML code, with HEAD section, page header, footer, menus and a place for the content.</li>
+<li>Different modules of the website will have one or more templates that fill the place for the content with the code they want to show. For example, the news module will display the list of news, and the contact page - a contact form.</li>
+<li>The module views will be assigned as the template variables to the layout views and included with <a href="syntax.instructions.include.html" title="3.7.12. opt:include">opt:include</a> instruction.</li>
+</ol>
+
+<p>This is the <code>layout.tpl</code> file:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:prolog</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:dtd</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;xhtml10transitional&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #808080; font-style: italic;">&lt;!-- some meta tags, CSS styles etc. --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$global.website.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">view</span>=<span style="color: #ff0000;">&quot;$module&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry, but we are unable to load the template.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:include<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span><span style="color: #ddbb00;">&amp;copy;</span> You {range('2009')}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>And this is one of our modules (<code>news.tpl</code>):</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>News<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;news&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;news&quot;</span> <span style="color: #000066;">parse:id</span>=<span style="color: #ff0000;">&quot;'e '~$news.id&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news.body}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="important">
+  <p>OPT template syntax and XML standard compliance is very flexible. In this example, we assume that you are working with the default, and the most restrictive set of rules. They force you to keep only one root tag in the template and to add an XML prolog to them. Please note that OPT does not send those prologs to the browser. Instead, it uses <a href="syntax.instructions.prolog.html" title="3.7.15. opt:prolog">opt:prolog</a> instruction to generate it.</p>
+</blockquote>
+
+<p>The following piece of code creates the suitable views and initializes them with the data:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #666666; font-style: italic;">// Initialize OPT here</span>
+&nbsp;
+<span style="color: #000088;">$moduleView</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'news.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #666666; font-style: italic;">// Let's assume that the news are loaded from the ORM.</span>
+<span style="color: #000088;">$moduleView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">news</span> <span style="color: #339933;">=</span> ORM<span style="color: #339933;">::</span><span style="color: #004000;">selectNews</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$layoutView</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'layout.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$layoutView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">title</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Index'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Assign the module view to the layout</span>
+<span style="color: #000088;">$layoutView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">module</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$moduleView</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Add some global data for the templates.</span>
+Opt_View<span style="color: #339933;">::</span><span style="color: #004000;">assignGlobal</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'website'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'title'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'My Website'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'address'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'http://www.example.com/'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<h2>Conclusion</h2>
+
+<p>This chapter showed, how OPT represents the templates on the script-side and how to manage the views. The careful users have probably noticed that simple creation of a view object does not mean that the template associated with it will be executed and sent to the user browser. In order to perform this task, we need another type of objects, called <em>output systems</em>. Their idea is explained in the next chapter.</p>
+<dl class="location location-bottom"><dt>4.2. Working with views<br/><a href="guide.html">4. Programmer's Guide</a></dt><dd class="prev"><a href="guide.initialization.configuration.html">&laquo; Previous</a><br/>4.1.1. List of configuration options</dd><dd class="next"><a href="guide.output-systems.html">Next &raquo;</a><br/>4.3. Working with output systems</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

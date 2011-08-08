@@ -1,0 +1,33 @@
+The test checks the basic opt:grid functionality with only one row.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:grid name="items" cols="3">
+:ROW START
+<opt:item>
+{$items.foo}
+</opt:item>
+<opt:emptyItem>
+Empty
+</opt:emptyItem>
+:ROW END
+</opt:grid>
+</opt:root>
+
+>>>>data.php
+$view->items = array(
+	array('foo' => 'item 1'),
+	array('foo' => 'item 2'),
+	array('foo' => 'item 3'),
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+:ROW START
+item 1
+item 2
+item 3
+:ROW END

@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>OPT 1.x - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>OPT 1.x</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="migration.html">Migration</a> &raquo; <a href="migration.opt1.html">OPT 1.x</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="migration.html">6. Migration</a><br/>6.1. OPT 1.x</dt><dd class="prev">6. Migration<br/><a href="migration.html">&laquo; Previous</a></dd><dd class="next">6.2. PHP<br/><a href="migration.php.html">Next &raquo;</a></dd></dl>	<h1>6.1. OPT 1.x</h1><p>Open Power Template 2 is a successor of Open Power Template 1 library, however it was written entirely from scratch and the backward compatibility actually does not exist. In this article, the users of the previous version may find useful information and tricks that will help them migrating to the new releases.</p>
+
+<h2>Programming interface</h2>
+
+<p>The library API has been simplified and many names have been changed to reflect their actual functions better. The code supports many new PHP5 features, such as autoloaders, SPL data structures and PHAR archives. The internal class data have been hermetized and it is not possible to modify them directly from the user space.</p>
+
+<p>The basic issues:</p>
+
+<ol>
+<li>OPT relies now on the common Open Power Libs core that provides the basic functionality such as configuration management, debugging, plug-ins and error handling.</li>
+<li>The new class naming convention has been introduced: <code>Opx_Class_Name</code>.</li>
+<li>The <code>Opt_Class</code> class is not an all-in-one harvester anymore. Most of its functions have been moved to separate classes.</li>
+<li>The templates are represented in the script by <a href="guide.views.html" title="4.2. Working with views">views</a>. They are simply objects of the <code>Opt_View</code> class and consist of the template and the data assigned to it.</li>
+<li>The template parsing and managing the output has been moved to <a href="guide.output-systems.html" title="4.3. Working with output systems">output objects</a>. They are objects of classes that implement the <a href="api.opt-output-interface.html" title="7.24. Opt_Output_Interface">Opt_Output_Interface</a>. The programmer may write new outputs easily by implementing the specified interface in his classes.</li>
+<li>There is no built-in <a href="guide.cache.html" title="4.11. Caching">caching mechanism</a> in OPT 2, as this is not a template engine task. Instead, the <a href="extending.caching-systems.html" title="5.6. New caching systems">cache port</a> has been introduced where the programmer may plug-in any caching library using a simple interface.</li>
+<li>The <a href="extending.plugins.html" title="5.1. Introduction to plugins">plugin architecture</a> and new item registration have been changed.</li>
+<li>The errors are still reported by exceptions, but now each error message has its own exception class. Moreover, they are grouped using the class inheritance which allows to capture only particular types of errors.</li>
+</ol>
+
+<h2>Template syntax</h2>
+
+<p>OPT 1 could not process XML documents, whereas OPT 2 does and makes a real use of this fact. The following <a href="syntax.compiler-modes.html" title="3.1. Compiler modes">compiler modes</a> are available in the new version:</p>
+
+<ol>
+<li>XML mode - in this mode, the templates must be valid XML documents. OPT recognizes and processes XML/HTML tags.</li>
+<li>HTML mode - by disabling some XML standard features, you may activate less restrictive HTML mode. Here, OPT still recognizes and processes XML and HTML tags. See <a href="guide.initialization.configuration.html" title="4.1.1. List of configuration options">Configuration directives</a>.</li>
+<li><a href="syntax.topics.quirks.html" title="3.9.5. Quirks mode">Quirks mode</a> - it is similar to <code>XML compatibility mode</code> from OPT 1.x. The compiler recognizes only OPT tags and the rest of the document is treated as a static text.</li>
+</ol>
+
+<p>The mode does not affect the OPT tags which must be always valid XML tags. The curly brackets are used to put the OPT expressions in the static text.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:if</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$variable&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    {$variable}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:if<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The XML/HTML mode produces several extra implications. It is not allowed to write <code>&lt;tag {$variable}&gt;</code> or <code>&lt;tag attribute="{$variable}"&gt;</code>. In order to add a dynamic attribute or tag, you have to use <code>opt:attribute</code> and <code>opt:tag</code> instructions, and to put a dynamic attribute value, you have to switch its namespace into <code>parse:</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">parse:class</span>=<span style="color: #ff0000;">&quot;$cssClass&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span> ... <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The compiler does not allow to enclose the tags in the incorrect order (even in HTML) and this is the reason why the output must not be a concatenation of several templates executed one after another. In order to create modular templates, you have to use <code>opt:include</code> or template inheritance.</p>
+
+<h2>Expressions</h2>
+
+<p>The <a href="syntax.expressions.html" title="3.5. Expressions">expression language</a> is very similar, but there are some differences in the object access syntax. The naming rules are changed, for example <em>blocks</em> from OPT 1.x are simply called <em>variables</em> now.</p>
+
+<p>The important change is the support for the <a href="guide.escaping.html" title="4.8. Custom escaping functions">HTML escaping</a> of the expression results which allows to make automatic XSS filtering on the template side. In OPT 1, the following code would accept every possible value as the variables, even containing new HTML attributes or breaking the code:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #66cc66;">&#123;</span>$value<span style="color: #66cc66;">&#125;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$text}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The result could be terrible:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">style</span>=<span style="color: #ff0000;">&quot;aaa&quot;</span> <span style="color: #000066;">javascript</span>=<span style="color: #ff0000;">&quot;aggressive code&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;span<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>a variable that adds some HTML tags<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/span<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>OPT introduces a smart three-level escaping control (script, per-template and per-expression control). The escaping rules are:</p>
+
+<ol>
+<li>Every expression put as an XML attribute value should be escaped.</li>
+<li>Every expression put as instruction attribute value will be escaped, if the instruction needs it.</li>
+<li>Every expression put in the static text will be escaped, if the current escaping policy requires it.</li>
+</ol>
+
+<p>An example of turning on the escaping for a particular variable using the <strong>e:</strong> modifier:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This variable will be escaped: {e:$variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>By default, <code>htmlspecialchars()</code> function is used to do the escaping, but the programmer may register his own escaping handler.</p>
+
+<blockquote class="information">
+  <p>Remember that the escaping is not a magic solution for all your problems. While developing your script, you have to remember that the used features will never give you a full protection against all the possible attacks. First of all, they must be used properly and your code should not leave various potentially dangerous options enabled.</p>
+</blockquote>
+
+<h2>Sections</h2>
+
+<p>At a first sight, the <a href="syntax.topics.sections.html" title="3.9.1. Sections">sections</a> did not change, and the basic functionality remains the same. However, the section behavior has been strictly defined in the new version, and the instructions themselves became more modular. This allows the programmers to create their own section instructions. By default, OPT provides four types of sections:</p>
+
+<ol>
+<li><a href="syntax.instructions.section.html" title="3.7.19. opt:section"><code>opt:section</code></a> - an ordinary section.</li>
+<li><a href="syntax.instructions.tree.html" title="3.7.25. opt:tree"><code>opt:tree</code></a> - displaying the tree. Similar to <code>{tree}</code> instruction from OPT 1.1, but the syntax is completely different.</li>
+<li><a href="syntax.instructions.selector.html" title="3.7.20. opt:selector"><code>opt:selector</code></a> - a combination of section and <strong>switch</strong> statement.</li>
+<li><a href="syntax.instructions.grid.html" title="3.7.10. opt:grid"><code>opt:grid</code></a> - displaying the items in columns.</li>
+</ol>
+
+<p>They share the same API and may cooperate one with another. The programmer has much more control over creating relationships between the sections thanks to the <code>parent</code> attribute. For example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section3&quot;</span> <span style="color: #000066;">parent</span>=<span style="color: #ff0000;">&quot;section1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            ...
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The internal architecture of sections is now completely hidden to the template designer and configured on the script side. The same applies to the <em>dynamic sections</em> from OPT 1.1 that can be achieved now simply by choosing the <em>StaticGenerator</em> or <em>RuntimeGenerator</em> <a href="guide.data-formats.html" title="4.6. Data formats">data format</a>.</p>
+
+<h2>Other instructions</h2>
+
+<p>OPT 2.0 brings several new instructions and changes the semantics and/or names of the old ones.</p>
+
+<ol>
+<li><code>{bind}</code> - renamed to <code>opt:snippet</code> and improved to make template inheritance possible.</li>
+<li><code>{insert}</code> - renamed to <code>opt:insert</code> and improved to make template inheritance possible.</li>
+<li><code>{bindEvent}</code> - not implemented. The same effects can be achieved with <code>opt:snippet</code> now.</li>
+<li><code>{bindGroup}</code> - not implemented. The same effects can be achieved with <code>opt:snippet</code> now.</li>
+<li><code>{pagesystem}</code> - not implemented. The same effects can be achieved with more general <code>opt:selector</code>.</li>
+<li><code>{var}</code> - not implemented. Use the assignment operator.</li>
+<li><code>{default}</code> - not implemented. The same effects can be achieved in other ways.</li>
+<li><code>{place}</code> - not implemented. It did not really work correctly and you can achieve much better effects with template inheritance and <code>opt:root</code>.</li>
+<li><code>{php}</code> - not implemented.</li>
+</ol>
+
+<h2>Components</h2>
+
+<p>The <a href="syntax.topics.components.html" title="3.9.3. Components">components</a> are still present, but they have been redesigned from scratch to make use of the new features of OPT 2.0. It is much easier to design the component neighborhood and the components are more functional. The programmer may still decide, whether to work with them only on the template side or not. Below, you can find a code of a sample OPT 2.0 component:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:myInput</span> <span style="color: #000066;">datasource</span>=<span style="color: #ff0000;">&quot;$fieldData&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;com:div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$sys.component.title} <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;span</span> <span style="color: #000066;">opt:if</span>=<span style="color: #ff0000;">&quot;$sys.component.description&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$sys.component.description}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/span<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$sys.component.errorMessage}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/com:div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:myInput<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>As you see, the component tag now defines the whole neighborhood and the place to display the component itself is marked with <code>opt:display</code> tag. Moreover, the component can control the HTML attributes of the surrounding tags, if they are moved to the <code>com</code> namespace.</p>
+
+<p>Moreover, a much simpler alternative to components has been introduced: <a href="syntax.topics.blocks.html" title="3.9.2. Blocks">blocks</a>.</p>
+
+<h2>Functions</h2>
+
+<p>The function set has been widely extended in OPT 2.0. Some of the functions have been ported to the last release of OPT 1.1 before closing that branch: 1.1.5. The significant improvement over OPT 1.x is that many functions became aggregates - they can modify either a single value or a list of values:</p>
+
+<pre class="xml">{@capitalizedNames is capitalize($names)}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;list&quot;</span> <span style="color: #000066;">datasource</span>=<span style="color: #ff0000;">&quot;@capitalizedNames&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$list}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Template modularization</h2>
+
+<p>Open Power Template 1.1 offered a limited number of modularization features. There was the <code>include</code> instruction and concatenating the output of the templates. Furthermore, due to the lack of views, the code was longer and harder to maintain.</p>
+
+<p>The situation has changed dramatically in OPT 2.0. Concatenation is not possible anymore in the XML mode, but on the other hand, you get a more advanced <code>opt:include</code> and the dynamic template inheritance. <code>opt:include</code> has been extended to support views and integrated with sections. For example, different actions may create their own views, insert them into a list and the section would render them easily:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+<span style="color: #666666; font-style: italic;">// some configuration here.</span>
+&nbsp;
+<span style="color: #000088;">$contentContainer</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Let's create some views...</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template1.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">customVar</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'some value'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$contentContainer</span><span style="color: #009900;">&#91;</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'view'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template2.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">anotherVar</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'some value'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$contentContainer</span><span style="color: #009900;">&#91;</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'view'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Let's create the main view:</span>
+&nbsp;
+<span style="color: #000088;">$mainView</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'main.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$mainView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">content</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$contentContainer</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$mainView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">title</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Some title'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Rendering the views:</span>
+<span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$mainView</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>And the template code:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Sorry, the specified template has not been found.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:include<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>One of the view advantages is the fact that each view has its own variable scope and you do not have to worry about the naming collisions between different modules. See <a href="syntax.topics.modularization.inclusion.html" title="3.9.4.1. Template inclusion">template inclusion</a> to get to know more.</p>
+
+<p>Another concept, completely new in the OPT project, is the <a href="syntax.topics.modularization.inheritance.html" title="3.9.4.2. Template inheritance">template inheritance</a>, quite similar to the inheritance in the object-oriented programming. Instead of classes, we extend templates and the "methods" are represented by <a href="syntax.instructions.snippet.html" title="3.7.23. opt:snippet">snippets</a>. Below, you can find a sample base template extended by the module-specific content:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #808080; font-style: italic;">&lt;!-- base template --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> 
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Default content<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> 
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>And the extending template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;base.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My awesome module<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>The module-specific content.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Conclusion</h2>
+
+<p>Open Power Template 2 brings lots of new features and significant improvements to the predecessor. If you enjoyed OPT 1.x, you will surely enjoy the new version, too.</p>
+<dl class="location location-bottom"><dt>6.1. OPT 1.x<br/><a href="migration.html">6. Migration</a></dt><dd class="prev"><a href="migration.html">&laquo; Previous</a><br/>6. Migration</dd><dd class="next"><a href="migration.php.html">Next &raquo;</a><br/>6.2. PHP</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

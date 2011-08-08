@@ -1,0 +1,20 @@
+This test checks the defined blocks.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+FOO
+<opt:myBlock>
+BAR
+</opt:myBlock>
+FOO
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+VIEW PASSED
+ON OPEN: 0
+BAR
+ON CLOSE
+FOO

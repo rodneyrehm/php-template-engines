@@ -1,0 +1,13 @@
+Disable duplicated attributes.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo abc="foo">
+<opt:attribute str:name="abc" str:value="def" />
+bar
+</foo>
+</opt:root>
+
+>>>>expected.txt
+Opt_XmlDuplicatedAttribute_Exception

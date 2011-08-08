@@ -1,0 +1,24 @@
+Check the opt:include "view" attribute. It should parse an external view.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a view -->
+<opt:root>
+Foo
+<opt:include view="$view" />
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Included file -->
+<opt:root>
+Bar
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooBar
+>>>>data.php
+$view->view = new Opt_View('included.tpl');

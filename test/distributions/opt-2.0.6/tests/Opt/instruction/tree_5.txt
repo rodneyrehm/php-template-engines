@@ -1,0 +1,22 @@
+Check if placing opt:content from opt:node in a loop causes an exception.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:tree name="tree">
+<opt:list>
+LIST START:
+<opt:content />
+LIST END
+</opt:list>
+<opt:node>
+<opt:repeat times="5">
+<opt:content />
+</opt:repeat>
+</opt:node>
+<opt:treeelse>NO DATA</opt:treeelse>
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+Opt_TreeContent_Exception

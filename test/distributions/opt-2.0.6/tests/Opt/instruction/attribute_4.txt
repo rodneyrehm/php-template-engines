@@ -1,0 +1,18 @@
+The test checks the "ns" attribute with static strings.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute str:ns="foo" str:name="abc" str:value="def" />
+bar
+</foo>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo foo:abc="def">
+bar
+</foo>

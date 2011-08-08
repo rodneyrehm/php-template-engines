@@ -1,0 +1,19 @@
+Check the addition of the last expression.
+
+>>>>templates/test.tpl
+The text
+<foo>The tag</foo>
+{$foo}
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+$this->tpl->singleRootNode = false;
+$view->foo = 'FOO';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+The text
+<foo>The tag</foo>
+FOO

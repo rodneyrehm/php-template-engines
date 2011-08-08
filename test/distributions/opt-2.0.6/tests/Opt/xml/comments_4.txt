@@ -1,0 +1,13 @@
+Check the unpaired comment closure.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+<!-- foo --> bar -->
+</foo>
+
+>>>>data.php
+$this->tpl->printComments = true;
+
+>>>>expected.txt
+Opt_XmlInvalidCharacter_Exception

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:show - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:show</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.show.html">opt:show</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.22. opt:show</dt><dd class="prev">3.7.21. opt:separator<br/><a href="syntax.instructions.separator.html">&laquo; Previous</a></dd><dd class="next">3.7.23. opt:snippet<br/><a href="syntax.instructions.snippet.html">Next &raquo;</a></dd></dl>	<h1>3.7.22. opt:show</h1><blockquote class="help">
+  <p>This chapter describes one of section instructions. We recommend to read <a href="syntax.topics.sections.html" title="3.9.1. Sections">Sections</a> first to get to know more about them.</p>
+</blockquote>
+<p><code>opt:show</code> allows to define the section neighborhood layout. It has an important property - if the section does not get any elements, the neighborhood is not visible in the browser, too. In the example, we hide the <code>&lt;ol&gt;</code> tags, when there are no elements to display:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;list&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$list.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>When using <code>opt:show</code>, you have to remember about two issues:</p>
+
+<ol>
+<li><em>All</em> the section attributes are defined in <code>opt:show</code>, and the section tag (<code>opt:section</code>, <code>opt:tree</code>, etc.) remains empty in order to be connected with <code>opt:show</code>. The section tags with attributes are possible within <code>opt:show</code>, but they will become independent sections.</li>
+<li><code>opt:show</code> <em>does not start section</em>. We can neither access the section element variables etc. within this tag nor make it parent for any other nested section.</li>
+</ol>
+
+<p>An example to the first issue:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The first <code>opt:section</code> contains some attributes, so it is not connected to <code>opt:show</code>. Even if it is empty, the content of <code>opt:show</code> is displayed and vice versa. However, the second one has no attributes and it will be cooperating with our instruction. Moreover, <code>section1</code> will not become a parent of <code>section2</code>, because in fact, it is not started yet. The relationship would be established, if the code looked like that:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Empty list messages</h2>
+
+<p>We may define the optional content to be displayed if the list is empty. We use <code>opt:showelse</code> tag then:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;list&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$list.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry, the list is empty.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="error">
+  <p>When using <code>opt:showelse</code>, the section tags <strong>must not</strong> contain their internal tags that perform the same thing (like <code>opt:sectionelse</code>).</p>
+</blockquote>
+<h4>See also:</h4><ul><li><a href="syntax.topics.sections.html">3.9.1. Sections</a></li><li><a href="syntax.instructions.section.html">3.7.19. opt:section</a></li><li><a href="syntax.instructions.tree.html">3.7.25. opt:tree</a></li><li><a href="syntax.instructions.grid.html">3.7.10. opt:grid</a></li><li><a href="syntax.instructions.selector.html">3.7.20. opt:selector</a></li></ul><dl class="location location-bottom"><dt>3.7.22. opt:show<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.separator.html">&laquo; Previous</a><br/>3.7.21. opt:separator</dd><dd class="next"><a href="syntax.instructions.snippet.html">Next &raquo;</a><br/>3.7.23. opt:snippet</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

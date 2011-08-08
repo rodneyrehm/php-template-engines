@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Variables - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Variables</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.expressions.html">Expressions</a> &raquo; <a href="syntax.expressions.variables.html">Variables</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.expressions.html">3.5. Expressions</a><br/>3.5.1. Variables</dt><dd class="prev">3.5. Expressions<br/><a href="syntax.expressions.html">&laquo; Previous</a></dd><dd class="next">3.5.2. Values<br/><a href="syntax.expressions.values.html">Next &raquo;</a></dd></dl>	<h1>3.5.1. Variables</h1><p>Variables are items that are used to storing values. Each variable has its own unique name that allows to identify it. The value of a variable can be any type of data: strings, numbers, floating point numbers, logical values, or even compound PHP data types, such as arrays and objects. The variable name begins with an underscore or a letter, and later the digits from 0 to 9 are also allowed. Variable names are case-sensitive. In OPT, there are several types of variables.</p>
+
+<h2>Simple variables</h2>
+
+<p>Simple variables are intended to be created by the script that executes the template. Their name is followed with a dollar sign. The script can assign any data to this variables, and the template can place it somewhere, so this type is used to communicate between the logic and the presentation layer. Below, we can see a sample use:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hello my friend, do you need {$item}?<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>If the script assigns the text <em>sunglasses</em> to <code>$item</code>, the parser returns the following result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hello my friend, do you need sunglasses?<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In the next part of the documentation, the term <em>variables</em> means usually <em>simple variables</em>.</p>
+
+<blockquote class="information">
+  <p>By default, the variables are assigned to the specified template only. So, if the script assigns some value to <code>$foo</code> in <code>template1.tpl</code>, this value will not be seen in <code>template2.tpl</code>. In this case we say that the variables are local. The configuration allows to make the variables global by default.</p>
+</blockquote>
+
+<h2>Template variables</h2>
+
+<p>The template variables are created and managed by the template itself. The difference is that the name begins with <code>@</code>, not <code>$</code>. It was introduced to avoid naming collisions, and technically, they are handled differently in the OPT core. Note that template variables are always global: if <code>template1.tpl</code> sets the variable <code>@foo</code>, it is also visible in every template that is parsed later.</p>
+
+<h2>Language variables</h2>
+
+<p>This type of variable provides a support to the translation interface in OPT. It looks like this: <code>$group@identifier</code> and it returns a text that is assigned to the specified identifier in the specified group. The translation interface should assign different text to the same identifier, depending on the language set by the script.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$form@field_name}: <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;input</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text&quot;</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;name&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Of course, nothing wrong will happen if you find some other use for this syntax. Note that you may also create a translation interface port with <a href="syntax.expressions.backticks.html" title="3.5.5. Backticks">backtick strings</a>.</p>
+
+<h2>Containers</h2>
+
+<p>You are not limited to store only one value in a variable. If a variable can handle more values, we call it simply <em>container</em>. Each container element of the container has its own unique index, which may be either alphanumeric or numeric: <em>foo</em>, <strong>7</strong> etc. The index allows to access the value from a container: <code>$container.element</code>. Containers are very convenient, both for the programmer and for you. Let's assume we want to display some information about a person. Using normal variables, the code looks like this:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Name: {$person_name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Surname: {$person_surname}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Age: {$person_age}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>However, each of these variables must be assigned manually, whereas such data are usually retrieved in the script as arrays or something like that. It's much easier to assign entire group of values, but this leads us to the following template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Name: {$person.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Surname: {$person.surname}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Age: {$person.age}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The containers are also useful for template designers, because some functions can operate directly on whole container. For example, we can display the number of items in the container:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{count($person)} parameters describe this guy:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Name: {$person.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Surname: {$person.surname}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Age: {$person.age}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The next example illustrates, how to create some kind of financial report:</p>
+
+<pre class="xml">{@formattedProfits are money($profits)}
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Corporation customer profits: {@formattedProfits.corporation}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Individual customer profits: {@formattedProfits.individual}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Training profits: {@formattedProfits.training}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Total profit: {money(sum($profits))}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<dl>
+<dt><code>{@formattedProfits are money($profits)}</code></dt>
+<dd>Here we say that we want to keep all the values in <code>$profits</code> in the money notation, for example <strong>$35.45</strong>. The new container must be saved to the new variable: <code>$formattedProfits</code> in order not to overwrite the original container.</dd>
+
+<dt><code>{money(sum($profits))}</code></dt>
+<dd>We request to sum all the values in <code>$profits</code> (that is why we have not overwritten that container!) and display the result in the money notation.</dd>
+</dl>
+
+<p>As you can see, many functions, like <code>money()</code> can operate both on single values and the entire containers.</p>
+
+<blockquote class="information">
+  <p>Unlike many other template engines, containers <strong>do not represent</strong> any particular PHP type. Although they are arrays by default, they may be fully functionable objects as well. The script gives the compiler hints on the container types and OPT generates a suitable PHP template that fulfills the demands.</p>
+</blockquote>
+
+<h2>Arrays</h2>
+
+<p>Arrays are one of the PHP compound types that has been ported to OPT. Arrays are much like containers - they are also variables that store more than one value. The syntax is a bit different and uses square brackets to enclose the index name: <code>$array[index]</code>. Moreover, the index name can be loaded from other variable: <code>$array[$index]</code>. Note that arrays also cooperate with many functions:</p>
+
+<pre class="xml">{@formattedProfits are money($profits)}
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Corporation customer profits: {@formattedProfits[corporation]}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Individual customer profits: {@formattedProfits[individual]}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Training profits: {@formattedProfits[training]}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Total profit: {money(sum($profits))}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="warning">
+  <p>We do not recommend using the array syntax unless it is really necessary. Containers allow to create more generic templates that can be reused with other PHP applications, even if they use different internal types to pass the data to the parser.</p>
+</blockquote>
+
+<h2>Special variables</h2>
+
+<p>OPT reserves three variable names for its own purposes:</p>
+
+<dl>
+<dt><code>$sys</code> or <code>$opt</code></dt>
+<dd>This is a special container that provides various information on the parser and instructions.</dd>
+
+<dt><code>$global</code></dt>
+<dd>The container with global variables that are visible in all the parsed templates.</dd>
+
+<dt><code>$this</code></dt>
+<dd>The container with local variables assigned to the particular template.</dd>
+</dl>
+
+<p>The basic information of the <code>$sys</code> special variable is:</p>
+
+<dl>
+<dt><code>$sys.version</code></dt>
+<dd>OPT version</dd>
+
+<dt><code>$sys.const.name</code></dt>
+<dd>The value of specified PHP constant.</dd>
+</dl>
+
+<p>Many instructions share their own information using <code>$sys</code>. For example, the section status information are available under <code>$sys.section.foo</code>.</p>
+
+<h2>For programmers</h2>
+
+<p>Contrary to PHP, OPT does not report nonexistent variables as mistakes. However, if you wish to be informed of them, you can simply change the error reporting level in the configuration (<code>errorReporting</code> directive) to <code>E_ALL | E_NOTICE</code>.</p>
+<dl class="location location-bottom"><dt>3.5.1. Variables<br/><a href="syntax.expressions.html">3.5. Expressions</a></dt><dd class="prev"><a href="syntax.expressions.html">&laquo; Previous</a><br/>3.5. Expressions</dd><dd class="next"><a href="syntax.expressions.values.html">Next &raquo;</a><br/>3.5.2. Values</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

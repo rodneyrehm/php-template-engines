@@ -1,0 +1,18 @@
+The test checks the basic opt:tag functionality with the "single" attribute added.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:tag name="foo">
+<opt:attribute str:name="single" str:value="bar" />
+bar
+</opt:tag>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo single="bar">
+bar
+</foo>

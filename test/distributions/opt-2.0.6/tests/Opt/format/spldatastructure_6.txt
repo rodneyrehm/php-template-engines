@@ -1,0 +1,19 @@
+SplDatastructure and invalid data
+
+>>>>templates/test.tpl
+<opt:section name="foo">
+{$foo.item}
+<opt:sectionelse>EMPTY</opt:sectionelse>
+</opt:section>
+
+>>>>data.php
+
+
+$view->foo = array('foo' => 'bar');
+$view->setFormat('foo', 'SplDatastructure');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+EMPTY

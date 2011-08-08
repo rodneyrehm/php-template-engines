@@ -1,0 +1,14 @@
+Testing the position() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{position('foo bar joe', 'bar')}
+{position('foo bar joe', 'goo')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+4

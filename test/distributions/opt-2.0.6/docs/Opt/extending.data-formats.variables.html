@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Variables - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Variables</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.data-formats.html">New data formats</a> &raquo; <a href="extending.data-formats.variables.html">Variables</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.data-formats.html">5.7. New data formats</a><br/>5.7.1. Variables</dt><dd class="prev">5.7. New data formats<br/><a href="extending.data-formats.html">&laquo; Previous</a></dd><dd class="next">5.7.2. Container items<br/><a href="extending.data-formats.items.html">Next &raquo;</a></dd></dl>	<h1>5.7.1. Variables</h1><p>In this chapter, we are going to learn, how to change the behavior of variables with OPT data formats.</p>
+
+<h2>Configuration</h2>
+
+<p>The variable access snippets are located in the <code>variable</code> group, so you must add it to <code>$_supports</code> field in your data format. Furthermore, you need to set up the property <code>variable:assign</code>. It is a boolean value that controls whether your data format supports assignments of a new value to the variables. Another property is <code>variable:useReference</code>. Its value should be <strong>true</strong> if the data format permits reading the variables via references. For example, the data format shown in the example below that implements the template variables as functions, should use <strong>false</strong> here, as it is not possible in PHP to access the returned function values via references.</p>
+
+<h2>Reading the values</h2>
+
+<p>The snippet that returns the PHP code to read a variable value is called <code>variable:main</code>. It should return a <em>piece of expression</em> that reads the value. The variable name is provided in the <code>item</code> format variable.</p>
+
+<pre class="php">    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'variable:main'</span><span style="color: #339933;">:</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'myVariableReader(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\')'</span><span style="color: #339933;">;</span></pre>
+
+<p>OPT supports both local and global template variables. The data formats may return different PHP codes for those two types of variables. The requested type is provided in the <code>access</code> format variable which takes two possible values:</p>
+
+<ol>
+<li><code>Opt_Class::ACCESS_LOCAL</code> - accessing a local variable</li>
+<li><code>Opt_Class::ACCESS_GLOBAL</code> - accessing a global variable</li>
+</ol>
+
+<p>The alternative PHP code:</p>
+
+<pre class="php">    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'variable:main'</span><span style="color: #339933;">:</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">==</span> Opt_Class<span style="color: #339933;">::</span><span style="color: #004000;">ACCESS_LOCAL</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'myVariableReader(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\')'</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+        <span style="color: #b1b100;">else</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'myGlobalVariableReader(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\')'</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span></pre>
+
+<h2>Modifying the variable values</h2>
+
+<p>It is also possible to control the variable assignments via the <code>variable:assign</code> snippet. The new value is provided in the <code>value</code> format variable that must be placed somewhere in the returned code.</p>
+
+<blockquote class="error">
+  <p>The <code>value</code> format variable actually contains neither PHP nor OPT expression that generates the specified value and there is no way to identify, what exactly the programmer is going to assign. The exact value is an internal token used by the expression engine to identify subexpressions.</p>
+</blockquote>
+
+<p>A sample code:</p>
+
+<pre class="php">    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'variable:assign'</span><span style="color: #339933;">:</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'myVariableModifier(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\', '</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'value'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">')'</span><span style="color: #339933;">;</span></pre>
+<dl class="location location-bottom"><dt>5.7.1. Variables<br/><a href="extending.data-formats.html">5.7. New data formats</a></dt><dd class="prev"><a href="extending.data-formats.html">&laquo; Previous</a><br/>5.7. New data formats</dd><dd class="next"><a href="extending.data-formats.items.html">Next &raquo;</a><br/>5.7.2. Container items</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

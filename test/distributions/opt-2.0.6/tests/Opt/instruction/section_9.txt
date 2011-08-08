@@ -1,0 +1,26 @@
+Test the "datasource" attribute.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:section name="sect" datasource="$variable">
+{$sect.val1},{$sect.val2}
+</opt:section>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+A,B
+C,D
+E,F
+G,H
+
+>>>>data.php
+$view->variable = array(
+	array('val1' => 'A', 'val2' => 'B'),
+	array('val1' => 'C', 'val2' => 'D'),
+	array('val1' => 'E', 'val2' => 'F'),
+	array('val1' => 'G', 'val2' => 'H'),
+);

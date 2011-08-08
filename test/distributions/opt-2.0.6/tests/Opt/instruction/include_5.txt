@@ -1,0 +1,31 @@
+In both of the views, the variables should have different values.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Foo{$variable1}{$variable2}
+<opt:include view="$view" />
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Bar{$variable1}{$variable2}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooABBarCD
+
+>>>>data.php
+$view2 = new Opt_View('included.tpl');
+$view2->variable1='C';
+$view2->variable2='D';
+
+$view->view = $view2;
+$view->variable1='A';
+$view->variable2='B';

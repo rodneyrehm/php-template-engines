@@ -1,0 +1,25 @@
+Objective format: the "item" namespace.
+
+>>>>templates/test.tpl
+{$variable.item}
+{$global.variable.item}
+
+>>>>data.php
+
+$obj1 = new stdClass;
+$obj1->item = 'FOO';
+$obj2 = new stdClass;
+$obj2->item = 'BAR';
+
+$view->variable = $obj1;
+Opt_View::assignGlobal('variable', $obj2);
+
+$view->setFormat('variable', 'Objective');
+Opt_View::setFormatGlobal('variable', 'Objective');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+BAR

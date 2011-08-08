@@ -1,0 +1,24 @@
+The test checks whether the order of snippets does not play any role. The test
+was made according to the bug #61.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="a.tpl">
+<opt:snippet name="C">C</opt:snippet>
+<opt:snippet name="A">A</opt:snippet>
+<opt:snippet name="B">B</opt:snippet>
+</opt:extend>
+
+>>>>templates/a.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:insert snippet="A">FAIL</opt:insert>
+<opt:insert snippet="B">FAIL</opt:insert>
+<opt:insert snippet="C">FAIL</opt:insert>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+ABC

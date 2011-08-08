@@ -1,0 +1,36 @@
+The test checks the relationships between sections in SingleArray format.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:section name="sect">
+{$sect.val1},{$sect.val2}
+<opt:section name="sect2">
+*{$sect2.foo}
+</opt:section>
+</opt:section>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+A,B
+*bar
+*joe
+C,D
+*goo
+*hoo
+
+>>>>data.php
+$view->sect = array(
+	array('val1' => 'A', 'val2' => 'B', 'sect2' => array(0 =>
+		array('foo' => 'bar'),
+		array('foo' => 'joe'),
+	)),
+	array('val1' => 'C', 'val2' => 'D', 'sect2' => array(0 =>
+		array('foo' => 'goo'),
+		array('foo' => 'hoo'),
+	)),
+);
+$view->setFormat('sect2', 'SingleArray');

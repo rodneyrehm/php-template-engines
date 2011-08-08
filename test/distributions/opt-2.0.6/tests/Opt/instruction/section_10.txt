@@ -1,0 +1,34 @@
+The test checks the "datasource" attribute for the nested sections.
+It should disable the relationships.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:section name="sect">
+{$sect.val1},{$sect.val2}
+<opt:section name="sect2" datasource="$nest">
+*{$sect2.foo}
+</opt:section>
+</opt:section>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+A,B
+*X
+*Y
+C,D
+*X
+*Y
+
+>>>>data.php
+$view->sect = array(
+	array('val1' => 'A', 'val2' => 'B'),
+	array('val1' => 'C', 'val2' => 'D'),
+);
+$view->nest = array(
+	array('foo' => 'X'),
+	array('foo' => 'Y'),
+);

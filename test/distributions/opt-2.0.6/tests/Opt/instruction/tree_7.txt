@@ -1,0 +1,28 @@
+The test checks if the tree throws an exception, if there is a strange depth.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:tree name="tree">
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.title} START:
+<opt:content />
+NODE {$tree.title} END
+</opt:node>
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+Opt_TreeInvalidDepth_Exception
+
+>>>>data.php
+$view->tree = array(0 =>
+	array('title' => '1', 'depth' => 6),
+	array('title' => '1.1', 'depth' => 3),
+	array('title' => '1.1.1', 'depth' => 8),
+);

@@ -1,0 +1,24 @@
+This test checks the basic block functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+FOO
+<opt:block from="$block" hide="1">
+BAR
+</opt:block>
+FOO
+
+>>>>data.php
+
+$view->block = new myBlock;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+VIEW PASSED
+ON OPEN: 1
+HIDING
+ON CLOSE
+FOO

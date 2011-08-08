@@ -1,0 +1,19 @@
+Check the extra space in the tag. It should be properly parsed (see bug #83)
+
+>>>>templates/test.tpl
+<?xml version="1.0"?>
+<table>
+<tr>
+<td >Show something</td>
+</tr>
+</table>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<table>
+<tr>
+<td>Show something</td>
+</tr>
+</table>

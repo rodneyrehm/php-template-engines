@@ -1,0 +1,25 @@
+This test checks the component events.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:component from="$component">
+<opt:onEvent name="falseEvent">
+Not displayed.
+</opt:onEvent>
+<opt:onEvent name="trueEvent">
+Displayed.
+</opt:onEvent>
+</opt:component>
+
+>>>>data.php
+
+$view->component = new myComponent;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+FALSE EVENT CHECKED
+TRUE EVENT LAUNCHED
+Displayed.

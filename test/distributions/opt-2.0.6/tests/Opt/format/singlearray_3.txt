@@ -1,0 +1,21 @@
+SingleArray format: basic sections.
+
+>>>>templates/test.tpl
+<opt:section name="foo">
+{$foo.item}
+</opt:section>
+
+>>>>data.php
+
+$view->foo = array(0 =>
+	array('item' => 'FOO'),
+	array('item' => 'BAR')
+);
+$view->setFormat('foo', 'SingleArray');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+BAR

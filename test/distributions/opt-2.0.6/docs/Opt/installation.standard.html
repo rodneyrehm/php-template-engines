@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Standard installation - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Standard installation</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="installation.html">Installation</a> &raquo; <a href="installation.standard.html">Standard installation</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="installation.html">2. Installation</a><br/>2.1. Standard installation</dt><dd class="prev">2. Installation<br/><a href="installation.html">&laquo; Previous</a></dd><dd class="next">2.2. PHAR installation<br/><a href="installation.phar.html">Next &raquo;</a></dd></dl>	<h1>2.1. Standard installation</h1><p>This chapter describes the installation as a set of PHP files.</p>
+
+<h2>Directory structure</h2>
+
+<p>In the downloaded archive you can find a directory called <code>/lib</code> with all the necessary OPT and OPL source code. Create in your project directory tree a new directory and copy there the contents of <code>/lib</code>. If you already use other OPL libraries, copy OPT into the existing directory. Do not be afraid to overwrite the files if you are asked to do so. Unless they are modified, there is nothing to worry.</p>
+
+<p>In case of OPT, you must also create two directories for your templates. Let assume that the first one is called <code>/templates</code> and the second one - <code>/templates_c</code>. You can choose any other name, if you want.</p>
+
+<blockquote class="important">
+  <p>Be sure that PHP has write access to <code>/templates_c</code> and read access to <code>/templates</code>.</p>
+</blockquote>
+
+<h2>PHP code and the configuration</h2>
+
+<p>In the beginning, you must load the OPL core, configure the path to the libraries and set the autoloader. The following code is used then:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// 1</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setDirectory</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// 2</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// 3</span>
+&nbsp;
+<span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// 4</span>
+<span style="color: #666666; font-style: italic;">// your script</span></pre>
+
+<blockquote class="steps">
+  <ol>
+  <li>We load the OPL core.</li>
+  <li>We set the library path. It should end with <code>/</code>, but it is not necessary. We recommend to set the absolute path, because OPL does not use <em>include_path</em> by default. In case of PHP 5.2 this method is required, because it also loads the emulation code for some extra classes from PHP 5.3.</li>
+  <li>We register the autoloader that will automatically locate and load the classes.</li>
+  <li>We create the main parser object.</li>
+  </ol>
+</blockquote>
+
+<p>All the OPL libraries report the errors as exceptions. For OPL, the base exception class is <code>Opl_Exception</code> and for OPT - <code>Opt_Exception</code>. OPT contains a very convenient error handler that shows some extra information that should help to solve the problem, and adds additional explanations, why you see it and where to look for mistakes.</p>
+
+<p>Once we created the object, the library must be configured. We do it by setting the values of some fields in <code>$tpl</code> object. The most important are:</p>
+
+<dl>
+<dt>sourceDir</dt>
+<dd>Path to the <code>/templates/</code> directory.</dd>
+
+<dt>compileDir</dt>
+<dd>Path to the <code>/templates_c/</code> directory.</dd>
+
+<dt>contentType</dt>
+<dd>Content type. We can use one of predefined values or enter the MIME type manually.</dd>
+
+<dt>charset</dt>
+<dd>Used output encoding.</dd>
+</dl>
+
+<p>Before we definitely start, we must also call <a href="api.opt-class.setup.html" title="7.1.10. Opt_Class::setup()">Opt_Class::setup()</a>. Do not forget about it, because it plays a very important role:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setDirectory</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<a href="http://www.php.net/spl_autoload_register"><span style="color: #990000;">spl_autoload_register</span></a><span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl_Loader'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'autoload'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+try
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+    <span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">sourceDir</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'./templates/'</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">compileDir</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'./templates_c/'</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">contentType</span> <span style="color: #339933;">=</span> Opt_Output_Http<span style="color: #339933;">::</span><span style="color: #004000;">XHTML</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">charset</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'utf-8'</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setup</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">hello</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Hello, world!'</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000088;">$out</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+    <span style="color: #000088;">$out</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setContentType</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$out</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+catch<span style="color: #009900;">&#40;</span>Opt_Exception <span style="color: #000088;">$exception</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    Opt_Error_Handler<span style="color: #009900;">&#40;</span><span style="color: #000088;">$exception</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>Finally, to work with OPT, we need two types of objects:</p>
+
+<ol>
+<li>Views - they represent a template with some script data assigned to it, as well as other rules, such as format definitions or inheritance lists. In the script, they are objects of <code>Opt_View</code> class and one object should match exactly one top template (possibly accompanied with dependent templates).</li>
+<li>Outputs - they decide, where to send the processed view results.</li>
+</ol>
+
+<p>Using a view is very easy. In the constructor, we specify the template assigned to the view, and later we simply assign the data to template variables using the syntax <code>$view-&gt;variableName = value</code>. There are several other data assignment methods which are described deeper in the API reference. As our view is ready, we need to create an output. We are going to use <code>Opt_Output_Http</code>, a standard OPT class that is responsible for HTTP header management and sending the templates to the browser. Once it is initialized, we call <a href="api.opt-output-http.set-content-type.html" title="7.3.4. Opt_Output_Http::setContentType()">Opt_Output_Http::setContentType()</a> to create the headers for the specified content type. The method supports full content negotiation, when connected with Open Power Classes library. Finally, we call <a href="api.opt-output-http.render.html" title="7.3.2. Opt_Output_Http::render()">Opt_Output_Http::render()</a> on our view object to send the results to the browser.</p>
+
+<p>Note that different output systems may have some requirements. For example, the HTTP output assumes that all the templates are valid XML files. This means that you cannot open a tag in one template and close it in another. So, to be sure that the script output will be also a valid XML document, we can parse only one template. But do not worry - OPT provides several better solutions to make a template modularization. They are explained in the next chapters.</p>
+
+<h2>The templates</h2>
+
+<p>We save the templates in <code>./templates/</code> directory. To speed up the task, OPT compiles them to the PHP code every time they are changed. The compiled versions are stored in <code>./templates_c/</code> whose content is managed by OPT and you do not have to do there anything. You can delete the contents in this folder anytime you want. OPT will recompile all the templates then.</p>
+
+<p>This is an example template in <code>/templates/template.tpl</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:prolog</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:dtd</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;xhtml10transitional&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My first OPT template<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>My first OPT template<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Script message: {$hello}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The third and fourth line expand the output XML prolog and the DTD for XHTML 1.0 Transitional, because the prolog we can see in the template is for internal use only. In the line four from the end, we specify an expression in curly brackets. It displays the content of the variable <code>$hello</code> in the specified place. When you run the example, instead of curly brackets we see there "Hello world!".</p>
+
+<p>The details concerning creating templates and using OPT are described later.</p>
+<h4>See also:</h4><ul><li><a href="installation.phar.html">2.2. PHAR installation</a></li></ul><dl class="location location-bottom"><dt>2.1. Standard installation<br/><a href="installation.html">2. Installation</a></dt><dd class="prev"><a href="installation.html">&laquo; Previous</a><br/>2. Installation</dd><dd class="next"><a href="installation.phar.html">Next &raquo;</a><br/>2.2. PHAR installation</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

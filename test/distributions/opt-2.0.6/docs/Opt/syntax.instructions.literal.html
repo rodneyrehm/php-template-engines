@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:literal - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:literal</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.literal.html">opt:literal</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.14. opt:literal</dt><dd class="prev">3.7.13. opt:insert<br/><a href="syntax.instructions.insert.html">&laquo; Previous</a></dd><dd class="next">3.7.15. opt:prolog<br/><a href="syntax.instructions.prolog.html">Next &raquo;</a></dd></dl>	<h1>3.7.14. opt:literal</h1><p><code>opt:literal</code> instruction controls the parsing of XML CDATA sections with OPT. Normally, OPT compiles them according to their semantics: it moves them to the output, but without parsing their content. CDATA tags are moved, too. For template designer, such behavior is not always acceptable. Having the JavaScript code and some data do be put into it, we would like to escape part of that code not to be parsed by OPT, but at the same time, it will be decorated with a huge amount of <code>&lt;![CDATA[</code> and <code>]]&gt;</code> and the browser will not parse such result.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;script</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text/javascript&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #339933;">&lt;![CDATA[</span>
+<span style="color: #339933;">    document.write('Hello my friend, do you need {$object} or ]]&gt;</span>{$object}<span style="color: #339933;">&lt;![CDATA[?');</span>
+<span style="color: #339933;">]]&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/script<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In the example above, the output JS code is simply destroyed. Here it's a place for <code>opt:literal</code>. We can enclose our JS code inside it, and then the template CDATA sections will not be rewritten to the output. Instead, <code>opt:literal</code> will generate its own CDATA beginning and end that encloses the complete code:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;script</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text/javascript&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:literal<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #339933;">&lt;![CDATA[</span>
+<span style="color: #339933;">    document.write('Hello my friend, do you need {$object} or ]]&gt;</span>{$object}<span style="color: #339933;">&lt;![CDATA[?');</span>
+<span style="color: #339933;">]]&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:literal<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/script<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;script</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;text/javascript&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #339933;">&lt;![CDATA[</span>
+<span style="color: #339933;">    document.write('Hello my friend, do you need {$object} or sunglasses?');</span>
+<span style="color: #339933;">]]&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/script<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>However, <code>opt:literal</code> offers you more decorators. It can be used to generate dynamic HTML comments or simply to hide the existence of CDATA sections from the browser. The behavior may be chosen with the following attribute:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th>Default</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>type</td>
+  <td>ID</td>
+  <td>No</td>
+  <td>cdata</td>
+  <td align="left">What to display?</td>
+</tr>
+</tbody>
+</table>
+
+<p>Allowed values are:</p>
+
+<ul>
+<li><p><code>cdata</code> - enclose the tag content with <code>&lt;![CDATA[</code> and <code>]]&gt;</code>, like in the example above.</p>
+
+<blockquote class="warning">
+  <p>JavaScript and CSS content enclosed with pure CDATA section can cause problems with some older browsers so your code may not work properly. It is recommended to use <code>comment_cdata</code> mode to solve this problem.</p>
+</blockquote></li>
+<li><p><code>comment_cdata</code> - enclose the tag content with <code>/* &lt;![CDATA[ */</code> and <code>/* ]]&gt; */</code>.</p>
+
+<blockquote class="information">
+  <p>Recommended mode to use with JavaScript and CSS content. Opening and closing CDATA tags surrounded by multiline comments (supported by both JS and CSS) are valid and leave the compatibility with older browsers. <a href="https://developer.mozilla.org/en/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents#Using_CDATA_Instead_of_Comments" title="Properly Using CSS and JavaScript in XHTML Documents - Using CDATA Instead of Comments">(Source)</a></p>
+</blockquote></li>
+<li><p><code>comment</code> - enclose the tag content with HTML comment tags <code>&lt;!--</code> and <code>--&gt;</code>.</p>
+
+<blockquote class="important">
+  <p>This option should not be used with CSS and JavaScript content. Modern browsers ignore code in these tags when used in correct XML/XHTML document. Use <code>comment_cdata</code> instead.</p>
+</blockquote></li>
+<li><p><code>transparent</code> - do not enclose the content with anything.</p></li>
+</ul>
+<h4>See also:</h4><ul><li><a href="syntax.cdata.html">3.2. CDATA sections</a></li><li><a href="https://developer.mozilla.org/en/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents#Using_CDATA_Instead_of_Comments"> Mozilla Developer Center - Properly Using CSS and JavaScript in XHTML Documents</a></li></ul><dl class="location location-bottom"><dt>3.7.14. opt:literal<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.insert.html">&laquo; Previous</a><br/>3.7.13. opt:insert</dd><dd class="next"><a href="syntax.instructions.prolog.html">Next &raquo;</a><br/>3.7.15. opt:prolog</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

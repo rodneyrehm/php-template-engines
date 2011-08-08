@@ -1,0 +1,21 @@
+The escaping in attributes.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root escaping="yes">
+<foo parse:bar="e:$value" parse:joe="u:$value">
+ABC
+</foo>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo bar="hi&amp;" joe="hi&">
+ABC
+</foo>
+
+>>>>data.php
+$view->value = 'hi&';
+$this->tpl->escape = false;

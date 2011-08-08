@@ -1,0 +1,14 @@
+The test checks if opt:single cannot be applied to the OPT tags.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:bar opt:single="yes">
+This will not be visible.
+</opt:bar>
+</foo>
+</opt:root>
+
+>>>>expected.txt
+Opt_AttributeInvalidNamespace_Exception

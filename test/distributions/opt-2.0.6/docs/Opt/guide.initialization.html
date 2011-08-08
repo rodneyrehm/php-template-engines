@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Initialization - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Initialization</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.initialization.html">Initialization</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.html">4. Programmer's Guide</a><br/>4.1. Initialization</dt><dd class="prev">4. Programmer's Guide<br/><a href="guide.html">&laquo; Previous</a></dd><dd class="next">4.1.1. List of configuration options<br/><a href="guide.initialization.configuration.html">Next &raquo;</a></dd></dl>	<h1>4.1. Initialization</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="guide.initialization.configuration.html">4.1.1. List of configuration options</a></li></ul><p>The first thing we have to do is to initialize and configure our script in order to use OPT.</p>
+
+<h2>Autoloader</h2>
+
+<p>We start with setting up the autoloader which must be included manually. You can find it in <code>Opl/Base.php</code> file - it is a part of the OPL core:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'../vendor/opl/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setDirectory</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'../vendor/opl/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>OPT does not force you to use <code>include_path</code>. With <code>Opl_Loader::setDirectory()</code> method, we specify the path to the OPL library directories. Finally, we register the autoloader in PHP. The OPL core provides a very flexible mechanism of loading the files that allows you to choose different locations for each library and even a file:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'../vendor/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">mapLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'../vendor/Opl/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">mapLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opt'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'../anotherDirectory/Opt/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>While this feature is rather useless in most of the script, as we usually want to keep similar pieces of the code in the same place, we might find it necessary if we wish to use PHAR-s.</p>
+
+<p>Once we have registered the autoloader, we might also configure the options that affect all the OPL libraries:</p>
+
+<pre class="php">Opl_Registry<span style="color: #339933;">::</span><span style="color: #004000;">setState</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opl_debug_console'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Registry<span style="color: #339933;">::</span><span style="color: #004000;">setState</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opl_extended_errors'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The first line enables the debug console. In this mode, each HTTP request will generate an extra pop-up window providing some information about OPT, like the executed templates, their execution time, the current configuration or estimated memory usage during the template compilation. The second option is very useful in the development environment, because it causes the default exception handler to show all the possible information about the exception and system state that helps to find the problem.</p>
+
+<blockquote class="warning">
+  <p>Do not forget to disable those two options on the production server!</p>
+</blockquote>
+
+<h2>Creating the main OPT class</h2>
+
+<p>Once our script knows, how to load OPL code, we are going to initialize Open Power Template. It is also a quite easy task. All we have to do is to create an object of <code>Opt_Class</code> class and set some configuration directives. They are available as public class variables:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">sourceDir</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'./templates/'</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">compileDir</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'./templates_c/'</span><span style="color: #339933;">;</span></pre>
+
+<p>The complete list of configuration options can be found in <a href="guide.initialization.configuration.html" title="4.1.1. List of configuration options">List of configuration options</a>. Note that you can also load the configuration from an array or INI file with <code>loadConfig()</code> method:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Loading from INI file.</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">loadConfig</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./opt.ini'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Loading from array</span>
+<span style="color: #000088;">$cfg</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+   <span style="color: #0000ff;">'sourceDir'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./templates/'</span><span style="color: #339933;">,</span>
+   <span style="color: #0000ff;">'compileDir'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./templates_c/'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">loadConfig</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$cfg</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The external configuration source does not have to set all the directives. Feel free to mix both of the configuration sources in one script.</p>
+
+<h2>Registering additional stuff</h2>
+
+<p>Although OPT comes bundled with a wide variety of different template instructions and functions, you will probably want to write custom system-specific ones. This is the right place to do it. You can either use plugins (see <a href="extending.plugins.html" title="5.1. Introduction to plugins">Plugins</a>) or register the new stuff manually using <code>Opt_Class::register()</code> method. The details, how to register different items can be found in <a href="extending.html" title="5. Extending OPT">Extending OPT</a>.</p>
+
+<h2>Finalizing the initialization</h2>
+
+<p>To finish the initialization, we call:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setup</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>This method is quite necessary, because it must prepare some data in order to make the rest of the script fully functional. Never forget to call it!</p>
+<dl class="location location-bottom"><dt>4.1. Initialization<br/><a href="guide.html">4. Programmer's Guide</a></dt><dd class="prev"><a href="guide.html">&laquo; Previous</a><br/>4. Programmer's Guide</dd><dd class="next"><a href="guide.initialization.configuration.html">Next &raquo;</a><br/>4.1.1. List of configuration options</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

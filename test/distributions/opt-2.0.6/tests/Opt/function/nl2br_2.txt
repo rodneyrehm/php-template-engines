@@ -1,0 +1,28 @@
+Testing the nl2br() function in the aggregate version.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@vars is nl2br($vars)}
+{u:@vars.v1}
+{u:@vars.v2}
+</opt:root>
+
+>>>>data.php
+$view->vars = array(
+	'v1' => 'text with a
+newline',
+	'v2' => 'another text
+with more
+newlines'
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+text with a<br />
+newline
+another text<br />
+with more<br />
+newlines

@@ -1,0 +1,21 @@
+Test checks the prolog generation with dynamic attributes
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Display the prolog -->
+<opt:root>
+foo
+<opt:prolog parse:encoding="$fff" />
+foo
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$view->assign('fff', 'UTF-8');
+
+>>>>result.txt
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+foo
+foo

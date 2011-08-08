@@ -1,0 +1,39 @@
+Testing the average() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{u:autoLink('foo http://www.example.com bar')}
+{u:autoLink('foo https://www.example.com bar')}
+{u:autoLink('foo ftp://www.example.com bar')}
+{u:autoLink('foo ftps://www.example.com bar')}
+{u:autoLink('foo gopher://www.example.com bar')}
+{u:autoLink('foo www.example.com bar')}
+{u:autoLink('foo ftp.example.com bar')}
+{u:autoLink('foo http://example.com/ bar')}
+{u:autoLink('foo http://example.com:8000/ bar')}
+{u:autoLink('foo http://foo@example.com/ bar')}
+{u:autoLink('foo http://example.com/index.html bar')}
+{u:autoLink('foo http://example.com/index.html#moo bar')}
+{u:autoLink('foo http://example.com/index.html?foo=bar#foo bar')}
+{u:autoLink('foo http://example.com/subdir/index.html bar')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+foo <a href="http://www.example.com" target="_blank">http://www.example.com</a> bar
+foo <a href="https://www.example.com" target="_blank">https://www.example.com</a> bar
+foo <a href="ftp://www.example.com" target="_blank">ftp://www.example.com</a> bar
+foo <a href="ftps://www.example.com" target="_blank">ftps://www.example.com</a> bar
+foo <a href="gopher://www.example.com" target="_blank">gopher://www.example.com</a> bar
+foo <a href="http://www.example.com" target="_blank">www.example.com</a> bar
+foo <a href="ftp://ftp.example.com" target="_blank">ftp.example.com</a> bar
+foo <a href="http://example.com/" target="_blank">http://example.com/</a> bar
+foo <a href="http://example.com:8000/" target="_blank">http://example.com:8000/</a> bar
+foo <a href="http://foo@example.com/" target="_blank">http://foo@example.com/</a> bar
+foo <a href="http://example.com/index.html" target="_blank">http://example.com/index.html</a> bar
+foo <a href="http://example.com/index.html#moo" target="_blank">http://example.com/index.html#moo</a> bar
+foo <a href="http://example.com/index.html?foo=bar#foo" target="_blank">http://example.com/index.html?foo=bar#foo</a> bar
+foo <a href="http://example.com/subdir/index.html" target="_blank">http://example.com/subdir/index.html</a> bar

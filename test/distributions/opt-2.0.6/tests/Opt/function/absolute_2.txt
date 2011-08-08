@@ -1,0 +1,22 @@
+Testing the absolute() function in the aggregate version.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@vars is absolute($vars)}
+{@vars.v1}
+{@vars.v2}
+</opt:root>
+
+>>>>data.php
+$view->vars = array(
+	'v1' => 5,
+	'v2' => -5
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+5
+5

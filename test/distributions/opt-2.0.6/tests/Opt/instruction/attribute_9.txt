@@ -1,0 +1,13 @@
+opt:attribute must not be added to OPT instructions unless they want to.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:section name="foo">
+<opt:attribute str:name="abc" str:value="def" />
+bar
+</opt:section>
+</opt:root>
+
+>>>>expected.txt
+Opt_InstructionInvalidParent_Exception

@@ -1,0 +1,34 @@
+Test whether the section is started in a valid place.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:grid name="items" cols="3">
+:ROW START
+<opt:section name="foo" parent="items">
+</opt:section>
+<opt:item>
+{$items.foo}
+</opt:item>
+<opt:emptyItem>
+Empty
+</opt:emptyItem>
+:ROW END
+</opt:grid>
+</opt:root>
+
+>>>>data.php
+$view->items = array(
+	array('foo' => 'item 1'),
+	array('foo' => 'item 2'),
+	array('foo' => 'item 3'),
+	array('foo' => 'item 4'),
+	array('foo' => 'item 5'),
+	array('foo' => 'item 6'),
+	array('foo' => 'item 7'),
+	array('foo' => 'item 8'),
+	array('foo' => 'item 9')
+);
+
+>>>>expected.txt
+Opt_SectionNotFound_Exception

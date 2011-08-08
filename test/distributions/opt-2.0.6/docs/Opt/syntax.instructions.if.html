@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:if - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:if</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.if.html">opt:if</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.11. opt:if</dt><dd class="prev">3.7.10. opt:grid<br/><a href="syntax.instructions.grid.html">&laquo; Previous</a></dd><dd class="next">3.7.12. opt:include<br/><a href="syntax.instructions.include.html">Next &raquo;</a></dd></dl>	<h1>3.7.11. opt:if</h1><blockquote class="warning">
+  <p>This chapter contains <em>useful programming information</em> that are simple to understand. In case of questions, contact your programmer.</p>
+</blockquote>
+
+<p><code>opt:if</code> is a very useful instruction. It allows to display some code, only if the specified condition is passed. There are several possible uses: for example, we may test if the script set a variable for us before entering a code that shows its value. Note that you do not have to test the initial conditions of many OPT instructions (like sections), because they do it for their own.</p>
+
+<p>The instruction takes one attribute:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>test</td>
+  <td>Expression</td>
+  <td>Yes</td>
+  <td align="left">A condition that must be <strong>true</strong> to display the tag content.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Suppose we have a community website where the users can publish notes on various topics. They optionally may specify their website address, and moreover - the note might be promoted. These two issues must be taken into account while designing a template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;note&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$note.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Date: {$note.date}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:if</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$note.www&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">parse:href</span>=<span style="color: #ff0000;">&quot;$note.www&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:if<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$note.body}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:if</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$note.rank == 3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This note has been promoted.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:if<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In the first place, we can see, how to use <code>opt:if</code> to test if a variable is set. If the script does not provide the <code>$note.www</code> variable, the paragraph with an URL is not even visible in the browser. Without the condition, the template would always display an URL, even if it was empty and redirected the user to a vacuum. At the end of the template, we want to show a suitable message, if the note is promoted. We compare the <code>$note.rank</code> to 3 and if they are equal, the user sees an extra text. More about writing OPT expressions and conditions can be found in <a href="syntax.expressions.html" title="3.5. Expressions">this chapter</a>.</p>
+
+<p><code>opt:if</code> may perform alternative operations, if the condition is not <strong>true</strong>. They are defined with <code>opt:elseif</code> and <code>opt:else</code> placed directly in <code>opt:show</code>. The first one represents an alternative condition to check. This tag may be used several times in one instruction. OPT will test them one after another till one is passed. The content in <code>opt:else</code> is displayed, if all the conditions for the instruction fail. It may be used only once:</p>
+
+<pre class="xml"><span style="color: #808080; font-style: italic;">&lt;!-- the exact condition content is not important here --&gt;</span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:if</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;condition1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+    This text will show, if the condition1 is passed.
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:elseif</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;condition2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        This text will show, if the condition1 fails and condition2 is passed.
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:elseif<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:elseif</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;condition3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        This text will show, if the condition1 and condition2 fail, but condition3 is passed.
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:elseif<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        This text will show, if neither of the conditions is passed.
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:if<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Note that placing <code>opt:elseif</code> and <code>opt:else</code> in any tag other than <code>opt:if</code> causes an error:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:if</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;condition&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>  <span style="color: #808080; font-style: italic;">&lt;!-- WRONG! We have put opt:else in DIV! --&gt;</span> <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:if<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Now we might get back to our example and modify it to display a message about the promotion for the rank 3 and something else for the rest:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:if</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$note.rank == 3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This note has been promoted.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is an ordinary note.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:if<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+<dl class="location location-bottom"><dt>3.7.11. opt:if<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.grid.html">&laquo; Previous</a><br/>3.7.10. opt:grid</dd><dd class="next"><a href="syntax.instructions.include.html">Next &raquo;</a><br/>3.7.12. opt:include</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

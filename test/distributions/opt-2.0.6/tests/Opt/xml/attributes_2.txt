@@ -1,0 +1,12 @@
+Check the correctness of attribute parsing.
+
+>>>>templates/test.tpl
+<foo>
+<tag attribute1="foo' />
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+Opt_XmlInvalidAttribute_Exception

@@ -1,0 +1,18 @@
+Check the backtick feature when it is enabled.
+
+>>>>templates/test.tpl
+{`test`}
+
+>>>>data.php
+function backtickHandler1($text)
+{
+	return strtoupper($text);
+} // end backtickHandler1();
+
+$this->tpl->backticks='backtickHandler1';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+TEST

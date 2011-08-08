@@ -1,0 +1,22 @@
+Testing the lower() function in the aggregate version.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@vars is lower($vars)}
+{@vars.v1}
+{@vars.v2}
+</opt:root>
+
+>>>>data.php
+$view->vars = array(
+	'v1' => 'HI UNIVERSE',
+	'v2' => 'Hi UnIvErSe'
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+hi universe
+hi universe

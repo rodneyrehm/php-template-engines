@@ -1,0 +1,17 @@
+The test checks the special var $sys a.k.a $opt a.k.a $system
+
+>>>>templates/test.tpl
+{$opt.const.SAMPLE_CONST}
+{$sys.const.SAMPLE_CONST}
+{$system.const.SAMPLE_CONST}
+
+>>>>data.php
+define('SAMPLE_CONST', 'foo');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+foo
+foo
+foo

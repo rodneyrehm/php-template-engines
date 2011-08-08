@@ -1,0 +1,19 @@
+Check the correctness of attribute parsing.
+
+>>>>templates/test.tpl
+<foo>
+<tag attribute1="foo" attribute2="bar" />
+<tag attribute3='foo' attribute4='bar' />
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+<tag attribute1="foo" attribute2="bar" />
+<tag attribute3="foo" attribute4="bar" />
+</foo>

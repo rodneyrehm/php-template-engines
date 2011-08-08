@@ -1,0 +1,23 @@
+The test checks the basic opt:attributes-build functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo opt:attributes-build="$input">
+bar
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->input = array(
+	'abc' => 'def',
+	'foo' => 'bar'
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo abc="def" foo="bar">
+bar
+</foo>

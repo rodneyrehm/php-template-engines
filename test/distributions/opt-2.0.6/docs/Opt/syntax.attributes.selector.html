@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:selector - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:selector</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.attributes.html">OPT attributes</a> &raquo; <a href="syntax.attributes.selector.html">opt:selector</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.attributes.html">3.8. OPT attributes</a><br/>3.8.9. opt:selector</dt><dd class="prev">3.8.8. opt:section<br/><a href="syntax.attributes.section.html">&laquo; Previous</a></dd><dd class="next">3.8.10. opt:single<br/><a href="syntax.attributes.single.html">Next &raquo;</a></dd></dl>	<h1>3.8.9. opt:selector</h1><blockquote class="help">
+  <p>This chapter describes one of section instructions. We recommend to read <a href="syntax.topics.sections.html" title="3.9.1. Sections">Sections</a> first to get to know more about them.</p>
+</blockquote>
+
+<p>This attribute applied to any tag changes it into a <a href="syntax.instructions.selector.html" title="3.7.20. opt:selector">selector</a> with the specified name. It allows to reduce the following code:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li</span> <span style="color: #000066;">opt:selector</span>=<span style="color: #ff0000;">&quot;list&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Layout 1: {$list.variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Layout 2: {$list.variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:joe<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Layout 3: {$list.variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:joe<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Instead:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:selector</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;list&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Layout 1: {$list.variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Layout 2: {$list.variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:joe<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Layout 3: {$list.variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:joe<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:selector<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The attribute has similar features, as <a href="syntax.attributes.section.html" title="3.8.8. opt:section">opt:section</a>.</p>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.selector.html">3.7.20. opt:selector</a></li><li><a href="syntax.attributes.section.html">3.8.8. opt:section</a></li><li><a href="syntax.topics.sections.html">3.9.1. Sections</a></li></ul><dl class="location location-bottom"><dt>3.8.9. opt:selector<br/><a href="syntax.attributes.html">3.8. OPT attributes</a></dt><dd class="prev"><a href="syntax.attributes.section.html">&laquo; Previous</a><br/>3.8.8. opt:section</dd><dd class="next"><a href="syntax.attributes.single.html">Next &raquo;</a><br/>3.8.10. opt:single</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

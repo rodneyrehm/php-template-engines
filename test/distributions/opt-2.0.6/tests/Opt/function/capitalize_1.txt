@@ -1,0 +1,15 @@
+Testing the capitalize() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{capitalize('hi universe')}
+{capitalize('Hi UnIvErSe')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Hi universe
+Hi UnIvErSe

@@ -1,0 +1,21 @@
+This test checks the basic component functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:component from="$component">
+<opt:set name="foo" str:value="bar" />
+{$system.component.foo}
+</opt:component>
+
+>>>>data.php
+
+$view->component = new myComponent;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+PARAM foo PASSED
+PARAM foo RETURNED
+bar

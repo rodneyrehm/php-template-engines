@@ -1,0 +1,21 @@
+Testing the nl2br() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{u:nl2br('text with a
+newline')}
+{u:nl2br('another text
+with more
+newlines')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+text with a<br />
+newline
+another text<br />
+with more<br />
+newlines

@@ -1,0 +1,10 @@
+The tests checks, if the attribute opt:capture throws an exception for invalid identifiers.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<p opt:capture="!f">foo</p>
+</opt:root>
+
+>>>>expected.txt
+Opt_InvalidAttributeType_Exception

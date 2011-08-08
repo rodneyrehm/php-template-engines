@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:extend - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:extend</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.extend.html">opt:extend</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.7. opt:extend</dt><dd class="prev">3.7.6. opt:dynamic<br/><a href="syntax.instructions.dynamic.html">&laquo; Previous</a></dd><dd class="next">3.7.8. opt:for<br/><a href="syntax.instructions.for.html">Next &raquo;</a></dd></dl>	<h1>3.7.7. opt:extend</h1><p><code>opt:extend</code> allows to use the template inheritance in your templates. It must be the root tag of the template, where we define the content. Any other location causes an exception. The instruction may take several attributes:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>file</td>
+  <td>Hard string</td>
+  <td>Yes</td>
+  <td align="left">The template to be extended with the current one</td>
+</tr>
+<tr>
+  <td>escaping</td>
+  <td>Option</td>
+  <td>No</td>
+  <td align="left">Escaping control.</td>
+</tr>
+<tr>
+  <td>dynamic</td>
+  <td>Option</td>
+  <td>No</td>
+  <td align="left">Do we allow dynamic inheritance for this template?</td>
+</tr>
+<tr>
+  <td>*</td>
+  <td>Hard string</td>
+  <td>No</td>
+  <td align="left">Alternative templates to be extended.</td>
+</tr>
+</tbody>
+</table>
+
+<p>The content of <code>opt:extend</code> may contain <code>opt:snippet</code> instructions only. Any other tags are ignored. The example below shows, how to use <code>opt:extend</code> and template inheritance:</p>
+
+<h6>homepage.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;layout.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Our website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Home page<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Welcome to our website!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>  
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h6>layout.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span><span style="color: #ddbb00;">&amp;copy;</span> Someone<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We can parse it with the following script:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #666666; font-style: italic;">// OPT initialization here</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'homepage.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">title</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Home page - Our Website'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">?&gt;</span></pre>
+
+<p>The result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Home page - Our Website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Our website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Home page<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Welcome to our website!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>  
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span><span style="color: #ddbb00;">&amp;copy;</span> Someone<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Our script template, <code>homepage.tpl</code> extends the <code>layout.tpl</code> that defines the basic HTML structure for the output and specifies the places, where to insert the header and the content. <code>homepage.tpl</code> fills these places with the proper content. Notice that the PHP script sees only <code>homepage.tpl</code> and does not have to know about <code>layout.tpl</code>. To get to know more about template inheritance in OPT, please read <a href="syntax.topics.modularization.inheritance.html" title="3.9.4.2. Template inheritance">this chapter</a>.</p>
+
+<p>OPT allows multiple inheritance, too.</p>
+
+<h2>Escaping control</h2>
+
+<p>Using the <code>escaping</code> attribute you may control the HTML escaping in the current template expressions. If it is not specified, OPT uses the default OPT settings. The value of this attribute is not a subject of inheritance:</p>
+
+<h6>template_a.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;template_b.tpl&quot;</span> <span style="color: #000066;">escaping</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Enabled escaping: {$htmlContent}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h6>template_b.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;template_c.tpl&quot;</span> <span style="color: #000066;">escaping</span>=<span style="color: #ff0000;">&quot;no&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Disabled escaping: {$htmlContent}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h6>template_c.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">escaping</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Enabled escaping: {$htmlContent}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>If the <code>$htmlContent</code> value is <code>A string with &lt;strong&gt;HTML&lt;/strong&gt;</code>, these templates will give us the following result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Enabled escaping: A string with <span style="color: #ddbb00;">&amp;lt;</span>strong<span style="color: #ddbb00;">&amp;gt;</span>HTML<span style="color: #ddbb00;">&amp;lt;</span>/strong<span style="color: #ddbb00;">&amp;gt;</span><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Disabled escaping: A string with <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;strong<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>HTML<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/strong<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Enabled escaping: A string with <span style="color: #ddbb00;">&amp;lt;</span>strong<span style="color: #ddbb00;">&amp;gt;</span>HTML<span style="color: #ddbb00;">&amp;lt;</span>/strong<span style="color: #ddbb00;">&amp;gt;</span><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>See <a href="syntax.expressions.escaping.html" title="3.5.7. HTML escaping">this chapter</a> to get to know more about HTML escaping.</p>
+
+<h2>Inheritance brances</h2>
+
+<p>The template does not have to extend a single file. We are allowed to define multiple <em>inheritance branches</em> - alternative groups of files to be extended. Suppose we are developing a website with two versions of the layout: full and simplified. The full layout displays the logos, menus etc. around the content. However, if someone wants to print our website, he probably does not want such stuff. In order not to write all the content templates twice for both of the layouts, we might define the <em>simple</em> branch, where the templates extend the simple layout file.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;standard_layout.tpl&quot;</span> <span style="color: #000066;">simple</span>=<span style="color: #ff0000;">&quot;simple_layout.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Message<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$message}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Now OPT may decide to use the standard layout (the default choice) or to follow the templates in <em>simple</em> branch. In this solution, the script still does not have to remember the name of <code>simple_layout.tpl</code> file.</p>
+
+<h3>For programmers</h3>
+
+<p>For each template, you may define any number of branches. To choose one, use the <a href="api.opt-view.set-branch.html" title="7.2.26. Opt_View::setBranch()">Opt_View::setBranch()</a> method from your view object. The <strong>NULL</strong> value means that we want to use the default files. OPT uses the following rules to choose the template to be extended:</p>
+
+<ul>
+<li>If the branch is not selected, use <code>file</code> attribute.</li>
+<li>If the programmer selected a branch that is not defined in the current template, use <code>file</code>.</li>
+<li>Use the branch attribute.</li>
+</ul>
+
+<h2>Dynamic template name</h2>
+
+<p>OPT processes the template inheritance during the template compilation, and this is the main reason why we are not able to read the template name from a variable, like <code>&lt;opt:extend file="'template_'~$tplId~.'.tpl'"&gt;</code>. However, the runtime dynamic inheritance is still possible. In the <code>opt:extend</code> tag we add the <code>dynamic</code> attribute set to "yes". Now the script can select the inherited template file name using <a href="api.opt-view.inherit.html" title="7.2.23. Opt_View::inherit()">Opt_View::inherit()</a> method. If the script does not provide any template, the default one is used:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;default_template.tpl&quot;</span> <span style="color: #000066;">dynamic</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ....
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>For programmers</h2>
+
+<p>From the script side, the inheritance chain is compiled as one, big file saved under the name of the top template. Such compilation requires significantly more memory and you must be sure that OPT will get enough resources to complete its tasks. If the script does not allocate too many objects or releases them earlier, the server with 16 MB should not cause problems. The estimated amount of memory required for the compilation process can be found in the debug console.</p>
+<h4>See also:</h4><ul><li><a href="syntax.topics.modularization.inheritance.html">3.9.4.2. Template inheritance</a></li></ul><dl class="location location-bottom"><dt>3.7.7. opt:extend<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.dynamic.html">&laquo; Previous</a><br/>3.7.6. opt:dynamic</dd><dd class="next"><a href="syntax.instructions.for.html">Next &raquo;</a><br/>3.7.8. opt:for</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

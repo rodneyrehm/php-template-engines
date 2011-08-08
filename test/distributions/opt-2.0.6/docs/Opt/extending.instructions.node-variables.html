@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Node and compiler variables - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Node and compiler variables</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.instructions.html">New instructions</a> &raquo; <a href="extending.instructions.node-variables.html">Node and compiler variables</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.instructions.html">5.8. New instructions</a><br/>5.8.7. Node and compiler variables</dt><dd class="prev">5.8.6. Using the data formats<br/><a href="extending.instructions.data-formats.html">&laquo; Previous</a></dd><dd class="next">5.8.8. Tips and tricks<br/><a href="extending.instructions.tips.html">Next &raquo;</a></dd></dl>	<h1>5.8.7. Node and compiler variables</h1><p>It is possible to store some values in any XML node. This feature is known as node variables and can be used for many purposes:</p>
+
+<ol>
+<li>Saving information for other instruction processors.</li>
+<li>Saving information for other part of the same instruction processors.</li>
+<li>Informing the compiler, how to process the node.</li>
+</ol>
+
+<p>The nodes are equipped with the methods <code>get()</code> and <code>set()</code>:</p>
+
+<pre class="php"><span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">set</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'value'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #b1b100;">echo</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<blockquote class="information">
+  <p>Accessing to the nonexistent variable causes the <code>get()</code> method to return <strong>NULL</strong>.</p>
+</blockquote>
+
+<p>The same methods are available in the <code>Opt_Compiler_Class</code> object.</p>
+
+<h3>Available node variables</h3>
+
+<p>The following node state variables are recognized by the template compiler:</p>
+
+<dl>
+<dt>cdata</dt>
+<dd>Type: Boolean</dd>
+
+<dd>Only in <code>Opt_Xml_Cdata</code> nodes.</dd>
+
+<dd>If this variable is set to <strong>true</strong>, the content of the node is enclosed within <code>&lt;![CDATA[</code> and <code>]]&gt;</code>.</dd>
+
+<dt>commented</dt>
+<dd>Type: Boolean</dd>
+
+<dd>If this variable is set to <strong>true</strong>, the entire node and its contents are enclosed within <code>&lt;!--</code> and <code>--&gt;</code>. The compiler correctly handles nested nodes with this flag enabled and does not produce nested XML comments.</dd>
+
+<dt>extend</dt>
+<dd>Type: String</dd>
+
+<dd>Only in <code>Opt_Xml_Root</code> node.</dd>
+
+<dd>The information for the compiler to extend the current template with the filename stored in this variable. Used to create the template inheritance.</dd>
+
+<dt>hidden</dt>
+<dd>Type: boolean</dd>
+
+<dd>If the node is hidden, it is skipped in the last compilation stage, linking the output file. Its contents do not appear in the final result. Initially, all the nodes are <strong>hidden</strong>; they are automatically converted to visible nodes during the processing, but you may do your own manipulations here.</dd>
+
+<dt>noEntitize</dt>
+<dd>Type: boolean</dd>
+
+<dd>Only in <code>Opt_Xml_Cdata</code> nodes.</dd>
+
+<dd>Causes the XML entities not to be parsed by the compiler.</dd>
+
+<dt>postprocess</dt>
+<dd>Type: boolean</dd>
+
+<dd>Informs the instruction processor handler, that the instruction processor must return to this node in the postprocess stage, after processing the node children. This flag can be applied only to the node that has been passed as an argument to the <code>processNode()</code> or <code>processAttribute()</code> method.</dd>
+
+<dt>single</dt>
+<dd>Type: boolean</dd>
+
+<dd>Only in <code>Opt_Xml_Element</code> nodes.</dd>
+
+<dd>Informs that this is a single XML element: <code>&lt;single /&gt;</code>. The node is rendered as single if it has no children and this variable is set to <strong>true</strong>.</dd>
+
+<dt>snippet</dt>
+<dd>Type: String</dd>
+
+<dd>Only in <code>Opt_Xml_Root</code> node.</dd>
+
+<dd>The information for the compiler to extend the current template with the contents of the specified snippet. Used to create the template inheritance.</dd>
+</dl>
+
+<p>Furthermore, the following conventions are used:</p>
+
+<dl>
+<dt><code>call:*</code></dt>
+<dd>The variable names beginning with <code>call:</code> are reserved for the instruction processors that want to store some state for a different instruction processor that could deal with the specified node.</dd>
+
+<dt><code>priv:*</code></dt>
+<dd>The variable names beginning with <code>priv:</code> are reserved for the instruction processor variables and <strong>should not</strong> be accessed or modified by other instruction processors and the compiler.</dd>
+</dl>
+
+<h3>Compiler variables</h3>
+
+<p>The following variables are available in the template compiler.</p>
+
+<dl>
+<dt>branch</dt>
+<dd>The template inheritance branch.</dd>
+
+<dt>currentTemplate</dt>
+<dd>Contains the currently parsed template name, including the templates loaded by the template inheritance.</dd>
+
+<dt>escape</dt>
+<dd>The current escaping state (enabled or disabled).</dd>
+
+<dt>mode</dt>
+<dd>The compilation mode (XML or quirks)</dd>
+
+<dt>template</dt>
+<dd>Contains the currently parsed top-level template name.</dd>
+</dl>
+<dl class="location location-bottom"><dt>5.8.7. Node and compiler variables<br/><a href="extending.instructions.html">5.8. New instructions</a></dt><dd class="prev"><a href="extending.instructions.data-formats.html">&laquo; Previous</a><br/>5.8.6. Using the data formats</dd><dd class="next"><a href="extending.instructions.tips.html">Next &raquo;</a><br/>5.8.8. Tips and tricks</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

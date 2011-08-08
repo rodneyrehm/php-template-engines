@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Components and forms - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Components and forms</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.components.html">Components and forms</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.html">4. Programmer's Guide</a><br/>4.10. Components and forms</dt><dd class="prev">4.9. Internationalization<br/><a href="guide.i18n.html">&laquo; Previous</a></dd><dd class="next">4.11. Caching<br/><a href="guide.cache.html">Next &raquo;</a></dd></dl>	<h1>4.10. Components and forms</h1><p>The components have been designed to help you building HTML forms. They provide a robust interface both on the script and template side to deal with this task. The basic ideas concerning components can be found in <a href="syntax.topics.components.html" title="3.9.3. Components">Syntax / Components</a> chapter and the guide to writing your own component classes - in <a href="extending.components.html" title="5.4. New components">Extending / Components</a>. Here we are going to show some practical techniques.</p>
+
+<h2>Component overview</h2>
+
+<p>The components offer you the following features:</p>
+
+<ul>
+<li>Displaying a particular form element.</li>
+<li>Managing the form element neighborhood look. This includes the field title, descriptions, error display fields etc.</li>
+<li>Managing the layout of the element.</li>
+<li>Generating various events, for example displaying the errors.</li>
+<li>Being created directly in the template.</li>
+<li>Being created by the script and deployed in the custom ports in the template.</li>
+</ul>
+
+<p>We assume that you have already read the documents mentioned above and have the basic knowledge, how they really work and how they look like.</p>
+
+<h2>A basic form</h2>
+
+<p>Below, we present a sample HTML form that asks the user for its name, surname and the age. We assume that we have the following components available:</p>
+
+<ol>
+<li><code>inputComponent</code> - <code>form:input</code></li>
+<li><code>textareaComponent</code> - <code>form:textarea</code></li>
+<li><code>selectComponent</code> - <code>form:select</code></li>
+</ol>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form</span> <span style="color: #000066;">method</span>=<span style="color: #ff0000;">&quot;post&quot;</span> <span style="color: #000066;">action</span>=<span style="color: #ff0000;">&quot;script.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:input</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;name&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:component-attributes</span>=<span style="color: #ff0000;">&quot;default&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;label</span> <span style="color: #000066;">parse:for</span>=<span style="color: #ff0000;">&quot;$system.component.name&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Name:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/label<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Error: {$system.component.error}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:input<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:input</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;surname&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:component-attributes</span>=<span style="color: #ff0000;">&quot;default&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;label</span> <span style="color: #000066;">parse:for</span>=<span style="color: #ff0000;">&quot;$system.component.name&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Surname:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/label<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Error: {$system.component.error}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:input<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:select</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;age&quot;</span> <span style="color: #000066;">datasource</span>=<span style="color: #ff0000;">&quot;$availableAges&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:component-attributes</span>=<span style="color: #ff0000;">&quot;default&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;label</span> <span style="color: #000066;">parse:for</span>=<span style="color: #ff0000;">&quot;$system.component.name&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Your age:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/label<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Error: {$system.component.error}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:select<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We may run it with the following code:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// The configuration</span>
+<span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// ...</span>
+&nbsp;
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span>Opt_Class<span style="color: #339933;">::</span><span style="color: #004000;">OPT_NAMESPACE</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'form'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span>Opt_Class<span style="color: #339933;">::</span><span style="color: #004000;">OPT_COMPONENT</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'form:input'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'inputComponent'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span>Opt_Class<span style="color: #339933;">::</span><span style="color: #004000;">OPT_COMPONENT</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'form:textarea'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'textareaComponent'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span>Opt_Class<span style="color: #339933;">::</span><span style="color: #004000;">OPT_COMPONENT</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'form:select'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'selectComponent'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setup</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// The script</span>
+&nbsp;
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'my_form.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">availableAges</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #cc66cc;">0</span> <span style="color: #339933;">=&gt;</span>
+    <span style="color: #0000ff;">'Under 10'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'10 - 18'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'19 - 25'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'25 - 35'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'35 - 50'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'50 - 65'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'Above 65'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// The composition of the output document, executing etc. here</span></pre>
+
+<p>As you can see, the component classes can be registered in OPT and receive their own XML tags. As we have chosen the <code>form</code> namespace for them, we must register the namespace, too, so that OPT knows that it must parse it. The rest depends on the component source code - they may be smart enough to import most of the necessary settings, including the validation result, from the form processing library, using the name provided as the <code>name</code> attribute.</p>
+
+<p>However, we see that the template is quite long and these are just three form fields! Fortunately, thanks to snippets, we may write only one, universal field structure and use it across all our forms. Let's create the <code>snippets.tpl</code> file:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;formField&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:component-attributes</span>=<span style="color: #ff0000;">&quot;default&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;label</span> <span style="color: #000066;">parse:for</span>=<span style="color: #ff0000;">&quot;$system.component.name&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$system.component.title}: <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/label<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Error: {$system.component.error}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Then, we insert the snippet to the component ports:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">include</span>=<span style="color: #ff0000;">&quot;snippets.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form</span> <span style="color: #000066;">method</span>=<span style="color: #ff0000;">&quot;post&quot;</span> <span style="color: #000066;">action</span>=<span style="color: #ff0000;">&quot;script.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:input</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;name&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Name&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:input<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:input</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;surname&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Surname&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:input<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:select</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;age&quot;</span> <span style="color: #000066;">datasource</span>=<span style="color: #ff0000;">&quot;$availableAges&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">str:name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Your age&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:select<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The code in the snippet is automatically merged with the ports. If we wish to modify the overall look of the form fields, we just modify the <code>snippets.tpl</code> file. Please note that we have not modified any line of the PHP code. With Open Power Template, the script does not have to deal with the view issue, like in many PHP frameworks. The template engine gives you all the necessary tools to build even very complex forms.</p>
+
+<h2>Dynamic forms</h2>
+
+<p>The components do not have to be statically deployed all the time. As the component logic is a PHP object, our form processor may generate such objects for each field in the form and put them into a section:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">include</span>=<span style="color: #ff0000;">&quot;snippets.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form</span> <span style="color: #000066;">method</span>=<span style="color: #ff0000;">&quot;post&quot;</span> <span style="color: #000066;">action</span>=<span style="color: #ff0000;">&quot;script.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;fields&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:component</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$fields.component&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The PHP script manages the components chosen to represent the form elements, but the template still has the control over the field layout thanks to the snippet. More advanced solution may allow to assign the fields to various containers, so that we could have different sections for each of the container and different layouts:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">include</span>=<span style="color: #ff0000;">&quot;snippets.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form</span> <span style="color: #000066;">method</span>=<span style="color: #ff0000;">&quot;post&quot;</span> <span style="color: #000066;">action</span>=<span style="color: #ff0000;">&quot;script.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;container1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:component</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$container1.component&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField_TypeA&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;container2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:component</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$container2.component&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField_TypeB&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>If we have a field that needs a custom treatment, we may still define it manually:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">include</span>=<span style="color: #ff0000;">&quot;snippets.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form</span> <span style="color: #000066;">method</span>=<span style="color: #ff0000;">&quot;post&quot;</span> <span style="color: #000066;">action</span>=<span style="color: #ff0000;">&quot;script.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;container1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:component</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$container1.component&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField_TypeA&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:textarea</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;content&quot;</span> <span style="color: #000066;">opt:component-attributes</span>=<span style="color: #ff0000;">&quot;default&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;wysiwyg&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                    <span style="color: #808080; font-style: italic;">&lt;!-- some WYSIWYG buttons here --&gt;</span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Error: {$system.component.error}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;anotherEvent&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                    <span style="color: #808080; font-style: italic;">&lt;!-- some code here --&gt;</span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:textarea<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;container2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:component</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$container2.component&quot;</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;formField_TypeB&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Complex form technical issues</h2>
+
+<p>In the last example, one of the components used in the form was statically deployed. The static deployment means that the component object is created on the template-side. Our components should be prepared for that. Usually, we would also export the whole form object or its data to the template, and such component could find and load them automatically in <code>setView()</code> method:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> inputComponent implements Opt_Component_Interface
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_initialized</span> <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_name</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">''</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> __construct<span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">''</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/is_string"><span style="color: #990000;">is_string</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #666666; font-style: italic;">// Created explicitely by the user or by the template engine</span>
+            <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_initialized <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+            <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_name <span style="color: #339933;">=</span> <span style="color: #000088;">$name</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+        <span style="color: #b1b100;">elseif</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/is_array"><span style="color: #990000;">is_array</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #666666; font-style: italic;">// Passing an array is a signal that the component has been created</span>
+            <span style="color: #666666; font-style: italic;">// By the form processor factory:</span>
+            <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">initialize</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+&nbsp;
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end __construct();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> setView<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_initialized <span style="color: #339933;">&amp;&amp;</span> <span style="color: #339933;">!</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">defined</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'form'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            throw <span style="color: #000000; font-weight: bold;">new</span> Exception<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'The component is not initialized!'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// sure, why not exceptions?</span>
+        <span style="color: #009900;">&#125;</span>
+&nbsp;
+        <span style="color: #666666; font-style: italic;">// Feed the component with the data obtained from the</span>
+        <span style="color: #666666; font-style: italic;">// form processor obtained from the view object just</span>
+        <span style="color: #666666; font-style: italic;">// before the deployment. This is the last chance.</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_initialized<span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #000088;">$form</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'form'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+            <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">initialize</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$form</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getFieldData</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_name<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end setView();</span>
+&nbsp;
+    <span style="color: #009933; font-style: italic;">/**
+     * This method is not included in the Opt_Component_Interface.
+     * Our form processor could use it to feed the component with the
+     * necessary data.
+     */</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> initialize<span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">Array</span></a> <span style="color: #000088;">$array</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// some code here...</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end initialize();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end inputComponent;</span></pre>
+
+<p>There is also another technique available, but it involves creating new instructions. Even more advanced form processors could have their own abstraction layer created over the <code>&lt;form&gt;</code> tag, for example <code>&lt;opt:form&gt;</code> that automatically integrates with the PHP form object created by the script and generates the necessary attributes. In this situation, the <code>&lt;opt:form&gt;</code> instruction processor is also allowed to modify the default compiler behavior of the static component deployment.</p>
+
+<blockquote class="information">
+  <p>The component processor registers several possible conversions for the component deployment code. Instead of creating a new component object, the static deployment tag: <code>&lt;form:input&gt;</code> etc. <strong>can</strong> refer to the form processor factory object. The template code is not affected, but becomes even more flexible.</p>
+</blockquote>
+
+<p>So, as we have the instruction processor (see <a href="extending.instructions.html" title="5.8. New instructions">Extending / Instructions</a> to get to know, how to write them), we may add some extra code to it that will call the form processor factory method instead of creating a new object:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> Opt_Instruction_Form <span style="color: #000000; font-weight: bold;">extends</span> Opt_Compiler_Processor
+<span style="color: #009900;">&#123;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// the rest of the instruction processing code goes here</span>
+        <span style="color: #666666; font-style: italic;">// ...</span>
+&nbsp;
+        <span style="color: #666666; font-style: italic;">// replace the standard deployment with our code:</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_compiler<span style="color: #339933;">-&gt;</span><span style="color: #004000;">setConversion</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'##component'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'$_form-&gt;componentFactory(\'%CLASS%\', \'%TAG%\', %ATTRIBUTES%)'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">set</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'postprocess'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_process<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode(); </span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> postprocessNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// Do not forget to remove the conversion outside the opt:form tag!</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_compiler<span style="color: #339933;">-&gt;</span><span style="color: #004000;">unsetConversion</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'##component'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end postprocessNode();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opt_Instruction_Form;</span></pre>
+
+<p>As the compiler generates the PHP code, our conversion pattern contains the new PHP code that should get us the component. Of course, the <code>componentFactory()</code> method must be implemented in the form processor class. The code uses some placeholders defined by the component processor:</p>
+
+<ol>
+<li><code>%CLASS%</code> - the component class name.</li>
+<li><code>%TAG%</code> - the component tag name.</li>
+<li><code>%ATTRIBUTES%</code> - the PHP code of the associative array that contains custom component port attributes.</li>
+</ol>
+
+<p>They can help the factory method to identify, what component object should be returned.</p>
+
+<blockquote class="help">
+  <p>The conversion can be also applied for a single component class only. Moreover, the same trick works for blocks, too.</p>
+</blockquote>
+
+<h2>Conclusion</h2>
+
+<p>As you can see, the components give us new opportunities of the form layout management. The code is very simple, portable and scalable: it can handle both the simplest and the most complex form structures without bigger problems. Compare it to the various solutions found in popular PHP frameworks, where we were in trouble unless we followed the path determined by the developers. Furthermore, the modularization techniques use the basic OPT features, such as snippets (note: template inheritance uses them, too! Think about combining the forms and the template inheritance!). This is another advantage over pure PHP-based solutions.</p>
+<h4>See also:</h4><ul><li><a href="syntax.topics.components.html">3.9.3. Components</a></li><li><a href="extending.components.html">5.4. New components</a></li></ul><dl class="location location-bottom"><dt>4.10. Components and forms<br/><a href="guide.html">4. Programmer's Guide</a></dt><dd class="prev"><a href="guide.i18n.html">&laquo; Previous</a><br/>4.9. Internationalization</dd><dd class="next"><a href="guide.cache.html">Next &raquo;</a><br/>4.11. Caching</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

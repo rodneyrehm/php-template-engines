@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:section - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:section</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.section.html">opt:section</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.19. opt:section</dt><dd class="prev">3.7.18. opt:root<br/><a href="syntax.instructions.root.html">&laquo; Previous</a></dd><dd class="next">3.7.20. opt:selector<br/><a href="syntax.instructions.selector.html">Next &raquo;</a></dd></dl>	<h1>3.7.19. opt:section</h1><blockquote class="help">
+  <p>This chapter describes one of section instructions. We recommend to read <a href="syntax.topics.sections.html" title="3.9.1. Sections">Sections</a> first to get to know more about them.</p>
+</blockquote>
+<p><code>opt:section</code> is the basic section instruction used to display flat, linear lists and supports all the section basic features. Inside the <code>opt:section</code> we define the layout of a single list element:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$categories.name}, {$categories.productCount}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Empty lists</h2>
+
+<p>We may define the optional content to be displayed if the list is empty with the <code>opt:sectionelse</code> tag:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$categories.namae}, {$categories.productCount}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:sectionelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry, there are no categories in the system.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:sectionelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p><code>opt:sectionelse</code> must be located directly within <code>opt:section</code>, but it is up to you, whether you put it before or after the content.</p>
+
+<p><code>opt:sectionelse</code> is disabled, if the section is used together with <code>opt:show</code>. In this case, the alternative message can be declared with <code>opt:showelse</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$categories.name}, {$categories.productCount}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry, there are no categories in the system.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.tree.html">3.7.25. opt:tree</a></li><li><a href="syntax.instructions.grid.html">3.7.10. opt:grid</a></li><li><a href="syntax.instructions.selector.html">3.7.20. opt:selector</a></li><li><a href="syntax.instructions.show.html">3.7.22. opt:show</a></li><li><a href="syntax.instructions.separator.html">3.7.21. opt:separator</a></li><li><a href="syntax.attributes.section.html">3.8.8. opt:section</a></li></ul><dl class="location location-bottom"><dt>3.7.19. opt:section<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.root.html">&laquo; Previous</a><br/>3.7.18. opt:root</dd><dd class="next"><a href="syntax.instructions.selector.html">Next &raquo;</a><br/>3.7.20. opt:selector</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

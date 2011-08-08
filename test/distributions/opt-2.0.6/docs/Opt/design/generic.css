@@ -1,0 +1,176 @@
+/*
+  --------------------------------------------------------------------
+                           TypeFriendly
+              Copyright (c) 2008-2010 Invenzzia Team
+                    http://www.invenzzia.org/
+                See README for more author details
+  --------------------------------------------------------------------
+  This file is part of TypeFriendly.
+
+  TypeFriendly is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  TypeFriendly is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with TypeFriendly. If not, see <http://www.gnu.org/licenses/>.
+*/
+/* $Id: generic.css 68 2010-01-16 11:11:50Z extremo $ */
+
+/* CSS RESET */
+body {color: black; background: white;}
+a {color: black; text-decoration: none;}
+body, div, dl, dt, dd, li, pre,
+form, fieldset, input, textarea, p, blockquote, th, td {margin: 0; padding: 0;}
+h1, h2, h3, h4, h5, h6, td {margin: 0; padding: 0; font-size: 100%; font-weight: normal;}
+address, caption, cite, code, dfn, var {font-style: normal; font-weight: normal;}
+ol, ul {list-style: none; margin: 0; padding: 0;}
+pre, code {font-size: 100%; font-family: inherit;}
+table {border-collapse: collapse; border-spacing: 0;} 
+caption, th {text-align: left; font-weight: normal; font-style: normal;}
+acronym, abbr, fieldset, img {border: 0;}
+:focus {outline: 0;}
+
+/* DESIGN */
+body {font-family: Tahoma, Helvetica, sans-serif; font-size: 14px; padding: 10px; background: #d4dec0 url(body-bg.gif) repeat-x; color: #555555;}
+
+#wrap {margin: 0 auto; border: 5px solid #c4d69f; min-width: 760px; background: #ffffff; max-width: 1000px;}
+
+#header {position: relative; padding-top: 60px; background: #d5f19c url(header-h1-bg.gif) repeat-x; margin:3px;}
+#header h1 {position: absolute; line-height: 60px; top: 0; right: 10px; color:#5e6f2c; text-shadow: #ffffff 0 0 8px; font-size: 20pt; font-weight: bold;}
+#header h2 {position: absolute; line-height: 60px; top: 0; left: 0; padding-left: 10px; text-shadow: #ffffff 1px 1px 2px; font-size: 16pt; font-weight: normal; letter-spacing: -1px;}
+#header p {line-height: 25px; padding-left: 10px; color:#acb886; background:#f4ffd1; border-top: 3px solid #ffffff; font-size: 12px;}
+#header p a {color: #5b6a2d;}
+#header p a:hover {text-decoration: underline;}
+#header p.generated {font-size: 11px; text-align: right; background: none; position: absolute; right: 0; bottom: 0; border-top-width:1px; padding-right: 10px;}
+#footer {position: relative;  background: #eef4da; margin:3px; color:#91977f; font-size: 10pt; text-align: center; padding: 5px 0;}
+#footer a {font-weight: bold; color: #8e9a75;}
+#footer a:hover {text-decoration:underline;}
+
+/* CHAPTER NAVIGATION */
+#content dl.location {position: relative; border-color: #d1f1c1; border-style: solid; margin-bottom: 20px; border-width: 0 0 3px 0; height:50px; line-height:20px; font-weight: bold;}
+#content dl.location a {font-weight: normal;}
+#content dl.location dt {text-align: center; margin:0; padding: 5px 0; font-size: 14px;}
+#content dl.location dt a {position: static; display: inline;}
+#content dl.location dd {position: absolute; top: 0; margin:0; padding: 5px 0; background: none !important;}
+#content dl.location-bottom {border-top-width: 3px; border-bottom-width: 0; margin-top: 20px; margin-bottom: 0;}
+#content dl.location-middle {border-top-width: 3px; border-bottom-width: 0; background-color: #E0FFBC; margin: 25px -10px 0 -10px;}
+#content dl.location dd a{}
+#content dl.location dd.prev {left:0; text-align: left;}
+#content dl.location dd.next {right:0; text-align: right;}
+#content dl.location-middle dd.prev {left: 10px;}
+#content dl.location-middle dd.next {right: 10px;}
+#content dl.location hr {display: none; background-color: #d1f1c1; height:3px; border-color:#d1f1c1; color:#d1f1c1;}
+
+/* GeSHi COLORS */
+.kw1 {color:#ff00ff;}
+.kw2 {color:#000000; font-weight:bold;}
+.kw3 {color:#006F08;}
+.kw4 {color:#f63333;}
+.co1, .co2, .coMULTI {color:#808080;}
+.es0 {color:#000033;}
+.br0 {color:#ff0000;}
+.st0 {color:#0000ff;}
+.nu0 {color:#ffff00;}
+.me0 {color:#006600;}
+.sc3 {color:#339933;}
+.rel {color:#ff0000;}
+
+/* MARKDOWN */
+#content {margin: 10px; font-size: 14px; line-height: 145%;}
+
+#content h1 {font-size: 24px; line-height: 26px; font-weight: bold; letter-spacing: -1px; font-family: Arial, Helvetica, sans-serif; margin: 10px 0 10px 0; color: #2e5727; border-bottom: 1px solid #c4f58a; padding-bottom: 4px;}
+#content h2 {font-size: 20px; line-height: 22px; font-weight: bold; letter-spacing: -1px; font-family: Arial, Helvetica, sans-serif; margin: 20px 0 10px 0; color: #333333; border-bottom: 1px solid #dddddd; padding-bottom: 2px;}
+#content h3 {font-size: 18px; line-height: 20px; font-weight: bold; letter-spacing: -1px; font-family: Arial, Helvetica, sans-serif; margin: 15px 0 10px 0; color: #111111; border-bottom: 1px solid #eeeeee; padding-bottom: 2px;}
+#content h4 {font-size: 16px; line-height: 18px; font-weight: bold; margin: 10px 0; font-family: Arial, Helvetica, sans-serif; color: #111111;}
+#content h5 {font-size: 14px; line-height: 16px; font-weight: bold; margin: 10px 0; font-family: Arial, Helvetica, sans-serif; color: #111111;}
+#content h6 {font-size: 12px; line-height: 14px; font-weight: bold; margin: 10px 0; font-family: Arial, Helvetica, sans-serif; color: #111111;}
+#content h1 a {border:none;}
+#content h2 a {border:none; color: #333333;}
+#content h3 a {text-decoration: underline; border:none; color: #333333;}
+
+#content p {margin: 10px 0; text-align: justify;}
+#content a {color: #669900; /*padding-right: 18px; background: url(jump.gif) no-repeat 100% 50%;*/}
+#content a:hover {/*color: #8d1414;*/ border-bottom: 1px solid #6faf00;}
+#content a:hover code {background: none;}
+#content hr {color: #444444; background-color: #444444; height: 1px; border: none;}
+#content dl {margin: 10px 0;}
+#content dl dt {font-weight: bold; font-size: 95%; margin: 5px 0 0 0; position: relative;}
+#content dl dt + dt {margin: -2px 0 0 0;}
+#content dl dt a {border: none; position: absolute; display: block; top:-2px; right: 5px; font-weight: bold;}
+#content dl dd {margin-left: 0; padding-left: 25px; background: url(jump.gif) no-repeat 5px 3px;}
+#content ul {list-style: disc; margin: 10px 0 10px 30px;}
+#content ul.toc {list-style: none; margin-left: 20px;}
+#content ol {list-style: decimal; margin: 10px 0 10px 40px;}
+#content code {padding: 1px 2px; background: #feffee;}
+/* #content code a, #content pre a {color: #3a9900;  padding-right: 18px; background: url(jump.gif) no-repeat 100% 50%;}
+#content code a:hover, #content pre a:hover {border:none; color:#8d1414;}    */
+#content div.pre {}
+#content pre {overflow: auto; white-space: pre-wrap; letter-spacing: 0; margin:10px 0; background: #f4f4f4; padding: 3px 7px;}
+#content pre code {background: none !important; padding: 0;}
+#content pre.console {background: #333333; color: #ffffff;}
+#content pre,
+#content code {font-size: 100%; font-family: Consolas, 'Lucida Console', 'Courier New', courier, monospaced;}
+
+#content dl dt code {font-weight: bold;}
+#content h2 code, #content h3 code, #content h4 code, #content h5 code, #content h6 code {font-weight: bold;}
+
+#content a[rel="footnote"] {font-size: 12px; line-height: 100%; padding: 0 1px;}
+#content div.footnotes {font-size: 13px;}
+#content div.footnotes hr {color: #69A540; background-color: #69A540;}
+#content div.footnotes li hr {color: #444444; background-color: #444444;}
+#content div.footnotes dl dd {background-position: 5px 2px;}
+#content div.footnotes table td, #content div.footnotes table th {font-size: 13px;}
+
+#content table {margin: 10px 0; width: 100%;}
+#content table caption {margin: 0; text-align: center; font-weight: bold; font-size: 120%; line-height: 180%;}
+#content table thead {}
+#content table tbody {}
+#content table tr {text-align: center;}    
+#content table td, #content table th {padding: 4px 7px; border: 1px solid #999999; font-size: 14px;}
+#content table td {background: #ffffff;}
+#content table th {background: #e4f7bd; text-align: center; font-weight: bold; color: #657926;}
+
+#content blockquote {border: none; padding: 1px 0 1px 20px; margin: 10px 5px 10px 10px; background: transparent; border-left: 3px solid #d1f1c1;}
+
+#content blockquote.error,
+#content blockquote.help,
+#content blockquote.important,
+#content blockquote.information,
+#content blockquote.steps,
+#content blockquote.stop,
+#content blockquote.warning {margin: 10px 0 10px 0; padding: 1px 10px 1px 40px; background-repeat: no-repeat; background-position: 8px 10px; background-color: #fffff0; border: 1px solid #eeef9f;}
+#content blockquote.error code,
+#content blockquote.help code,
+#content blockquote.important code,
+#content blockquote.information code,
+#content blockquote.steps code,
+#content blockquote.stop code,
+#content blockquote.warning code {background-color: #f5f5dc;}
+
+#content blockquote.error {background-image: url(icon-error.gif);}
+#content blockquote.help {background-image: url(icon-help.gif);}
+#content blockquote.important {background-image: url(icon-important.gif);}
+#content blockquote.information {background-image: url(icon-information.gif);}
+#content blockquote.steps {background-image: url(icon-steps.gif);}
+#content blockquote.stop {background-image: url(icon-stop.gif);}
+#content blockquote.warning {background-image: url(icon-warning.gif);}
+
+#content div.tf_reference {font-size: 13px;/* background: #fafafa;*/ margin: 10px 0 20px 0; /*padding: 10px;*/}
+#content div.tf_reference p {margin: 0;}
+#content div.tf_reference hr {display: none;}
+#content div.tf_reference table {}
+#content div.tf_reference table td {text-align: left; width: 100%}
+#content div.tf_reference table th {text-align: left; background: transparent; color: #000000; white-space: nowrap;}
+#content div.tf_reference table td, #content div.tf_reference table th {border-width: 0 0 2px 0; border-color: #eeeeee; padding-top: 2px; padding-bottom: 2px; vertical-align: top; font-size: 13px;}
+#content div.tf_reference dl {margin: 0;}
+#content div.tf_reference dl dt a {position: static; display: inline; top:auto; right: auto; font-weight: bold;}
+#content div.tf_reference dl dt {color: #888888;}
+#content div.tf_reference dl dt code {color: #444444;}
+#content div.tf_reference dl dt small {}
+#content div.tf_reference dl dt {margin: 0}

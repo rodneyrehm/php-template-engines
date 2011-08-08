@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Function reference - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Function reference</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.functions.html">Function reference</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.html">3. Template syntax</a><br/>3.6. Function reference</dt><dd class="prev">3.5.7. HTML escaping<br/><a href="syntax.expressions.escaping.html">&laquo; Previous</a></dd><dd class="next">3.6.1. absolute()<br/><a href="syntax.functions.absolute.html">Next &raquo;</a></dd></dl>	<h1>3.6. Function reference</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="syntax.functions.absolute.html">3.6.1. absolute()</a></li><li><a href="syntax.functions.auto-link.html">3.6.2. autoLink()</a></li><li><a href="syntax.functions.average.html">3.6.3. average()</a></li><li><a href="syntax.functions.capitalize.html">3.6.4. capitalize()</a></li><li><a href="syntax.functions.contains.html">3.6.5. contains()</a></li><li><a href="syntax.functions.contains-key.html">3.6.6. containsKey()</a></li><li><a href="syntax.functions.count.html">3.6.7. count()</a></li><li><a href="syntax.functions.count-chars.html">3.6.8. countChars()</a></li><li><a href="syntax.functions.count-substring.html">3.6.9. countSubstring()</a></li><li><a href="syntax.functions.count-words.html">3.6.10. countWords()</a></li><li><a href="syntax.functions.cycle.html">3.6.11. cycle()</a></li><li><a href="syntax.functions.date.html">3.6.12. date()</a></li><li><a href="syntax.functions.entity.html">3.6.13. entity()</a></li><li><a href="syntax.functions.firstof.html">3.6.14. firstof()</a></li><li><a href="syntax.functions.indent.html">3.6.15. indent()</a></li><li><a href="syntax.functions.is-image.html">3.6.16. isImage()</a></li><li><a href="syntax.functions.is-url.html">3.6.17. isUrl()</a></li><li><a href="syntax.functions.lower.html">3.6.18. lower()</a></li><li><a href="syntax.functions.money.html">3.6.19. money()</a></li><li><a href="syntax.functions.nl2br.html">3.6.20. nl2br()</a></li><li><a href="syntax.functions.number.html">3.6.21. number()</a></li><li><a href="syntax.functions.pad.html">3.6.22. pad()</a></li><li><a href="syntax.functions.pluralize.html">3.6.23. pluralize()</a></li><li><a href="syntax.functions.position.html">3.6.24. position()</a></li><li><a href="syntax.functions.range.html">3.6.25. range()</a></li><li><a href="syntax.functions.regex-replace.html">3.6.26. regexReplace()</a></li><li><a href="syntax.functions.replace.html">3.6.27. replace()</a></li><li><a href="syntax.functions.scalar.html">3.6.28. scalar()</a></li><li><a href="syntax.functions.spacify.html">3.6.29. spacify()</a></li><li><a href="syntax.functions.stddev.html">3.6.30. stddev()</a></li><li><a href="syntax.functions.strip.html">3.6.31. strip()</a></li><li><a href="syntax.functions.strip-tags.html">3.6.32. stripTags()</a></li><li><a href="syntax.functions.sum.html">3.6.33. sum()</a></li><li><a href="syntax.functions.truncate.html">3.6.34. truncate()</a></li><li><a href="syntax.functions.upper.html">3.6.35. upper()</a></li><li><a href="syntax.functions.wordwrap.html">3.6.36. wordWrap()</a></li></ul><p>In this chapter, the available functions are described.</p>
+
+<p>In OPT, all the functions that operate on the specified value, take it always as the first parameter, even if their equivalent in PHP requires it as the last one!</p>
+
+<h2>Function data</h2>
+
+<p>Unlike PHP, many functions may operate both on a single value and a container of values. In the second case, the function is applied to all of the container elements:</p>
+
+<pre class="xml">&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>A formatted, single value: {money($profits.corporation)}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>The function used on the container:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+{@formattedProfits are money($profits)}
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Corporation customer profits: {@formattedProfits.corporation}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Individual customer profits: {@formattedProfits.individual}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Training profits: {@formattedProfits.training}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The function result is returned and must be saved to another variable in order to be used or passed to another function.</p>
+
+<h2>OPT and Unicode</h2>
+
+<p>The available functions are not designed for any particular character encoding due to the planned support for Unicode in PHP6. If you want to use UTF-8 with PHP 5.x, you have to be patient or write your own versions of the functions. We will try to release an optional set of UTF-ready functions as a plugin before releasing the first stable OPT version.</p>
+<h4>See also:</h4><ul><li><a href="syntax.expressions.functions.html">3.5.4. Functions</a></li></ul><dl class="location location-bottom"><dt>3.6. Function reference<br/><a href="syntax.html">3. Template syntax</a></dt><dd class="prev"><a href="syntax.expressions.escaping.html">&laquo; Previous</a><br/>3.5.7. HTML escaping</dd><dd class="next"><a href="syntax.functions.absolute.html">Next &raquo;</a><br/>3.6.1. absolute()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

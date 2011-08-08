@@ -1,0 +1,30 @@
+Testing the pluralize() function with custom rules (Polish).
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{pluralize(0, 'uzytkownik', 'uzytkownicy', 'uzytkownikow')}
+{pluralize(1, 'uzytkownik', 'uzytkownicy', 'uzytkownikow')}
+{pluralize(2, 'uzytkownik', 'uzytkownicy', 'uzytkownikow')}
+{pluralize(5, 'uzytkownik', 'uzytkownicy', 'uzytkownikow')}
+{pluralize(10, 'uzytkownik', 'uzytkownicy', 'uzytkownikow')}
+{pluralize(100, 'uzytkownik', 'uzytkownicy', 'uzytkownikow')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$this->tpl->pluralForms = array(
+	'%d == 0 || %d > 4' => 2,
+	'%d == 1' => 0,
+	'%d' => 1
+);
+
+>>>>result.txt
+uzytkownikow
+uzytkownik
+uzytkownicy
+uzytkownikow
+uzytkownikow
+uzytkownikow

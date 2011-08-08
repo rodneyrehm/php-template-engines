@@ -1,0 +1,19 @@
+Testing the scalar() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:if test="scalar($value1)">OK<opt:else>FAIL</opt:else></opt:if>
+<opt:if test="scalar($value2)">OK<opt:else>FAIL</opt:else></opt:if>
+</opt:root>
+
+>>>>data.php
+$view->value1 = 'foo';
+$view->value2 = array();
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+OK
+FAIL

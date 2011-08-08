@@ -1,0 +1,43 @@
+Testing section special variable
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:section name="sect">
+TESTING: {$sect.val1}
+{$system.section.sect.count},{$system.section.sect.size}
+{$system.section.sect.iterator}
+<opt:if test="$system.section.sect.first">FIRST</opt:if>
+<opt:if test="$system.section.sect.last">LAST</opt:if>
+<opt:if test="$system.section.sect.extreme">EXTREME</opt:if>
+</opt:section>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+TESTING: A
+4,1
+0
+FIRST
+EXTREME
+TESTING: B
+4,1
+1
+TESTING: C
+4,1
+2
+TESTING: D
+4,1
+3
+LAST
+EXTREME
+
+>>>>data.php
+$view->sect = array(
+	array('val1' => 'A'),
+	array('val1' => 'B'),
+	array('val1' => 'C'),
+	array('val1' => 'D'),
+);

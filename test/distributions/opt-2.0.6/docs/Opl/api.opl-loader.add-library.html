@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>addLibrary() - Open Power Libs</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Libs 2.0</h1>
+		<h2>addLibrary()</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API reference</a> &raquo; <a href="api.opl-loader.html">Opl_Loader</a> &raquo; <a href="api.opl-loader.add-library.html">Opl_Loader::addLibrary()</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.opl-loader.html">4.5. Opl_Loader class</a><br/>4.5.1. addLibrary()</dt><dd class="prev">4.5. Opl_Loader class<br/><a href="api.opl-loader.html">&laquo; Previous</a></dd><dd class="next">4.5.2. autoload()<br/><a href="api.opl-loader.autoload.html">Next &raquo;</a></dd></dl>	<h1>4.5.1. addLibrary()</h1><div class="tf_reference"><table><tr><th>Construct</th><td>Static method</td></tr><tr><th>Visibility</th><td>public</td></tr><tr><th>Reference</th><td><code>void addLibrary(string $library, array $config);</code></td></tr><tr><th>Argument list</th><td><dl><dt><code>$library</code> <small>- string</small></dt><dd>The library name and prefix of its classes.</dd><dt><code>$config</code> <small>- array</small></dt><dd>The library configuration.</dd></dl></td></tr><tr><th>Versions</th><td>since <code>2.0-RC1</code></td></tr>
+</table><hr/></div><p>Adds the specific settings for the library <code>$library</code>. The rules will be applied to all the classes beginning with the prefix <code>$library</code>. The allowed settings are:</p>
+
+<ul>
+<li><code>directory</code> - the library may be located elsewhere than the main location.</li>
+<li><code>handler</code> - the library may use a custom autoloading handler to deal with specific needs. If we do not want to use any handler with the library, this option should be set to <strong>null</strong>. If the option is not defined, the default handler is used.</li>
+</ul>
+
+<blockquote class="warning">
+  <p>By default, the autoloader uses the OPL handler. If you are going to use the autoloader with non-OPL libraries, you should disable it for them.</p>
+</blockquote>
+
+<pre class="php">Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Foo'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'directory'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./foo'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'handler'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'myHandlerFunction'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">load</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Foo_Class'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The example above will load the <code>Foo_Class</code> source code from the <code>./foo/</code> directory and use the <code>myHandlerFunction</code> to deal with some specific autoloading needs.</p>
+
+<h2>Library handlers</h2>
+
+<p>The standard autoloader converts the class name to the file name by replacing the underscores with the directory separator and adding the <code>.php</code> file extension. However, some libraries may have some specific needs. For example, in OPL the autoloader must perform the following extra actions:</p>
+
+<ul>
+<li>To load the PHP 5.2 compatibility layer.</li>
+<li>To load the library main file.</li>
+<li>The exception classes are stored in one big file.</li>
+</ul>
+
+<p>Such needs are supported with external handlers. If your library needs one, with this method you can add it. The handler must be an ordinary function or class method:</p>
+
+<pre><code>boolean autoloadingHandler(string $library, string $className)
+</code></pre>
+
+<p>The method must return <strong>true</strong>, if the autoloader should still load the file using the standard rules and <strong>false</strong>, if the handler has already found and loaded the requested class.</p>
+<h4>See also:</h4><ul><li><a href="api.opl-loader.remove-library.html">4.5.13. Opl_Loader::removeLibrary()</a></li></ul><dl class="location location-bottom"><dt>4.5.1. addLibrary()<br/><a href="api.opl-loader.html">4.5. Opl_Loader class</a></dt><dd class="prev"><a href="api.opl-loader.html">&laquo; Previous</a><br/>4.5. Opl_Loader class</dd><dd class="next"><a href="api.opl-loader.autoload.html">Next &raquo;</a><br/>4.5.2. autoload()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

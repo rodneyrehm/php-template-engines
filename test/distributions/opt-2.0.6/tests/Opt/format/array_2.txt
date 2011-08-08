@@ -1,0 +1,19 @@
+Array format: the "item" namespace.
+
+>>>>templates/test.tpl
+{$variable.item}
+{$global.variable.item}
+
+>>>>data.php
+$view->variable = array('item' => 'FOO');
+Opt_View::assignGlobal('variable', array('item' => 'BAR'));
+
+$view->setFormat('variable', 'Array');
+Opt_View::setFormatGlobal('variable', 'Array');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+BAR

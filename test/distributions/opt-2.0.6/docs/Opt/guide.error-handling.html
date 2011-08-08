@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Error handling - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Error handling</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.error-handling.html">Error handling</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.html">4. Programmer's Guide</a><br/>4.4. Error handling</dt><dd class="prev">4.3. Working with output systems<br/><a href="guide.output-systems.html">&laquo; Previous</a></dd><dd class="next">4.5. Working with sections<br/><a href="guide.sections.html">Next &raquo;</a></dd></dl>	<h1>4.4. Error handling</h1><p>Another aspect of Open Power Template 2 that needs to be described is the error handling. The library provides a significant number of tools that help you discovering and eliminating problems. In this chapter, we will describe all of them.</p>
+
+<h2>OPT errors</h2>
+
+<p>OPT reports the errors as PHP exceptions. Each error type has its own exception class and all of them share the same base exception class, <code>Opt_Exception</code>, derivated from <code>Opl_Exception</code>. Moreover, the certain groups of exception have also their own base classes in the middle. The modularization helps the programmer to choose, which exceptions must be handled in the specified piece of code. To see the list of available exceptions, please read the <a href="appendix.error-messages.html" title="B. Error messages">Error messages</a> appendix.</p>
+
+<p>Basically speaking, capturing a thrown exception is nothing more but using the <code>try ... catch</code> construct:</p>
+
+<pre class="php">try
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// The script that uses OPT goes here.</span>
+<span style="color: #009900;">&#125;</span>
+catch<span style="color: #009900;">&#40;</span>Opt_Exception <span style="color: #000088;">$exception</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// The exception handling code goes here.</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<h2>Default exception handler</h2>
+
+<p>A common practice is to let the programmer to write the exception handler that will handle information about the problem somehow. The application usually provides an exception handling system, for example some sort of log files etc. but the displayed messages are often very laconic and hard to understand, especially for the new library users. On the other hand, Open Power Template provides a standard error handler that aims to display as much information about the problem, as possible. It respects the debugging settings and does not display any potentially dangerous pieces of information in the production mode, whereas in the development mode its diagnosis may be very helpful.</p>
+
+<p><img src="media/opt_error.png" alt="OPT error handler at work" title="OPT error handler at work" /></p>
+
+<p>In the picture, we can see that OPT error handler displayed the exception message and the place where the exception occurred. Moreover, it noticed that the exception concerns template compilation and sections and provided some extra data:</p>
+
+<ol>
+<li>The name of the template that caused the problem.</li>
+<li>The current stack list that allows us to notice that we do not have a section named "foo" on the stack.</li>
+<li>The information explaining, <em>why</em> the exception probably occurred and where to look for the solution.</li>
+</ol>
+
+<p>To use the exception handler, you must create an object of <code>Opt_ErrorHandler</code> class and call the <code>display()</code> method:</p>
+
+<pre class="php"><span style="color: #000088;">$handler</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_ErrorHandler<span style="color: #339933;">;</span>
+<span style="color: #000088;">$handler</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">display</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$exception</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>To respect the tradition and the OPT 1.x legacy, OPT 2 provides also a function <code>Opt_ErrorHandler()</code> that does exactly the same task (in fact, it is only a wrapper for the code above).</p>
+
+<blockquote class="important">
+  <p>If the exception is thrown during the template execution or compilation, the compiler state is reseted, so that it could be usable again, and the exception handler removes the already printed output HTML from the buffer.</p>
+</blockquote>
+
+<h2>Extending the exception handler</h2>
+
+<p>You can easily extend the default exception handler with extra functionality by overriding the default <code>Opt_ErrorHandler</code> class. The OPL core provides the necessary framework to process the context exception information and all we have to do is to specify, what to display when a certain exception occurs.</p>
+
+<p>The context information is stored in the protected variable <code>$_context</code>. It is automatically initialized by <code>Opt_ErrorHandler</code>, so if you do not want to loose this information, you have to fill it in the class constructor:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #000000; font-weight: bold;">class</span> My_ErrorHandler <span style="color: #000000; font-weight: bold;">extends</span> Opt_ErrorHandler
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> __construct<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_context<span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'ExceptionName'</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'The configuration'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end __construct();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end My_ErrorHandler;</span></pre>
+
+<p>As you see, the <code>$_context</code> field is an associative array and the keys are exception class names. As a value, we provide another associative array with a list of <em>informer</em> that can display various data.</p>
+
+<blockquote class="information">
+  <p><em>Informer</em> is a special method in the OPL error handling utility that is able to display something in the exception report.</p>
+</blockquote>
+
+<p>Below, you can find a sample configuration of the OPT exception shown on the screen above.</p>
+
+<pre class="php"><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_context<span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'Opt_SectionNotExists_Exception'</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'TemplateInfo'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'StackInfo'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #cc66cc;">1</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Actual section stack'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'ErrorInfo'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #cc66cc;">1</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'The nested sections can be connected together with a relationship. By default,
+        OPT tries to establish such relationship automatically, but you can modify the default behavior with
+        the &quot;parent&quot; attribute. This exception occurs, because the template tries use the &quot;parent&quot; attribute
+        to create a relationship to a section that does not exist. Check whether the specified section names
+        are correct.'</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>This exception is handled by three informers and two of them accept arguments. The arguments for an informer are provided as a list of values indexed from 1.</p>
+
+<p>The list of informers provided by OPT and OPL can be found below:</p>
+
+<ol>
+<li><code>ErrorInfo</code> - used to display some extra information about the exception.</li>
+<li><code>StackInfo</code> - prints a stack that has been assigned to the particular exception. Our task is to give it a name.</li>
+<li><code>BasicConfiguration</code> - prints the basic library configuration.</li>
+<li><code>Backtrace</code> - prints the debug backtrace.</li>
+<li><code>TemplateInfo</code> - shows the name of the currently compiled template.</li>
+<li><code>BugtrackerInfo</code> - informs that the exception is caused by a bug in the library and it should be reported to the developers.</li>
+</ol>
+
+<p>Writing your own informer is very easy. All you have to do is to create a protected method <code>_printInformerName()</code> with at least one argument (the first one must be always the exception we are displaying). We can display the text, using the basic <strong>echo</strong> subroutine:</p>
+
+<pre class="php">    protected <span style="color: #000000; font-weight: bold;">function</span> _printMyInformer<span style="color: #009900;">&#40;</span>Opt_Exception <span style="color: #000088;">$exception</span><span style="color: #339933;">,</span> <span style="color: #000088;">$argument</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">echo</span> <span style="color: #0000ff;">'I am the informer and I have an argument: '</span><span style="color: #339933;">.</span><span style="color: #000088;">$argument</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end _printMyInformer();</span></pre>
+
+<p>You can now use it in your exception context definition:</p>
+
+<pre class="php"><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_context<span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'Opt_Some_Exception'</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'MyInformer'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #cc66cc;">1</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Some argument'</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<h2>PHP Bug #40479 problem</h2>
+
+<p>PHP Bug #40479 is a bug found in Zend Engine 2 memory management code in 2007. It seems to appear only in certain, complex scripts and causes the PHP parser to make a segmentation fault. It is very hard to track and so far, nobody has managed to create a simple test case that could give a clue, why it exactly occurs. Unfortunately, one of the OPT code parts is affected by the problem. If the data format parser tries to raise <code>Opt_APIHookNotDefined_Exception</code>, the script goes down. This is only a minor issue and unless you are writing your own data format, you should never encounter it, however we decided that in this particular case OPT will display the error message with a simple <code>die()</code> subroutine in order not to lead to a potential damage of your data.</p>
+
+<h2>Conclusion</h2>
+
+<p>Open Power Template 2 reports the errors with the exception system. You can handle them on your own or use the standard error handler provided by OPT. It is very helpful in the problem diagnosis, as it tries to show extra potentially useful information and tips, where to look for the solution.</p>
+<dl class="location location-bottom"><dt>4.4. Error handling<br/><a href="guide.html">4. Programmer's Guide</a></dt><dd class="prev"><a href="guide.output-systems.html">&laquo; Previous</a><br/>4.3. Working with output systems</dd><dd class="next"><a href="guide.sections.html">Next &raquo;</a><br/>4.5. Working with sections</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

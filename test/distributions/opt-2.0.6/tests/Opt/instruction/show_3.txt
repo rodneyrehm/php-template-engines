@@ -1,0 +1,25 @@
+The test checks the basic opt:show features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:show name="sect">
+Foo:
+<opt:section>
+{$sect.val1},{$sect.val2}
+</opt:section>
+Eof
+<opt:showelse>
+NO DATA
+</opt:showelse>
+</opt:show>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+NO DATA
+
+>>>>data.php
+$view->sect = array();

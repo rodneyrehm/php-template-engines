@@ -1,0 +1,13 @@
+"opt:root" should not be used in other context than parent's.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<div>
+<opt:root>foo</opt:root>
+</div>
+
+>>>>data.php
+$this->tpl->singleRootNode = true;
+
+>>>>expected.txt
+Opt_InstructionInvalidParent_Exception

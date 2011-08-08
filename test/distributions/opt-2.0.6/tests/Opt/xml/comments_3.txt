@@ -1,0 +1,13 @@
+The ---> ending should not be available in XML according to the syntax.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+<!-- foo --->
+</foo>
+
+>>>>data.php
+$this->tpl->printComments = true;
+
+>>>>expected.txt
+Opt_XmlComment_Exception

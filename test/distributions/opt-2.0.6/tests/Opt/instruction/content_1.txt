@@ -1,0 +1,18 @@
+The test checks the basic opt:content functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<p opt:content="$foo">Default content</p>
+<p opt:content="$bar">Default content</p>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$view->bar = 'Modified content';
+
+>>>>result.txt
+<p>Default content</p>
+<p>Modified content</p>

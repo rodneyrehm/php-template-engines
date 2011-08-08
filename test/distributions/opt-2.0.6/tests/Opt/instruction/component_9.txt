@@ -1,0 +1,17 @@
+The test checks the defined components.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:myComponent>
+<opt:set name="foo" str:value="bar" />
+{$system.component.foo}
+</opt:myComponent>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+PARAM foo PASSED
+PARAM foo RETURNED
+bar

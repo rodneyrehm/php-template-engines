@@ -1,0 +1,14 @@
+The test checks the basic opt:put functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+{@foo is 5}
+<opt:put value="@foo" />
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+5

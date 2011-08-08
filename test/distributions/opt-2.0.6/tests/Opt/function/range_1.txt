@@ -1,0 +1,15 @@
+Testing the range() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{range(50, 60)}
+{range(50, 50)}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+50 - 60
+50

@@ -1,0 +1,23 @@
+Test checks the basic iteration features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Print array keys and values -->
+<opt:root>
+<opt:foreach array="$data" index="idx" value="val" str:separator="::">
+{@idx},{@val}
+</opt:foreach>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+key1,Value 1::key2,Value 2::key3,Value 3::key4,Value 4
+>>>>data.php
+	$view->data = array(
+		'key1' => 'Value 1',
+		'key2' => 'Value 2',
+		'key3' => 'Value 3',
+		'key4' => 'Value 4'
+	);

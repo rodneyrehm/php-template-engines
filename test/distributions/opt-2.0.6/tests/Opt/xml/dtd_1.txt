@@ -1,0 +1,19 @@
+Check whether the XML prolog works.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<foo>
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<foo>
+</foo>

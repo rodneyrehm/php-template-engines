@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Instructions - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Instructions</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.html">3. Template syntax</a><br/>3.7. Instructions</dt><dd class="prev">3.6.36. wordWrap()<br/><a href="syntax.functions.wordwrap.html">&laquo; Previous</a></dd><dd class="next">3.7.1. opt:attribute<br/><a href="syntax.instructions.attribute.html">Next &raquo;</a></dd></dl>	<h1>3.7. Instructions</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="syntax.instructions.attribute.html">3.7.1. opt:attribute</a></li><li><a href="syntax.instructions.block.html">3.7.2. opt:block</a></li><li><a href="syntax.instructions.capture.html">3.7.3. opt:capture</a></li><li><a href="syntax.instructions.component.html">3.7.4. opt:component</a></li><li><a href="syntax.instructions.dtd.html">3.7.5. opt:dtd</a></li><li><a href="syntax.instructions.dynamic.html">3.7.6. opt:dynamic</a></li><li><a href="syntax.instructions.extend.html">3.7.7. opt:extend</a></li><li><a href="syntax.instructions.for.html">3.7.8. opt:for</a></li><li><a href="syntax.instructions.foreach.html">3.7.9. opt:foreach</a></li><li><a href="syntax.instructions.grid.html">3.7.10. opt:grid</a></li><li><a href="syntax.instructions.if.html">3.7.11. opt:if</a></li><li><a href="syntax.instructions.include.html">3.7.12. opt:include</a></li><li><a href="syntax.instructions.insert.html">3.7.13. opt:insert</a></li><li><a href="syntax.instructions.literal.html">3.7.14. opt:literal</a></li><li><a href="syntax.instructions.prolog.html">3.7.15. opt:prolog</a></li><li><a href="syntax.instructions.put.html">3.7.16. opt:put</a></li><li><a href="syntax.instructions.repeat.html">3.7.17. opt:repeat</a></li><li><a href="syntax.instructions.root.html">3.7.18. opt:root</a></li><li><a href="syntax.instructions.section.html">3.7.19. opt:section</a></li><li><a href="syntax.instructions.selector.html">3.7.20. opt:selector</a></li><li><a href="syntax.instructions.separator.html">3.7.21. opt:separator</a></li><li><a href="syntax.instructions.show.html">3.7.22. opt:show</a></li><li><a href="syntax.instructions.snippet.html">3.7.23. opt:snippet</a></li><li><a href="syntax.instructions.tag.html">3.7.24. opt:tag</a></li><li><a href="syntax.instructions.tree.html">3.7.25. opt:tree</a></li></ul><p>An instruction is any XML tag in one of the registered namespaces that:</p>
+
+<ul>
+<li>Is processed by OPT.</li>
+<li>It disappears during the compilation - we see there only the effects of their work.</li>
+</ul>
+
+<p>Instructions are one of the main OPT syntax elements. They allow to create lists or display something conditionally. Let's take a closer look at them, using one of the instructions, <code>opt:section</code>. It is used to make lists. Below we can find a template that contains it:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h3<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Menu<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h3<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">parse:href</span>=<span style="color: #ff0000;">&quot;$menu.address&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$menu.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>  
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>   
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The code between <code>&lt;opt:section&gt;</code> and <code>&lt;/opt:section&gt;</code> is treated as a look of the single list element. The section tells the parser, how to create a list from it, but it is not visible in the output code itself. There is only a result of its work, for example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h3<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Menu<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h3<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">href</span>=<span style="color: #ff0000;">&quot;page1.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Page 1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">href</span>=<span style="color: #ff0000;">&quot;page2.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Page 2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">href</span>=<span style="color: #ff0000;">&quot;page3.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Page 3<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">href</span>=<span style="color: #ff0000;">&quot;page4.php&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Page 4<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Some of the instructions have very sophisticated form and consist of many tags. The other ones can be used in certain places only.</p>
+
+<p>Usually, the instructions are written in the declarative style. It means that you only tell, <em>what</em> you want to see, not <em>how</em> to implement it or how it should work. The goal is to eliminate the imperative programming with lots of loops and conditions from the templates, because it only makes the code ugly and hard to modify. The programming constructs are still available, but we recommend not to use it, and let the compiler work for you.</p>
+
+<p>The instruction tags may take arguments as XML attributes. Each of them has strictly defined type that you have to follow. The following types are possible:</p>
+
+<ul>
+<li>Expression - any valid OPT expression that does not use the assignment operator.</li>
+<li>Expression with assignments - any valid OPT expression.</li>
+<li>String - a string value.</li>
+<li>Hard string - a string value.</li>
+<li>Option - <em>yes</em> or <em>no</em> values.</li>
+<li>Number</li>
+<li>Identifier - any valid identifier that begins with an underscore or a letter. Later, numbers are possible, too. Example: <code>foo123</code>. </li>
+</ul>
+
+<p>The first three types are expressions - the value you type is sent to the expression parser, so we can load their values from variables or functions. If the default type does not suit us, we can change it using another namespace:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:instruction</span> <span style="color: #000066;">foo</span>=<span style="color: #ff0000;">&quot;here is a text by default&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p>This sample instruction takes a string as the <code>foo</code> attribute. It is not a hard string, so we can load it from the variable. However, to do this, we must change the namespace to <code>parse</code> in order to mark that we want a full expression here:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:instruction</span> <span style="color: #000066;">parse:foo</span>=<span style="color: #ff0000;">&quot;$load_me_from_variable&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p>This namespace does not allow the assignment operator.</p>
+
+<p>A similar relationship works also in the opposite direction. There are many instructions that take a full expression as an argument, but if we want to specify a string there, by default we have to deal with lots of quotes.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:instruction2</span> <span style="color: #000066;">foo</span>=<span style="color: #ff0000;">&quot;'I must have been enclosed in both double and single quotes. One of them come from XML, the second one - from OPT expressions'&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p>We can avoid it by using <code>str</code> namespace:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:instruction2</span> <span style="color: #000066;">str:foo</span>=<span style="color: #ff0000;">&quot;Now the parser knows that we have a string here, so we don't need single quotes.&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p>The namespace does not have to be changed, if the string is a single word. As we remember from the chapter on expressions, OPT can recognize the string from the context. We can't change the namespace, if we want to concatenate a string with some variable. Otherwise, the variable call would be treated as a part of the text.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:instruction2</span> <span style="color: #000066;">bar</span>=<span style="color: #ff0000;">&quot;'add something here: '~$variable&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p>The last four types cannot be changed. OPT needs them to compile the template properly and this is why their values cannot be loaded from variables or generated by expressions.</p>
+
+<h2>Notation</h2>
+
+<p>The instruction arguments are provided in this manual in the form of a table. If we find an asterisk in the "Name" field, it means that the instruction accepts any number of attributes of the specified type.</p>
+<dl class="location location-bottom"><dt>3.7. Instructions<br/><a href="syntax.html">3. Template syntax</a></dt><dd class="prev"><a href="syntax.functions.wordwrap.html">&laquo; Previous</a><br/>3.6.36. wordWrap()</dd><dd class="next"><a href="syntax.instructions.attribute.html">Next &raquo;</a><br/>3.7.1. opt:attribute</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

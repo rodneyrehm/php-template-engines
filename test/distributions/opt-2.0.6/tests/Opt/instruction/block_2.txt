@@ -1,0 +1,20 @@
+This test checks the basic block functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+FOO
+<opt:block from="$block" />
+FOO
+
+>>>>data.php
+
+$view->block = new myBlock;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+VIEW PASSED
+ON SINGLE: 0
+FOO

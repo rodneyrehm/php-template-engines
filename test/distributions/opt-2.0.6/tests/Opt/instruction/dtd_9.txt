@@ -1,0 +1,10 @@
+Strange template - opt:dtd should report an exception.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:dtd template="foo" />
+</opt:root>
+
+>>>>expected.txt
+Opt_InvalidValue_Exception

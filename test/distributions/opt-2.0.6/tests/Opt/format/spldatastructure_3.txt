@@ -1,0 +1,35 @@
+SplDatastructure format: grids and the descending order.
+
+>>>>templates/test.tpl
+<opt:root>
+<opt:grid name="items" order="desc" cols="3">
+:ROW START
+<opt:item>
+{$items.item}
+</opt:item>
+<opt:emptyItem>
+Empty
+</opt:emptyItem>
+:ROW END
+</opt:grid>
+</opt:root>
+
+>>>>data.php
+
+$spl1 = new SplDoublyLinkedList;
+$spl1->push(array('item' => 'item 1'));
+$spl1->push(array('item' => 'item 2'));
+$spl1->push(array('item' => 'item 3'));
+
+$view->items = $spl1;
+$view->setFormat('items', 'SplDatastructure');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+:ROW START
+item 3
+item 2
+item 1
+:ROW END

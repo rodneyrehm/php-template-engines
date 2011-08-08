@@ -1,0 +1,27 @@
+Check the isImage() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:if test="isImage('foo.png')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+<opt:if test="isImage('foo.jpg')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+<opt:if test="isImage('foo.gif')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+<opt:if test="isImage('foo.svg')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+<opt:if test="isImage('foo.bmp')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+<opt:if test="isImage('foo.jpeg')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+<opt:if test="isImage('http://www.example.com/image.png')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+<opt:if test="isImage('bogus')">IMAGE<opt:else>NOT IMAGE</opt:else></opt:if>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+IMAGE
+IMAGE
+IMAGE
+IMAGE
+IMAGE
+IMAGE
+IMAGE
+NOT IMAGE

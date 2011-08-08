@@ -1,0 +1,22 @@
+Check the opt:include "file" attribute. It should include a template.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Foo
+<opt:include file="included.tpl" />
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Bar
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooBar

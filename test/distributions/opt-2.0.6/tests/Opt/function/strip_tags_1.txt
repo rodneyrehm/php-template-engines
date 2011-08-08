@@ -1,0 +1,18 @@
+Testing the stripTags() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{u:stripTags($text)}
+{u:stripTags($text, '&lt;strong&gt;')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$view->text = 'This is a <strong>text</strong> with some <em>HTML</em>';
+
+>>>>result.txt
+This is a text with some HTML
+This is a <strong>text</strong> with some HTML

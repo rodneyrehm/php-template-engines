@@ -1,0 +1,21 @@
+Testing the average() function and support for IP address recognition.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{u:autoLink('foo http://127.0.0.1/ bar')}
+{u:autoLink('foo http://127.0.0.1:8000/ bar')}
+{u:autoLink('foo http://fe80::/ bar')}
+{u:autoLink('foo http://[fe80::]:8000/ bar')}
+{u:autoLink('foo http://fe80:0000:0000:0000:0000:0000:0000:0001/ bar')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+foo <a href="http://127.0.0.1/" target="_blank">http://127.0.0.1/</a> bar
+foo <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a> bar
+foo <a href="http://fe80::/" target="_blank">http://fe80::/</a> bar
+foo <a href="http://[fe80::]:8000/" target="_blank">http://[fe80::]:8000/</a> bar
+foo <a href="http://fe80:0000:0000:0000:0000:0000:0000:0001/" target="_blank">http://fe80:0000:0000:0000:0000:0000:0000:0001/</a> bar

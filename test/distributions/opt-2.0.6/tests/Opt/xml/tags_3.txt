@@ -1,0 +1,18 @@
+Simple tag creation test.
+
+>>>>templates/test.tpl
+<foo>
+<bar></bar>
+<bar></bar>
+</foo>
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+<bar></bar>
+<bar></bar>
+</foo>

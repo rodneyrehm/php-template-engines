@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Coding standards - Open Power Libs</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Libs 2.0</h1>
+		<h2>Coding standards</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="design.html">Design and concepts</a> &raquo; <a href="design.coding-standards.html">Coding standards</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="design.html">3. Design and concepts</a><br/>3.2. Coding standards</dt><dd class="prev">3.1. Autoloading<br/><a href="design.autoloading.html">&laquo; Previous</a></dd><dd class="next">3.3. Configuration options<br/><a href="design.config.html">Next &raquo;</a></dd></dl>	<h1>3.2. Coding standards</h1><p>This document describes the coding standards used by OPL. All the PHP files in the project fall under these rules.</p>
+
+<h2>Directory structure</h2>
+
+<p>The installation directory (in this document: <code>/src</code>) is divided into several directories, one for each library. The library directory names <strong>must</strong> be a three-letter codes with the first character capitalized created from the first letters of the library name words. For example, <em>Open Power Template</em> code is <em>OPT</em> (directory name: <em>Opt</em>). In the rest of the document, the library directory in the file path will be marked as <em>Opx</em>.</p>
+
+<p>The library directories contain the PHP files and other subdirectories. The names <strong>must</strong> begin with a capital letter.</p>
+
+<h2>File structure</h2>
+
+<p>The PHP file must begin with the <code>&lt;?php</code> string and a license/copyright header that can be found in <code>HEADER</code> file. You <strong>must not</strong> end the file with <code>?&gt;</code>.</p>
+
+<p>The file is divided into several parts marked by comment. The code template is:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #666666; font-style: italic;">/*
+ *  OPEN POWER LIBS &lt;http://www.invenzzia.org&gt;
+ *  ==========================================
+ *
+ * This file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE. It is also available through
+ * WWW at this URL: &lt;http://www.invenzzia.org/license/new-bsd&gt;
+ *
+ * Copyright (c) Invenzzia Group &lt;http://www.invenzzia.org&gt;
+ * and other contributors. See website for details.
+ *
+ * $Id$
+ */</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">/*
+ * Optional file description
+ */</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">/*
+ * Function definitions
+ */</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// code here</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">/*
+ * Interface definitions
+ */</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// code here</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">/*
+ * Class definitions
+ */</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// code here</span></pre>
+
+<p>Feel free to remove the parts you do not use.</p>
+
+<p>By default, the file <strong>must</strong> contain exactly one class or interface, but it <strong>can</strong> contain more than one functions at the same time. The functions <strong>must</strong> be for internal use only, otherwise you <strong>must</strong> be sure that they will be available, when the user calls them, as the autoloader does not capture ordinary functions.</p>
+
+<p>The exceptions are:</p>
+
+<ol>
+<li>Core files (<code>/src/Opx/Class.php</code>). They <strong>may</strong> contain any number of classes and interfaces. They <strong>should</strong> be necessary to make the library work, so that OPL does not waste time to include them from separate files.</li>
+<li>Exception files (<code>/src/Opx/Exception.php</code>) They <strong>may</strong> contain any number of classes whose names end with word <strong>Exception</strong>.</li>
+</ol>
+
+<h2>Naming rules</h2>
+
+<p>Naming rules for classes, interfaces, functions and class fields.</p>
+
+<ol>
+<li>Class names look as follows: <code>Opx_Something_More</code>. The name must begin with a three-letter library code. The name parts are separated with underline and begin with a big letter. They are automatically mapped to a file in the filesystem. For example, <code>Opx_Something_More</code> will be loaded from <code>/src/Opx/Something/More.php</code>.</li>
+<li>Interfaces follow the same rules as classes, but the last part of their name <strong>should</strong> be <code>Interface</code>, for example: <code>Opl_Translation_Interface</code>.</li>
+<li>Exception classes follow the same rules, as the rest of the classes, except that the last part of their name must be <code>Exception</code>, for example: <code>Opl_Debug_Exception</code>. Moreover, they <strong>must</strong> be stored in <code>/src/Opx/Exception.php</code> file.</li>
+<li>For class function and field names, we use <code>camelCase</code>.</li>
+<li>Protected, private and public internal use methods or fields must have names that begin with an underline, for example: <code>_foo()</code>.</li>
+<li>For class constants, we use <code>BIG_LETTER_NOTATION</code>.</li>
+<li>For variable names, we use <code>$camelCase</code>.</li>
+<li>For standard function names, we use the same rules, as for classes, except that the name does not refer to the filesystem. Example: <code>Opl_Error_Handler</code> in <code>/src/Opl/Exception.php</code> file.</li>
+</ol>
+
+<blockquote class="important">
+  <p>The names should be clever enough to illustrate what the particular function/class does. Moreover, you should keep the same naming patterns in your project - if your class contains several methods that do almost the same, all of their names should be similar. For example, in Open Power Template, the compiler contains a group of methods that allow to obtain various things. They are named like this: <code>isProcessor()</code>, <code>isNamespace()</code>, <code>isFunction()</code> etc.</p>
+</blockquote>
+
+<h2>Basic code formatting</h2>
+
+<p>The indentation <strong>must</strong> be done with tabulation. Spaces <strong>must not</strong> be used to format or indent the source code.</p>
+
+<h2>Classes, functions, etc.</h2>
+
+<p>All the classes, functions and interfaces <strong>may</strong> be one tab away from the left margin:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// Good</span>
+<span style="color: #000000; font-weight: bold;">class</span> Opx_Foo
+<span style="color: #009900;">&#123;</span>
+&nbsp;
+<span style="color: #009900;">&#125;</span>
+&nbsp;
+    <span style="color: #666666; font-style: italic;">// Also good</span>
+    <span style="color: #000000; font-weight: bold;">class</span> Opx_Foo
+    <span style="color: #009900;">&#123;</span>
+&nbsp;
+    <span style="color: #009900;">&#125;</span></pre>
+
+<p>Each curly bracket increases the indentation by one.</p>
+
+<p>Opening curly brackets <strong>must</strong> be in a separate line:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// Good</span>
+<span style="color: #000000; font-weight: bold;">class</span> Opx_Foo
+<span style="color: #009900;">&#123;</span>
+&nbsp;
+<span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Veeery bad, die, go to hell!</span>
+<span style="color: #000000; font-weight: bold;">class</span> Opx_Bar<span style="color: #009900;">&#123;</span>
+&nbsp;
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>Class and interface closing curly brackets <strong>must</strong> be accompanied with the class/interface name written in the single line comment that looks like this: <code>// end classname;</code></p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> Opx_Foo
+<span style="color: #009900;">&#123;</span>
+&nbsp;
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opx_Foo;</span></pre>
+
+<p>The methods must follow it as well, but here we add also the round brackets to indicate what it is:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> Opx_Foo
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> foo<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+&nbsp;
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end foo();</span>
+&nbsp;
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opx_Foo;</span></pre>
+
+<p>All of the class items <strong>must</strong> have the visibility modifier: <code>public</code>, <code>protected</code> or <code>private</code>. You <strong>must not</strong> use <code>var</code> keyword or write methods without a <code>public</code> modifier.</p>
+
+<h2>Control structures</h2>
+
+<h3>Basic information</h3>
+
+<p><strong>While</strong> statement:</p>
+
+<pre class="php"><span style="color: #b1b100;">while</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$expression</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p><strong>For</strong> statement:</p>
+
+<pre class="php"><span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$i</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span> <span style="color: #339933;">&lt;</span> <span style="color: #cc66cc;">10</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span><span style="color: #339933;">++</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p><strong>do... while</strong> statement:</p>
+
+<pre class="php"><span style="color: #b1b100;">do</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">while</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$expression</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p><strong>foreach</strong> statement:</p>
+
+<pre class="php"><span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$array</span> <span style="color: #b1b100;">as</span> <span style="color: #000088;">$value</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someCode<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$array</span> <span style="color: #b1b100;">as</span> <span style="color: #000088;">$index</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$value</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someCode<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p><strong>if-else</strong> statement:</p>
+
+<pre class="php"><span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$expression</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">elseif</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$expression</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">else</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p><strong>switch</strong> statement:</p>
+
+<pre class="php"><span style="color: #b1b100;">switch</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$expression</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'value1'</span><span style="color: #339933;">:</span>
+    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'value2'</span><span style="color: #339933;">:</span>
+        someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">break</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'value3'</span><span style="color: #339933;">:</span>
+        someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">break</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">default</span><span style="color: #339933;">:</span>
+        someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p><strong>Try... catch</strong> statement:</p>
+
+<pre class="php">try
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+catch<span style="color: #009900;">&#40;</span>Exception <span style="color: #000088;">$exception</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    exceptionHandler<span style="color: #009900;">&#40;</span><span style="color: #000088;">$exception</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<h3>Additional information</h3>
+
+<p><strong>For</strong> statements <strong>should</strong> be used to iterate through an array with numeric indexes:</p>
+
+<pre class="php"><span style="color: #000088;">$cnt</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/sizeof"><span style="color: #990000;">sizeof</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$array</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$i</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span> <span style="color: #339933;">&lt;</span> <span style="color: #000088;">$cnt</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span><span style="color: #339933;">++</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #000088;">$array</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$i</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>To iterate through associative arrays, we use <strong>foreach</strong>.</p>
+
+<p>In <strong>switch</strong>, we are allowed to create constructs with advanced flow control (i.e. conditional breaks), if it makes the code shorter and simpler to understand.</p>
+
+<p>If we have to move the iterator until the condition is not true, we can use the following construct:</p>
+
+<pre class="php"><span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span>start_condition<span style="color: #339933;">;</span> end_condition<span style="color: #339933;">;</span> iterate<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#123;</span><span style="color: #009900;">&#125;</span></pre>
+
+<h2>Expressions</h2>
+
+<h3>Basic information</h3>
+
+<p>The operators <strong>should</strong> be separated from values with one space. It can be avoided, if the expression is very long:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// short expression</span>
+<span style="color: #000088;">$a</span> <span style="color: #339933;">+</span> <span style="color: #000088;">$b</span>
+<span style="color: #666666; font-style: italic;">// very long expression</span>
+<span style="color: #000088;">$a</span><span style="color: #339933;">+</span><span style="color: #000088;">$b</span><span style="color: #339933;">+</span><span style="color: #000088;">$c</span><span style="color: #339933;">+</span><span style="color: #000088;">$d</span><span style="color: #339933;">+</span><span style="color: #000088;">$e</span><span style="color: #339933;">+</span><span style="color: #000088;">$f</span><span style="color: #339933;">+</span><span style="color: #000088;">$g</span><span style="color: #339933;">+</span><span style="color: #000088;">$h</span><span style="color: #339933;">+</span><span style="color: #000088;">$i</span><span style="color: #339933;">+</span><span style="color: #000088;">$j</span><span style="color: #339933;">+</span><span style="color: #000088;">$k</span><span style="color: #339933;">+</span><span style="color: #000088;">$l</span><span style="color: #339933;">+</span><span style="color: #000088;">$m</span><span style="color: #339933;">+</span><span style="color: #000088;">$n</span><span style="color: #339933;">+</span><span style="color: #000088;">$o</span><span style="color: #339933;">+</span><span style="color: #000088;">$p</span><span style="color: #339933;">+</span><span style="color: #000088;">$r</span><span style="color: #339933;">+</span><span style="color: #000088;">$s</span><span style="color: #339933;">+</span><span style="color: #000088;">$t</span><span style="color: #339933;">+</span><span style="color: #000088;">$u</span><span style="color: #339933;">+</span><span style="color: #000088;">$v</span><span style="color: #339933;">+</span><span style="color: #000088;">$w</span><span style="color: #339933;">+</span><span style="color: #000088;">$x</span><span style="color: #339933;">+</span><span style="color: #000088;">$y</span><span style="color: #339933;">+</span><span style="color: #000088;">$z</span></pre>
+
+<p>For strings, single quotes <strong>must</strong> be used unless we have newline/carriage return/tab characters to show. We connect the strings with the values with dots:</p>
+
+<pre class="php"><span style="color: #0000ff;">'Single quoted text'</span><span style="color: #339933;">;</span>
+<span style="color: #0000ff;">'Single quoted text '</span><span style="color: #339933;">.</span><span style="color: #000088;">$data</span><span style="color: #339933;">.</span><span style="color: #0000ff;">' with some data'</span><span style="color: #339933;">;</span>
+<span style="color: #0000ff;">&quot;Double quoted text, because it uses <span style="color: #000099; font-weight: bold;">\r</span><span style="color: #000099; font-weight: bold;">\n</span>&quot;</span><span style="color: #339933;">;</span></pre>
+
+<p>The object access operators are written without surrounding spaces:</p>
+
+<pre class="php"><span style="color: #000088;">$obj</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">method</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">class</span><span style="color: #339933;">::</span><span style="color: #004000;">method</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The use of brackets:</p>
+
+<pre class="php"><span style="color: #000088;">$a</span> <span style="color: #339933;">*</span> <span style="color: #009900;">&#40;</span><span style="color: #000088;">$b</span> <span style="color: #339933;">+</span> <span style="color: #000088;">$c</span><span style="color: #009900;">&#41;</span>
+<span style="color: #000088;">$a</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$b</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$c</span><span style="color: #009900;">&#93;</span></pre>
+
+<p>The conditional operator <strong>should</strong> be written in brackets:</p>
+
+<pre class="php"><span style="color: #000088;">$a</span> <span style="color: #339933;">=</span> <span style="color: #009900;">&#40;</span><span style="color: #000088;">$b</span> <span style="color: #339933;">==</span> <span style="color: #009900; font-weight: bold;">true</span> ? <span style="color: #0000ff;">'Foo'</span> <span style="color: #339933;">:</span> <span style="color: #0000ff;">'Bar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<h3>Data type information</h3>
+
+<p>OPL makes use of the <code>NULL</code> type. The methods <strong>must</strong> return <code>null</code> instead of the requested content, if such content has not been found:</p>
+
+<pre class="php"><span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$foo</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$resource</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #009900; font-weight: bold;">NULL</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">return</span> <span style="color: #000088;">$foo</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$resource</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">;</span></pre>
+
+<p>To check, whether the <code>NULL</code> value has been returned, we the <code>=== null</code> expression:</p>
+
+<pre class="php"><span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$foo</span> <span style="color: #339933;">===</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    someContent<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<h2>Other issues</h2>
+
+<h3>Data structures</h3>
+
+<p>If we are going to use a data structure, we <strong>must</strong> use SPL implementations:</p>
+
+<ol>
+<li><code>SplDoublyLinkedList</code></li>
+<li><code>SplQueue</code></li>
+<li><code>SplStack</code></li>
+<li><code>SplHeap</code></li>
+<li><code>SplPriorityQueue</code></li>
+<li><code>SplFixedArray</code></li>
+</ol>
+
+<p>However, we must pay attention to PHP 5.2. If the requested functionality is not implemented in <code>/Opl/Php52.php</code>, we should implement it.</p>
+
+<h3>Comments</h3>
+
+<p>The code <strong>must</strong> be commented. For short notes, we use single-line comments:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// Now we must do foo.</span></pre>
+
+<blockquote class="error">
+  <p>We do not comment obvious things and issues.</p>
+</blockquote>
+
+<p>For longer explanations, we use multiline comments:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">/* This is a multiline
+ * comment that explains
+ * something
+ */</span></pre>
+
+<p>In the development code, we <strong>should</strong> mark the unfinished places with <em>TODO</em> comments:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// TODO: Implement XXX!</span></pre>
+
+<h3>Documentation</h3>
+
+<p>The methods and the most important class fields <strong>should</strong> be equipped with phpdoc That briefly describes the particular item and provides some information on the arguments and return values.</p>
+
+<pre class="php"><span style="color: #009933; font-style: italic;">/**
+ * This method does something.
+ * 
+ * @param string $foo The required argument
+ * @param int $bar=5 optional The optional argument
+ * @return int
+ */</span>
+<span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> something<span style="color: #009900;">&#40;</span><span style="color: #000088;">$foo</span><span style="color: #339933;">,</span> <span style="color: #000088;">$bar</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">5</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// ...</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end something();</span></pre>
+
+<blockquote class="important">
+  <p>Please note that phpdoc <strong>is not</strong> used to generate the API reference, but rather provides the basic help for programmers and IDE.</p>
+</blockquote>
+<dl class="location location-bottom"><dt>3.2. Coding standards<br/><a href="design.html">3. Design and concepts</a></dt><dd class="prev"><a href="design.autoloading.html">&laquo; Previous</a><br/>3.1. Autoloading</dd><dd class="next"><a href="design.config.html">Next &raquo;</a><br/>3.3. Configuration options</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

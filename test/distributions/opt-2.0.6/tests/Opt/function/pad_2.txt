@@ -1,0 +1,27 @@
+Testing the pad() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@list is pad($strings, 6, '=')}
+{@list.string1}
+{@list.string2}
+{@list.string3}
+{@list.array}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$view->strings = array(
+	'string1' => 'foo',
+	'string2' => 'bar',
+	'string3' => 'joe',
+	'array' => array()
+);
+
+>>>>result.txt
+foo===
+bar===
+joe===

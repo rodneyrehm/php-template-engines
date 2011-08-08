@@ -1,0 +1,49 @@
+The test checks the opt:grid cooperation with HTML tags.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<table>
+<opt:grid name="items" cols="3">
+<tr>
+<opt:item>
+<td>{$items.foo}</td>
+</opt:item>
+<opt:emptyItem><td></td></opt:emptyItem>
+</tr>
+</opt:grid>
+</table>
+</opt:root>
+
+>>>>data.php
+$view->items = array(
+	array('foo' => 'item 1'),
+	array('foo' => 'item 2'),
+	array('foo' => 'item 3'),
+	array('foo' => 'item 4'),
+	array('foo' => 'item 5'),
+	array('foo' => 'item 6'),
+	array('foo' => 'item 7')
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<table>
+<tr>
+<td>item 1</td>
+<td>item 2</td>
+<td>item 3</td>
+</tr>
+<tr>
+<td>item 4</td>
+<td>item 5</td>
+<td>item 6</td>
+</tr>
+<tr>
+<td>item 7</td>
+<td></td>
+<td></td>
+</tr>
+</table>

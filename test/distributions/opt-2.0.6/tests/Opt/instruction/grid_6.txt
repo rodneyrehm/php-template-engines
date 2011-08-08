@@ -1,0 +1,53 @@
+Test if the grid works with snippets.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="snip">
+:ROW START
+<opt:item>
+{$snip.foo}
+<opt:section name="foo" parent="items">
+</opt:section>
+</opt:item>
+<opt:emptyItem>
+Empty
+</opt:emptyItem>
+:ROW END
+</opt:snippet>
+<opt:grid name="items" cols="3" opt:use="snip">
+</opt:grid>
+</opt:root>
+
+>>>>data.php
+$view->items = array(
+	array('foo' => 'item 1'),
+	array('foo' => 'item 2'),
+	array('foo' => 'item 3'),
+	array('foo' => 'item 4'),
+	array('foo' => 'item 5'),
+	array('foo' => 'item 6'),
+	array('foo' => 'item 7'),
+	array('foo' => 'item 8'),
+	array('foo' => 'item 9')
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+:ROW START
+item 1
+item 2
+item 3
+:ROW END
+:ROW START
+item 4
+item 5
+item 6
+:ROW END
+:ROW START
+item 7
+item 8
+item 9
+:ROW END

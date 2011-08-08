@@ -1,0 +1,17 @@
+Check whether the snippets are overloaded properly according to the template inheritance rules.
+Additionally, the opt:parent tag is checked.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="foo">Open1<opt:parent/>End1</opt:snippet>
+<opt:snippet name="foo">Open2<opt:parent/>End2</opt:snippet>
+<opt:snippet name="foo">Open3<opt:parent/>End3</opt:snippet>
+<opt:insert snippet="foo" />
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Open1Open2Open3End3End2End1

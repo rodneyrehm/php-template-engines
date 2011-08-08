@@ -1,0 +1,83 @@
+The test checks the basic opt:tree features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:tree name="tree">
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.title} START:
+<opt:content />
+NODE {$tree.title} END
+</opt:node>
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+LIST START:
+NODE Main category 1 START:
+NODE Main category 1 END
+NODE Main category 2 START:
+LIST START:
+NODE Subcategory 2.1 START:
+NODE Subcategory 2.1 END
+LIST END:
+NODE Main category 2 END
+NODE Main category 3 START:
+LIST START:
+NODE Subcategory 3.1 START:
+LIST START:
+NODE Item 3.1.1 START:
+NODE Item 3.1.1 END
+NODE Item 3.1.2 START:
+NODE Item 3.1.2 END
+NODE Item 3.1.3 START:
+NODE Item 3.1.3 END
+LIST END:
+NODE Subcategory 3.1 END
+NODE Subcategory 3.2 START:
+NODE Subcategory 3.2 END
+NODE Subcategory 3.3 START:
+LIST START:
+NODE Item 3.3.1 START:
+NODE Item 3.3.1 END
+LIST END:
+NODE Subcategory 3.3 END
+LIST END:
+NODE Main category 3 END
+NODE Main category 4 START:
+LIST START:
+NODE Subcategory 4.1 START:
+LIST START:
+NODE Item 4.1.1 START:
+NODE Item 4.1.1 END
+LIST END:
+NODE Subcategory 4.1 END
+LIST END:
+NODE Main category 4 END
+LIST END:
+
+>>>>data.php
+$view->tree = array(0 =>
+	array('title' => 'Main category 1', 'depth' => 0),
+	array('title' => 'Main category 2', 'depth' => 0),
+	array('title' => 'Subcategory 2.1', 'depth' => 1),
+	array('title' => 'Main category 3', 'depth' => 0),
+	array('title' => 'Subcategory 3.1', 'depth' => 1),
+	array('title' => 'Item 3.1.1', 'depth' => 2),
+	array('title' => 'Item 3.1.2', 'depth' => 2),
+	array('title' => 'Item 3.1.3', 'depth' => 2),
+	array('title' => 'Subcategory 3.2', 'depth' => 1),
+	array('title' => 'Subcategory 3.3', 'depth' => 1),
+	array('title' => 'Item 3.3.1', 'depth' => 2),
+	array('title' => 'Main category 4', 'depth' => 0),
+	array('title' => 'Subcategory 4.1', 'depth' => 1),
+	array('title' => 'Item 4.1.1', 'depth' => 2)
+);

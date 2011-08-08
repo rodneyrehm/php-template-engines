@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:snippet - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:snippet</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.snippet.html">opt:snippet</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.23. opt:snippet</dt><dd class="prev">3.7.22. opt:show<br/><a href="syntax.instructions.show.html">&laquo; Previous</a></dd><dd class="next">3.7.24. opt:tag<br/><a href="syntax.instructions.tag.html">Next &raquo;</a></dd></dl>	<h1>3.7.23. opt:snippet</h1><p><code>opt:snippet</code> saves its content under the specified name. It can be inserted in many other places with <code>opt:insert</code> instruction or <code>opt:use</code> attribute. Contrary to <code>opt:capture</code>, the saved code remains dynamic. If we change the value of an variable used in the snippet between two insertions, it will be visible in the output. The instruction is a part of template inheritance system, however it may be also used for many other purposes.</p>
+
+<p>attributes:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>name</td>
+  <td>ID</td>
+  <td>Yes</td>
+  <td align="left">The snippet unique name.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Below, you can see a template that illustrates the snippet properties:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;snippet&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>The value of <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;em<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>foo<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/em<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>: {@foo}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #808080; font-style: italic;">&lt;!-- Shows &quot;The value of foo: 5&quot; --&gt;</span>
+{@foo is 5}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;snippet&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+<span style="color: #808080; font-style: italic;">&lt;!-- Shows &quot;The value of foo: 6&quot; --&gt;</span>
+{@foo is 6}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;snippet&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p><code>opt:snippet</code> is processed during the compilation and neither declared nor included snippet names may be loaded from variables. The template may use the snippets defined in other template, however - we must assure that it will be loaded by the compiler, either using template inheritance or <code>opt:root</code> <code>include</code> attribute. Note that <code>opt:include</code> instruction does not guarantee that the snippets from the included template will be loaded.</p>
+
+<p>Although the snippet name must be unique, it is possible to create several snippets named identically:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    SNIPPET 1 
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    SNIPPET 2
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    SNIPPET 3
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span> <span style="color: #808080; font-style: italic;">&lt;!-- what will be the result? --&gt;</span></pre>
+
+<p>The first look at the code suggests that the new snippets overwrite the old ones and we will see "SNIPPET 3". Unfortunately, they don't because of the way the template inheritance is processed in the compiler. The output will be "SNIPPET 1", the first snippet that uses the name <code>foo</code>. However, the later definitions are not lost. Snippet 2 becomes a parent of snippet 1, and snippet 3 - of snippet 2. Each snippet may display the content of its parent using the <code>opt:parent</code> tag. (Do you see here some similarities to the method overloading in the object oriented programming?)</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    The beginning of snippet 1
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    The end of snippet 1
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    The beginning of snippet 2
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    The end of snippet 2
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    The beginning of snippet 3
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:parent</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    The end of snippet 3
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p>Such code produces the following result:</p>
+
+<pre><code>    The beginning of snippet 1
+        The beginning of snippet 2
+            The beginning of snippet 3
+            The end of snippet 3
+        The end of snippet 2
+    The end of snippet 1
+</code></pre>
+
+<p>As we see, <code>opt:parent</code> is ignored, if the snippet does not have any parent. However, note that <code>opt:insert</code> instruction used to paste snippets in the new place, may have an alternative content in case the snippet is not defined. By default, that content is also treated as a parent of the pasted snippet! However, this can be disabled with <code>opt:insert</code> <code>ingoredefault</code> attribute.</p>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.extend.html">3.7.7. opt:extend</a></li><li><a href="syntax.instructions.insert.html">3.7.13. opt:insert</a></li></ul><dl class="location location-bottom"><dt>3.7.23. opt:snippet<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.show.html">&laquo; Previous</a><br/>3.7.22. opt:show</dd><dd class="next"><a href="syntax.instructions.tag.html">Next &raquo;</a><br/>3.7.24. opt:tag</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

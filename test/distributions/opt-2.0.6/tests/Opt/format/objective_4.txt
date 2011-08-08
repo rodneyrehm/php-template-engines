@@ -1,0 +1,48 @@
+Objective format: trees.
+
+>>>>templates/test.tpl
+<opt:tree name="tree">
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.item} START:
+<opt:content />
+NODE {$tree.item} END
+</opt:node>
+</opt:tree>
+
+>>>>data.php
+
+$obj1 = new stdClass;
+$obj1->item = 'FOO';
+$obj1->depth = 0;
+$obj2 = new stdClass;
+$obj2->item = 'BAR';
+$obj2->depth = 1;
+$obj3 = new stdClass;
+$obj3->item = 'JOE';
+$obj3->depth = 1;
+
+$view->tree = new ArrayIterator(array(0 =>
+	$obj1, $obj2, $obj3
+
+));
+$view->setFormat('tree', 'Objective');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+LIST START:
+NODE FOO START:
+LIST START:
+NODE BAR START:
+NODE BAR END
+NODE JOE START:
+NODE JOE END
+LIST END:
+NODE FOO END
+LIST END:

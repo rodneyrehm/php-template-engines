@@ -1,0 +1,15 @@
+The test checks the reporting of multiple opt:selectorelse.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:selector name="sect">
+<opt:foo>FOO: {$sect.val1},{$sect.val2}</opt:foo>
+<opt:bar>BAR: {$sect.val1},{$sect.val2}</opt:bar>
+<opt:selectorelse>NO DATA</opt:selectorelse>
+<opt:selectorelse>NO DATA</opt:selectorelse>
+</opt:selector>
+</opt:root>
+
+>>>>expected.txt
+Opt_InstructionTooManyItems_Exception

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Tips and tricks - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Tips and tricks</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.instructions.html">New instructions</a> &raquo; <a href="extending.instructions.tips.html">Tips and tricks</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.instructions.html">5.8. New instructions</a><br/>5.8.8. Tips and tricks</dt><dd class="prev">5.8.7. Node and compiler variables<br/><a href="extending.instructions.node-variables.html">&laquo; Previous</a></dd><dd class="next">5.8.9. Instruction plugins<br/><a href="extending.instructions.plugins.html">Next &raquo;</a></dd></dl>	<h1>5.8.8. Tips and tricks</h1><p>This chapter describes various tips and tricks related to writing the instruction processors.</p>
+
+<h3>Conversions</h3>
+
+<p>By default, various parts of the compiler work on the original data extracted from the template. However, sometimes it is useful to replace it transparently to something else. The compiler provides the conversion system to manage and perform various conversions on the fly, using the set of simple rules.</p>
+
+<p>An example of a place where the conversions take place are the sections and snippets:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$foo.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;user&quot;</span> <span style="color: #000066;">opt:use</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Here, the snippet variable, <code>$foo.name</code> is transparently converted into <code>$user.name</code> as the section processor begins to process the inserted content.</p>
+
+<p>The methods to manage conversions are available in the compiler object (<code>Opt_Compiler_Class</code>):</p>
+
+<ol>
+<li><code>setConversion($pattern, $replacement)</code> - creates a new conversion rule.</li>
+<li><code>unsetConversion($pattern)</code> - removes the conversion rule.</li>
+<li><code>convert($item)</code> - attempts to convert the passed item using the current rules. If none of the rules is present, it returns the original name.</li>
+</ol>
+
+<p>Some conversions recognized by the compiler:</p>
+
+<dl>
+<dt><code>##simplevar_VARIABLENAME</code></dt>
+<dd>
+<p>Allows to convert the variable name <code>$variable</code> to some other name. This feature is used in the example above. The section processor reads the snippet name and registers the conversion:</p>
+
+<pre class="php"><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_compiler<span style="color: #339933;">-&gt;</span><span style="color: #004000;">setConversion</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'##simplevar_foo'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'user'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Once the section content has been processed, the conversion is removed.</p>
+</dd>
+
+<dt><code>##var_VARIABLENAME</code></dt>
+<dd>Allows to convert the template variables <code>@variable</code> to something else. The general rule is very similar to the previous case.</dd>
+</dl>
+
+<p>The instruction processors may also create their own conversion points. The available points are described in the chapters concerning certain instructions.</p>
+
+<h3>Useful compiler methods</h3>
+
+<p>The template compiler provides a number of public methods that let us perform various checks and operations. For example, to locate a different instruction processor, you may use <code>isProcessor()</code> and <code>processor()</code> methods. Read the appropriate API documentation <a href="api.opt-compiler-class.html" title="7.5. Opt_Compiler_Class">chapter</a> to get to know more about them.</p>
+
+<h3>Modifying the template prolog and DTD</h3>
+
+<p>The XML prolog and DTD are not kept directly in the XML node. They are managed by the root node (see: <a href="api.opt-xml-root.html" title="7.17. Opt_Xml_Root">Opt_Xml_Root</a>). To create a new prolog or DTD, you must create an object of <code>Opt_Xml_Prolog</code> or <code>Opt_Xml_Dtd</code> and add it to the root node:</p>
+
+<pre class="php"><span style="color: #000088;">$prolog</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Xml_Prolog<span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// ...</span>
+&nbsp;
+<span style="color: #000088;">$root</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setProlog</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$prolog</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<h3>Removing the CDATA sections</h3>
+
+<p>Sometimes we must remove all the CDATA sections from a particular part of the XML document. As we know from the chapter about node variables, it is controlled by the <code>cdata</code> node variable. Fortunately, we do not have to locate the <code>Opt_Xml_Cdata</code> nodes manually, as one of the processors provides a method for this:</p>
+
+<pre class="php"><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_compiler<span style="color: #339933;">-&gt;</span><span style="color: #004000;">processor</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'literal'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">disableCDATA</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>It removes the CDATA sections from the specified node content. If the second, optional argument is set to <strong>true</strong>, the method also sets the <code>noEntitize</code> node variable to <strong>true</strong>.</p>
+<dl class="location location-bottom"><dt>5.8.8. Tips and tricks<br/><a href="extending.instructions.html">5.8. New instructions</a></dt><dd class="prev"><a href="extending.instructions.node-variables.html">&laquo; Previous</a><br/>5.8.7. Node and compiler variables</dd><dd class="next"><a href="extending.instructions.plugins.html">Next &raquo;</a><br/>5.8.9. Instruction plugins</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

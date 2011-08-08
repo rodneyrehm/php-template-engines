@@ -1,0 +1,16 @@
+Testing the "opt:root" escaping control capabilities.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root escaping="no">
+{$htmlVar}
+</opt:root>
+
+>>>>data.php
+$view->htmlVar = '<p>foo</p>';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<p>foo</p>

@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>PHP - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>PHP</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="migration.html">Migration</a> &raquo; <a href="migration.php.html">PHP</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="migration.html">6. Migration</a><br/>6.2. PHP</dt><dd class="prev">6.1. OPT 1.x<br/><a href="migration.opt1.html">&laquo; Previous</a></dd><dd class="next">6.3. Smarty™<br/><a href="migration.smarty.html">Next &raquo;</a></dd></dl>	<h1>6.2. PHP</h1><p>Many template engines, mostly in the popular frameworks, use PHP as a template language. This article shows, how to switch from PHP-based templates to OPT, what are the differences and why you should do that.</p>
+
+<p>In the presentation layer written in pure PHP, the most characteristic issues are:</p>
+
+<ol>
+<li>Many functions and classes that generate HTML code snippets and return them as their results. They are usually called <em>helpers</em>, because they help writing clean templates.</li>
+<li>PHP control structures, such as <em>if</em> or <em>foreach</em> are very common. Every relationship between them must be programmed manually by the template designer.</li>
+<li>Complex output flow between nested templates. It is common to parse one template, store its result in a variable and display it later in the other template.</li>
+<li>Sometimes the presentation layer reads the data directly from the script structures, or even generates them.</li>
+</ol>
+
+<h2>Imperative vs declarative programming</h2>
+
+<p>PHP is an imperative language. It means that you specify all the operations it must perform step-by-step using functions and control structures. The control you have is very good, if you are going to optimize something or write a complex algorithm, but it has one important disadvantage. When you look at such code for the first time, you see that it does something and how it is done, but without extra explanations it is often hard to say, <em>what</em> this "it" is. Take a look at the example. You can say <em>get up, find the window, if it is too far away from you, move there. Then push it up, catch the handle and turn it right</em> or simply <em>close that window, please</em>. The first sentence is too long, too complex and someone may not guess, what we want from him to be done. There is one more problem: what if you have to turn the handle to the left or if the window has a completely different closing mechanism?</p>
+
+<p>OPT encourages you to concentrate on the final effect, not the ways to implement it. You should build your template from ready-to-use blocks that implement a small and commonly used algorithm and that can co-operate one with another. However, in order to use them properly, you should forget for a while about functions, PHP loops, and finally - about reinventing the wheel with them. Let's assume we want to display a list of books with their authors. Using PHP, we would write something like this:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/is_array"><span style="color: #990000;">is_array</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">books</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">:</span> <span style="color: #000000; font-weight: bold;">?&gt;</span>
+<span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">books</span> <span style="color: #b1b100;">as</span> <span style="color: #000088;">$book</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">:</span> <span style="color: #000000; font-weight: bold;">?&gt;</span>
+&lt;div class=&quot;book&quot;&gt;
+    &lt;h2&gt;<span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">echo</span> <a href="http://www.php.net/htmlspecialchars"><span style="color: #990000;">htmlspecialchars</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$book</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'title'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span>&lt;/h2&gt;
+    &lt;p&gt;Authors:&lt;/p&gt;
+    &lt;ul&gt;
+        <span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$book</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'authors'</span><span style="color: #009900;">&#93;</span> <span style="color: #b1b100;">as</span> <span style="color: #000088;">$author</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">:</span> <span style="color: #000000; font-weight: bold;">?&gt;</span>
+        &lt;li&gt;<span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">echo</span> <span style="color: #000088;">$author</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">' '</span><span style="color: #339933;">.</span><span style="color: #000088;">$author</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'surname'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span>&lt;/li&gt;
+        <span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">endforeach</span><span style="color: #339933;">;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span>
+    &lt;/ul&gt;
+&lt;/div&gt;
+<span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">endforeach</span><span style="color: #339933;">;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span>
+<span style="color: #000000; font-weight: bold;">&lt;?php</span> <span style="color: #b1b100;">endif</span><span style="color: #339933;">;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></pre>
+
+<p>There some issues in this code that OPT considers wrong:</p>
+
+<ol>
+<li>Too many code for elementary tasks, such as displaying the title.</li>
+<li>The code is format-dependent. The <code>$this-&gt;books</code> must be an array, and the authors must be saved as the book element <em>authors</em>.</li>
+<li>We have to tell PHP that the nested loop is connected with the top one.</li>
+<li>Take a deeper look, in the nested we forgot about checking if we can iterate through <code>$book['authors']</code>.</li>
+<li>Put more and more PHP and you will notice that the HTML below will be invisible around all those <code>&lt;?php</code> and <code>?&gt;</code>.</li>
+</ol>
+
+<p>Now the OPT way:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;book&quot;</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;books&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$books.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Authors:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;authors&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$authors.name} {$authors.surname}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The OPT template is much easier to write and maintain. The sections are much more smarter than PHP <code>foreach</code> - they know do not throw warnings if there are no data to display, they know, that authors and books are connected with one-to-many relationship, and finally, you do not have to know, whether the list of books is an array or an object or how the relationship is really implemented on the script side. The same code can be used again without any modifications in other template or in different script. Moreover, OPT knows that the variables must be escaped.</p>
+
+<p>The sections are the most commonly used tools in OPT and they provide even more features for you. Suppose you want to display the authors in the descending order. In PHP, it would depend on the data format - you must know the proper functions, store the output in temporary variables, etc. whereas in OPT all you have to do is to tell that you want to change the order:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;authors&quot;</span> <span style="color: #000066;">order</span>=<span style="color: #ff0000;">&quot;desc&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$authors.name} {$authors.surname}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We know that declarative programming is different from the solutions you have already got used to. However, once you learn more about the declarative instructions in OPT, you will notice that things were never so simple. When we are going to create a new website, we usually begin with the presentation layer which is completed within 30 minutes and usually does not require any further modifications after the script is written. The templates for the administration panel can be used in different projects without changes, even if they are powered by different frameworks. It saves our time and allows us to focus on the project.</p>
+
+<h2>Error handling</h2>
+
+<p>OPT warns you on much more dangerous problems than PHP and reports them as exceptions. This gives you the possibility to provide a custom error handler that suits your needs and is not a security violation for your website. The common problems that OPT informs about are:</p>
+
+<ol>
+<li>The tags closed in the incorrect order.</li>
+<li>Missing attribute value delimiters.</li>
+<li>Missing XML prolog.</li>
+<li>Calling the resources that are not allowed to be used in templates.</li>
+<li>Expression syntax errors, like missing parentheses in <code>(($a + $b) * $c</code>. OPT provides a complex expression parser that captures even such complex mistakes, as method incrementation: <code>++$object::method()::field::method()</code>.</li>
+<li>Trying to build an invalid XML output from valid XML templates.</li>
+</ol>
+
+<h2>Typical issues solved by OPT</h2>
+
+<p>Here we would like to show you, what problems can be solved using declarative programming in OPT:</p>
+
+<ol>
+<li>List processing - <a href="syntax.topics.sections.html" title="3.9.1. Sections">sections</a>.</li>
+<li>Data separation on lists - <a href="syntax.instructions.separator.html" title="3.7.21. opt:separator">opt:separator</a>.</li>
+<li>Displaying hierarchical data (trees) - sections (<a href="syntax.instructions.tree.html" title="3.7.25. opt:tree">opt:tree</a>)</li>
+<li>Displaying the data in columns - sections (<a href="syntax.instructions.grid.html" title="3.7.10. opt:grid">opt:grid</a>)</li>
+<li>Displaying the pagination links - sections (<a href="syntax.instructions.selector.html" title="3.7.20. opt:selector">opt:selector</a>)</li>
+<li>Dynamic forms - <a href="syntax.topics.components.html" title="3.9.3. Components">components</a></li>
+<li>Modular templates - <code>opt:include</code> and the template inheritance. See: <a href="syntax.topics.modularization.html" title="3.9.4. Template modularization">Template modularization</a>.</li>
+<li>Code reusing - <a href="syntax.instructions.snippet.html" title="3.7.23. opt:snippet">opt:snippet</a></li>
+<li>HTML escaping and XSS filtering - <a href="syntax.expressions.escaping.html" title="3.5.7. HTML escaping">HTML escaping</a></li>
+<li>Data format independence - <a href="guide.data-formats.html" title="4.6. Data formats">data formats</a></li>
+<li>Simple runtime tasks - <a href="syntax.topics.blocks.html" title="3.9.2. Blocks">blocks</a></li>
+<li>Internationalization - <a href="guide.i18n.html" title="4.9. Internationalization">I18n in OPT</a></li>
+</ol>
+
+<h2>OPT from the script-side</h2>
+
+<p>The advantage of PHP-based view layer is usually a good programmer API, especially when we talk about framework. OPT comes with a framework-style API out-of-the-box. You do not have to write massive wrappers that handle the configuration and attempt to put the template engine into a framework structure. OPT's objective architecture provides the following terms:</p>
+
+<ul>
+<li><em>Main object</em> - the object of <code>Opt_Class</code> class that manages the configuration and the basic, common services.</li>
+<li><em>Views</em> - the objects of <code>Opt_View</code> class, they contain the data associated to the template.</li>
+<li><em>Output systems</em> - the objects of classes implementing <code>Opt_Output_Interface</code>, decide where to send the rendered output.</li>
+</ul>
+
+<p>Below, you can find a sample code that makes use of these features to create a flexible structure of the view layer:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Sorry, the specified template has not been found.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:include<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>And now the PHP code:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+<span style="color: #666666; font-style: italic;">// some configuration here.</span>
+&nbsp;
+<span style="color: #000088;">$contentContainer</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Let's create some views...</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template1.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">customVar</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'some value'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$contentContainer</span><span style="color: #009900;">&#91;</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'view'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template2.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">anotherVar</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'some value'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$contentContainer</span><span style="color: #009900;">&#91;</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'view'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Let's create the main view:</span>
+&nbsp;
+<span style="color: #000088;">$mainView</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'main.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$mainView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">content</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$contentContainer</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$mainView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">title</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'Some title'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Rendering the views:</span>
+<span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$mainView</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Simple, isn't it?</p>
+
+<h2>Conclusion</h2>
+
+<p>As you can see, a good template engine does not have to introduce new limitations, but may also remove some limitations of PHP. In the past, PHP actually was intended to be a template language, but it is a history now. The language is equipped with richer and richer OOP, the new objective extensions are introduced and the programmers find it as a better and better tool to write massive frameworks and enterprise solutions. At the same time, nothing is done to make writing the templates actually easier.</p>
+
+<p>We know that many programmers do not like template engines because they introduce in fact even more limitations than PHP, as they usually offer just a subset of PHP enclosed in curly brackets. However, this is not the Open Power Template way. And to enjoy OPT, you must not think about it as <em>yet another imperative language for templates</em>...</p>
+<dl class="location location-bottom"><dt>6.2. PHP<br/><a href="migration.html">6. Migration</a></dt><dd class="prev"><a href="migration.opt1.html">&laquo; Previous</a><br/>6.1. OPT 1.x</dd><dd class="next"><a href="migration.smarty.html">Next &raquo;</a><br/>6.3. Smarty™</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

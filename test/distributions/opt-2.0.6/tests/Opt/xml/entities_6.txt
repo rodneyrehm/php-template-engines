@@ -1,0 +1,14 @@
+Check whether the exception is thrown, if there is a non-recognized entity.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+&amp;
+&nbsp;
+</foo>
+
+>>>>data.php
+$this->tpl->htmlEntities=false; // be sure that HTML entities are not registered
+
+>>>>expected.txt
+Opt_UnknownEntity_Exception

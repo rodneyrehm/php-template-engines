@@ -1,0 +1,28 @@
+The test checks the cooperation with "opt:if" attribute.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+START
+<opt:section name="sect" opt:if="$falseVar">
+{$sect.val1},{$sect.val2}
+<opt:sectionelse>NO DATA</opt:sectionelse>
+</opt:section>
+STOP
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+START
+STOP
+
+>>>>data.php
+$view->falseVar = false;
+$view->sect = array(
+	array('val1' => 'A', 'val2' => 'B'),
+	array('val1' => 'C', 'val2' => 'D'),
+	array('val1' => 'E', 'val2' => 'F'),
+	array('val1' => 'G', 'val2' => 'H'),
+);

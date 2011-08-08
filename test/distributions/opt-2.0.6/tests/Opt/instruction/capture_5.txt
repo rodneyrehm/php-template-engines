@@ -1,0 +1,21 @@
+Dynamically chosen capture parts and opt:insert - the captured part does not exist.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+BAR
+<opt:insert captured="$captured" />
+<opt:insert captured="$captured">
+<p>Default content</p>
+</opt:insert>
+</opt:root>
+
+>>>>data.php
+$view->captured = 'capt';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BAR
+<p>Default content</p>

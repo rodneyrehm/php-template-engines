@@ -1,0 +1,53 @@
+/*
+  --------------------------------------------------------------------
+                           TypeFriendly
+              Copyright (c) 2008-2010 Invenzzia Team
+                    http://www.invenzzia.org/
+                See README for more author details
+  --------------------------------------------------------------------
+  This file is part of TypeFriendly.
+
+  TypeFriendly is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  TypeFriendly is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with TypeFriendly. If not, see <http://www.gnu.org/licenses/>.
+*/
+/* $Id: print.css 68 2010-01-16 11:11:50Z extremo $ */
+
+body {background: #ffffff; color: #000000;}
+
+#wrap {border: none; min-width: 0; min-width: 100%; width: auto;}
+
+#header {background: #ffffff; margin-bottom: 30px; border-bottom: 2px solid #aaaaaa; padding-bottom: 10px;}
+#header h1 {color: #000000; text-shadow: none;}
+#header h2 {color: #000000; text-shadow: none;}
+#header p.generated {bottom: 10px; color: #666666; background: transparent;}
+#header p {background: #fafafa; border: none;}
+#header p a {color: #666666;}
+
+#footer {background: #ffffff; border-top: 2px solid #aaaaaa; margin-top: 30px; padding-top: 10px; color: #333333;}
+#footer a {color: #000000;}
+
+#content dl.location {display: none;}
+#content h1 {color: #000000; border-color: #cccccc;}
+#content pre.console {background: #f4f4f4; color: #000000;}
+#content blockquote {border-color: #aaaaaa;}
+#content table th {background-color: #eeeeee; color: #000000;}
+#content div.footnotes hr {color: #444444; background-color: #444444;}
+#content a {border-bottom: 1px solid #3e5b22; color: #3e5b22;}
+
+#content blockquote.error,
+#content blockquote.help,
+#content blockquote.important,
+#content blockquote.information,
+#content blockquote.steps,
+#content blockquote.stop,
+#content blockquote.warning {background-color: #ffffff; border: 3px solid #eeef9f;}

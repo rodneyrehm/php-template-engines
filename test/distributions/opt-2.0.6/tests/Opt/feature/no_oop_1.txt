@@ -1,0 +1,18 @@
+Check, if disabling the advanced OOP features actually works: "new" operator.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{$obj::foo}
+{$obj2 is new foo}
+</opt:root>
+
+>>>>expected.txt
+Opt_ExpressionOptionDisabled_Exception
+
+>>>>data.php
+$std = new stdClass;
+$std->foo = 'bar';
+
+$view->obj = $std;
+$this->tpl->advancedOOP = false;

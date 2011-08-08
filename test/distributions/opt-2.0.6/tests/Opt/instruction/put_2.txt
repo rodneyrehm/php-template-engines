@@ -1,0 +1,24 @@
+Conditional opt:put, or "add as much instructions as you can".
+
+>>>>templates/test.tpl
+The test checks the basic opt:put functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:put value="$sect.item" opt:section="sect" str:separator=" / "/>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+A / B / C / D
+
+>>>>data.php
+$view->sect = array(0 =>
+	array('item' => 'A'),
+	array('item' => 'B'),
+	array('item' => 'C'),
+	array('item' => 'D')
+);

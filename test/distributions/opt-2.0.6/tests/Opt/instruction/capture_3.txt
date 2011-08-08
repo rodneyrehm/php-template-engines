@@ -1,0 +1,18 @@
+Tests the opt:capture attribute.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo opt:capture="capt">Bar</foo>
+BAR
+{u:$system.capture.capt}
+{u:$system.capture.capt}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BAR
+<foo>Bar</foo>
+<foo>Bar</foo>

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:tree - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:tree</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.tree.html">opt:tree</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.25. opt:tree</dt><dd class="prev">3.7.24. opt:tag<br/><a href="syntax.instructions.tag.html">&laquo; Previous</a></dd><dd class="next">3.8. OPT attributes<br/><a href="syntax.attributes.html">Next &raquo;</a></dd></dl>	<h1>3.7.25. opt:tree</h1><blockquote class="help">
+  <p>This chapter describes one of section instructions. We recommend to read <a href="syntax.topics.sections.html" title="3.9.1. Sections">Sections</a> first to get to know more about them.</p>
+</blockquote>
+<p><code>opt:tree</code> is one of the section instructions designed to display hierarchical data (trees) with any level of nesting. The instruction does not support one of section attributes, <code>order</code> - because of the used algorithm the result displayed in the descending order would be strange.</p>
+
+<p>Inside the <code>opt:tree</code> tag we place two new ones: <code>opt:list</code> and <code>opt:node</code>. The first tag tells, how to open and close the new nesting level, whereas <code>opt:node</code> defines the layout of a single element within a tree. In both of them, we need to put also another tag: <code>opt:content</code> to mark, where to display the nested content:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:tree</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;tree&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:content</span><span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$tree.name} <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:content</span> <span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>  
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:tree<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Sample result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Element 1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Element 2 <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Element 2.1 <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Element 2.1.1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Element 2.2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Element 3<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In <code>opt:list</code>, the <code>opt:content</code> tag specifies, where to show the elements of the currently opened level, and in <code>opt:node</code>, where the nested list could appear. Note that we do not have to enclose <code>opt:tree</code> itself within <code>&lt;ul&gt;</code> tags, because they are automatically added, when the instruction starts to generate the initial nesting level.</p>
+
+<blockquote class="error">
+  <p>The <code>opt:content</code> tag must not be located within any other tag that generates PHP code during the compilation. Especially, it must not be placed within other instruction tags.</p>
+</blockquote>
+
+<p>A sample of invalid <code>opt:content</code> location:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:tree</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;tree&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:content</span><span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$tree.name} <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:repeat</span> <span style="color: #000066;">times</span>=<span style="color: #ff0000;">&quot;3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;opt:content</span> <span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/opt:repeat<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>  
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:tree<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Empty list support</h2>
+
+<p>You may define the alternative content to be displayed, if the list is empty, using the tag <code>opt:treeelse</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:tree</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;tree&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:content</span><span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$tree.name} <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:content</span> <span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:treeelse<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry, but there is nothing to show.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:treeelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:tree<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>With <code>opt:show</code> instruction, <code>opt:treeelse</code> must not be used:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;tree&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Tree:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:tree<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:content</span><span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:list<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$tree.name} <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:content</span> <span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:node<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:tree<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry, but there is nothing to show.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>For programmers</h2>
+
+<p><code>opt:tree</code> requires each element to have a variable <code>$sectionName.depth</code> that defines the depth of the element. Its value can be easily counted recursively, if the tree is stored in a traditional format. If the tree is stored in the database and we are using the nested sets algorithm (also known as modified preorder tree traversal), such value is automatically counted during the retrieving the tree from the database. A sample list from the first example would look like this:</p>
+
+<pre><code>name=Element 1, depth=1
+name=Element 2, depth=1
+name=Element 2.1, depth=2
+name=Element 2.1.1, depth=3
+name=Element 2.2, depth=2
+name=Element 3, depth=1
+</code></pre>
+<h4>See also:</h4><ul><li><a href="syntax.topics.sections.html">3.9.1. Sections</a></li><li><a href="syntax.instructions.section.html">3.7.19. opt:section</a></li><li><a href="syntax.instructions.grid.html">3.7.10. opt:grid</a></li><li><a href="syntax.instructions.selector.html">3.7.20. opt:selector</a></li><li><a href="syntax.instructions.show.html">3.7.22. opt:show</a></li><li><a href="syntax.instructions.separator.html">3.7.21. opt:separator</a></li></ul><dl class="location location-bottom"><dt>3.7.25. opt:tree<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.tag.html">&laquo; Previous</a><br/>3.7.24. opt:tag</dd><dd class="next"><a href="syntax.attributes.html">Next &raquo;</a><br/>3.8. OPT attributes</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

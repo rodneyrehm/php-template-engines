@@ -1,0 +1,19 @@
+The test checks the conditional attributes.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute str:name="abc" str:value="def" opt:if="true"/>
+<opt:attribute str:name="ghi" str:value="jkm" opt:if="false"/>
+bar
+</foo>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo abc="def">
+bar
+</foo>

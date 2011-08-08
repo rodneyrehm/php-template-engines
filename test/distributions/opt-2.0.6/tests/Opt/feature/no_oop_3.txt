@@ -1,0 +1,16 @@
+Check, if disabling the OOP completely actually works.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{$obj::foo}
+</opt:root>
+
+>>>>expected.txt
+Opt_NotSupported_Exception
+
+>>>>data.php
+$std = new stdClass;
+$std->foo = 'bar';
+$view->obj = $std;
+$this->tpl->basicOOP = false;

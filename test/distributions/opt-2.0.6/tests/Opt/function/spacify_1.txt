@@ -1,0 +1,15 @@
+Testing the spacify() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{spacify('hi universe')}
+{spacify('hi universe', '-')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+h i   u n i v e r s e
+h-i- -u-n-i-v-e-r-s-e

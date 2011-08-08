@@ -1,0 +1,23 @@
+Bug #85 test - opt:literal must disable entities in the cdata text.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<script type="text/javascript">
+<opt:literal type="comment_cdata">
+<![CDATA[
+alert("I'm not <b>evil</b>");
+]]>
+</opt:literal>
+</script>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<script type="text/javascript">
+/* <![CDATA[ */
+alert("I'm not <b>evil</b>");
+/* ]]> */
+</script>

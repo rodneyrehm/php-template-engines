@@ -1,0 +1,23 @@
+Testing the pluralize() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{pluralize(0, 'user', 'users')}
+{pluralize(1, 'user', 'users')}
+{pluralize(2, 'user', 'users')}
+{pluralize(5, 'user', 'users')}
+{pluralize(10, 'user', 'users')}
+{pluralize(100, 'user', 'users')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+users
+user
+users
+users
+users
+users

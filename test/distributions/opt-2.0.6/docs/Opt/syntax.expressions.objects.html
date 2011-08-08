@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Objects - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Objects</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.expressions.html">Expressions</a> &raquo; <a href="syntax.expressions.objects.html">Objects</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.expressions.html">3.5. Expressions</a><br/>3.5.6. Objects</dt><dd class="prev">3.5.5. Backticks<br/><a href="syntax.expressions.backticks.html">&laquo; Previous</a></dd><dd class="next">3.5.7. HTML escaping<br/><a href="syntax.expressions.escaping.html">Next &raquo;</a></dd></dl>	<h1>3.5.6. Objects</h1><blockquote class="warning">
+  <p>This page describes a feature strictly related to PHP language. We <strong>do not</strong> recommend to use it in your projects unless <strong>absolutely</strong> necessary, as it reduces the portability and links the templates with a concrete script implementation.</p>
+</blockquote>
+<p>Open Power Template expression syntax can optionally support PHP objects directly from the template side.</p>
+
+<h2>Supported OOP features</h2>
+
+<ul>
+<li>Accessing object fields.</li>
+<li>Accessing object methods.</li>
+<li>Accessing static fields and methods of the registered classes.</li>
+<li>Creating new objects of registered classes (advanced use).</li>
+<li>Cloning the objects (advanced use).</li>
+</ul>
+
+<h2>Enabling or disabling object support</h2>
+
+<p>This feature is strictly related to the PHP language which may lead to the problems with portability, refactoring and security. This is why it may be disabled in some scripts or even not supported. In order to enable the OOP on the template side, set the following configuration options to <strong>true</strong>:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+<span style="color: #666666; font-style: italic;">// ...</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">basicOOP</span> <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">advancedOOP</span> <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// ...</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setup</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Moreover, if you are going to create new objects or accessing the static class members, you have to register the appropriate classes in the template engine:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span>Opt_Class<span style="color: #339933;">::</span><span style="color: #004000;">PHP_CLASS</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'templateClassName'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'realPHPClassName'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<blockquote class="information">
+  <p>OPT does not support PHP namespaces on the template side. However, you can specify the class namespace in the <code>register()</code> method.</p>
+</blockquote>
+
+<h2>Accessing object members</h2>
+
+<p>OPT provides only one object access operator: <code>::</code>. Depending on the context, it may refer either to the static or normal members:</p>
+
+<pre><code>$object::field - accessing object field
+$object::method() - accessing object method
+className::field - accessing static class field
+className::method() - accessing static class method
+</code></pre>
+
+<p>The complex calls are also possible: <code>className::method()::field::submethod()</code>.</p>
+
+<h2>Creating new objects</h2>
+
+<p>If the <code>advancedOOP</code> option is enabled, OPT allows you to create new objects of registered classes:</p>
+
+<pre><code>$object is new className
+$object is new className('constructor arguments')
+</code></pre>
+
+<p>With this option, you may also clone existing objects:</p>
+
+<pre><code>$objectA is clone $objectB
+</code></pre>
+
+<h2>Why should you not use objects in templates?</h2>
+
+<p>You could have used to use objects with pure PHP or other template engine, but there you had no other choice! The reasons why you should not use them in templates are:</p>
+
+<ul>
+<li><p>They require you to know the exact script implementation while writing the templates. It decreases the refactoring possibilities. Let's say that your template contains a text <code>$item::field</code>. It would not work without an object here and moreover, if you decide to make this field private and add the accessor method, you must modify the template, too.</p></li>
+<li><p>They can transparently move the application logic to the view layer. The view layer should contain the presentation logic only and the experiences with other template engines show that some programmers attempt to call the SQL queries or database models directly from the templates. This is not what the templates are supposed to do and believe me - in 99% cases you are wrong saying that you really need those objects in them.</p></li>
+<li><p>OPT provides you several features that hide the implementation details from you.</p></li>
+</ul>
+
+<h2>The OPT techniques to replace objects</h2>
+
+<ul>
+<li>Containers - they are generic compound data structures with syntax <code>$item.subitem.subsubitem</code>. With <a href="guide.data-formats.html" title="4.6. Data formats">data formats</a> the PHP script may replace them to any stuff you need: arrays, objects, some script-specific structures etc.</li>
+<li>Components - useful for dealing with HTML forms.</li>
+<li>Blocks - like above, but more generic.</li>
+<li>OPT functions - you may register static class methods as OPT functions.</li>
+</ul>
+<dl class="location location-bottom"><dt>3.5.6. Objects<br/><a href="syntax.expressions.html">3.5. Expressions</a></dt><dd class="prev"><a href="syntax.expressions.backticks.html">&laquo; Previous</a><br/>3.5.5. Backticks</dd><dd class="next"><a href="syntax.expressions.escaping.html">Next &raquo;</a><br/>3.5.7. HTML escaping</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

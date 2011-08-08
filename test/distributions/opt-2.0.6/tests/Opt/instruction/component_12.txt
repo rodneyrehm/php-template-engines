@@ -1,0 +1,25 @@
+opt: attributes in :com should be skipped.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:component from="$component">
+<div foo="bar joe-goo" opt:component-attributes="yes">
+Foo.
+</div>
+</opt:component>
+
+>>>>data.php
+
+$view->component = new myComponent;
+$view->foo = true;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+ATTRIBUTE MANAGEMENT FOR: div#yes
+foo: bar joe-goo
+<div foo="bar joe-goo">
+Foo.
+</div>

@@ -1,0 +1,14 @@
+Check if the snippets are inserted properly.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="foo">Snippet</opt:snippet>
+<opt:insert snippet="foo" />
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Snippet

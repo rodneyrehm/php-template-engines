@@ -1,0 +1,25 @@
+Testing the number() function in the aggregate version.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@vars is number($vars)}
+{@vars.v1}
+{@vars.v2}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$this->tpl->numberDecimals = 1;
+$this->tpl->numberDecPoint = ';';
+$this->tpl->numberThousandSep = '}';
+$view->vars = array(
+	'v1' => 1234.56,
+	'v2' => 1234.32
+);
+
+>>>>result.txt
+1}234;6
+1}234;3

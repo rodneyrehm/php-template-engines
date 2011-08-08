@@ -1,0 +1,22 @@
+The test checks the "ns" attribute with a dynamic value and dynamic name.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute ns="$ns" name="$name" str:value="def" />
+bar
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->ns = 'foo';
+$view->name = 'abc';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo foo:abc="def">
+bar
+</foo>

@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Internationalization - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Internationalization</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.i18n.html">Internationalization</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.html">4. Programmer's Guide</a><br/>4.9. Internationalization</dt><dd class="prev">4.8. Custom escaping functions<br/><a href="guide.escaping.html">&laquo; Previous</a></dd><dd class="next">4.10. Components and forms<br/><a href="guide.components.html">Next &raquo;</a></dd></dl>	<h1>4.9. Internationalization</h1><p>OPT provides several features that make the internationalization easy.</p>
+
+<h2>Translation interface</h2>
+
+<p>Open Power Libs core contains the interface <code>Opl_Translation_Interface</code> that allows you to write a class that serves text with the specified identifier and assigned to a specified group. OPT template syntax provides a port for this interface using the language variables <code>$group@identifier</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news@title}: {$news.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$news@author}: {$news.author}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In order to make it work, you have to register an object of a class that implements that interface. A sample implementation can be found below:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+&nbsp;
+<span style="color: #000000; font-weight: bold;">class</span> translationInterface implements Opl_Translation_Interface
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_original</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+        <span style="color: #0000ff;">'foo'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'bar'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Value 1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'joe'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Value 2'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #0000ff;">'goo'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'bar'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Modificable value: %s'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_modified</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> _<span style="color: #009900;">&#40;</span><span style="color: #000088;">$group</span><span style="color: #339933;">,</span> <span style="color: #000088;">$id</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_modified<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$id</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #b1b100;">return</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_modified<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$id</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_original<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$id</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #b1b100;">return</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_original<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$id</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">''</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end _();</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> assign<span style="color: #009900;">&#40;</span><span style="color: #000088;">$group</span><span style="color: #339933;">,</span> <span style="color: #000088;">$id</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$args</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/func_get_args"><span style="color: #990000;">func_get_args</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <a href="http://www.php.net/unset"><span style="color: #990000;">unset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$args</span><span style="color: #009900;">&#91;</span>0<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <a href="http://www.php.net/unset"><span style="color: #990000;">unset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$args</span><span style="color: #009900;">&#91;</span>1<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_original<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$id</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_modified<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+            <span style="color: #009900;">&#123;</span>
+                <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_modified<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+            <span style="color: #009900;">&#125;</span>
+            <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_modified<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$id</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/vsprintf"><span style="color: #990000;">vsprintf</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_original<span style="color: #009900;">&#91;</span><span style="color: #000088;">$group</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$id</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$args</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end assign();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end translationInterface;</span>
+&nbsp;
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setTranslationInterface</span><span style="color: #009900;">&#40;</span><span style="color: #000000; font-weight: bold;">new</span> translationInterface<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// You can create the views and parse the templates now</span></pre>
+
+<p>There are two ways of registering the translation interface in OPT. The first one is to use the <a href="api.opt-class.set-translation-interface.html" title="7.1.9. Opt_Class::setTranslationInterface()">Opt_Class::setTranslationInterface()</a> method:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setTranslationInterface</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$tf</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The second one is to register the object directly in <code>Opl_Registry</code> object, so that the other libraries can also get it. However, this must be done <strong>before</strong> you call <a href="api.opt-class.setup.html" title="7.1.10. Opt_Class::setup()">Opt_Class::setup()</a>.</p>
+
+<pre class="php">Opl_Registry<span style="color: #339933;">::</span><span style="color: #004000;">set</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opl_translate'</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">new</span> translationInterface<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #339933;">...</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Now the translation interface is imported into OPT from the global OPL registry</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setup</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Another interesting feature of the translation interface is that you can assign values to the text from the template side using the <code>assign()</code> function:</p>
+
+<pre class="xml">{assign($foo@bar, $variable)}
+&nbsp;
+<span style="color: #808080; font-style: italic;">&lt;!-- now the $foo@bar should contain some text with a value from the script --&gt;</span>
+{$foo@bar}</pre>
+
+<p>It is up to you, how you implement this feature in your script. In our case, we used PHP <code>vsprintf()</code> function so that we can use formatting codes like <code>%s</code> or <code>%d</code> to indicate the places in the text, where to put some values.</p>
+
+<p>The translation interface has one disadvantage - you cannot specify the default interface messages directly in the template, so you must be sure they are defined in some external file and load them somehow.</p>
+<h4>See also:</h4><ul><li><a href="syntax.expressions.variables.html">3.5.1. Variables</a></li></ul><dl class="location location-bottom"><dt>4.9. Internationalization<br/><a href="guide.html">4. Programmer's Guide</a></dt><dd class="prev"><a href="guide.escaping.html">&laquo; Previous</a><br/>4.8. Custom escaping functions</dd><dd class="next"><a href="guide.components.html">Next &raquo;</a><br/>4.10. Components and forms</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

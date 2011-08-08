@@ -1,0 +1,16 @@
+Testing the containsKey() function for scalar values.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:if test="contains($vars, 'v3')">CONTAINS<opt:else>DOES NOT CONTAIN</opt:else></opt:if>
+</opt:root>
+
+>>>>data.php
+$view->vars = 'foo';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+DOES NOT CONTAIN

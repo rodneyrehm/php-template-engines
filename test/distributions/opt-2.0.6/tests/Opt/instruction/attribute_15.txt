@@ -1,0 +1,21 @@
+Test, if the other instructions are blocked in opt:value
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="class" str:value="c">
+	<opt:value test="$val1 == 'foo'">a <opt:section name="foo">...</opt:section> bar</opt:value>
+	<opt:value test="$val1 == 'bar'">b</opt:value>
+	<opt:value>c</opt:value>
+</opt:attribute>
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->val1 = 'foo';
+$view->val2 = 'bar';
+$view->val3 = 'joe';
+
+>>>>expected.txt
+Opt_InvalidValue_Exception

@@ -1,0 +1,20 @@
+Check the detection of infinite recursion.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="extended1.tpl">
+<opt:snippet name="foo">
+FOO-VALUE1
+</opt:snippet>
+</opt:extend>
+
+>>>>templates/extended1.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="test.tpl">
+<opt:snippet name="foo">
+FOO-VALUE2
+</opt:snippet>
+</opt:extend>
+
+>>>>expected.txt
+Opt_InheritanceRecursion_Exception

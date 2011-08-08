@@ -1,0 +1,29 @@
+This test checks the multiple components (potential bug #62)
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:component from="$c1">
+<p><span parse:title="$opt.component.title">{$opt.component.title}</span></p>
+</opt:component>
+<opt:component from="$c2">
+<p><span parse:title="$opt.component.title">{$opt.component.title}</span></p>
+</opt:component>
+</opt:root>
+
+>>>>data.php
+
+$view->c1 = new myComponent;
+$view->c1->set('title', 'FOO');
+
+$view->c2 = new myComponent;
+$view->c2->set('title', 'BAR');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+<p><span title="PARAM title RETURNEDFOO">PARAM title RETURNEDFOO</span></p>
+VIEW PASSED
+<p><span title="PARAM title RETURNEDBAR">PARAM title RETURNEDBAR</span></p>

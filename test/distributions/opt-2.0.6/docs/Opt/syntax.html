@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Template syntax - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Template syntax</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="index.html">Table of Contents</a><br/>3. Template syntax</dt><dd class="prev">2.2. PHAR installation<br/><a href="installation.phar.html">&laquo; Previous</a></dd><dd class="next">3.1. Compiler modes<br/><a href="syntax.compiler-modes.html">Next &raquo;</a></dd></dl>	<h1>3. Template syntax</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="syntax.compiler-modes.html">3.1. Compiler modes</a></li><li><a href="syntax.cdata.html">3.2. CDATA sections</a></li><li><a href="syntax.prolog.html">3.3. XML Prolog and DTD</a></li><li><a href="syntax.entities.html">3.4. Entities</a></li><li><a href="syntax.expressions.html">3.5. Expressions</a></li><li><a href="syntax.functions.html">3.6. Function reference</a></li><li><a href="syntax.instructions.html">3.7. Instructions</a></li><li><a href="syntax.attributes.html">3.8. OPT attributes</a></li><li><a href="syntax.topics.html">3.9. Topics</a></li></ul><p>In this chapter, we are going to describe the syntax used in OPT templates. It is based on XML language, and if you are familiar with it, you should have no problems to understand. Otherwise, you should consider reading something about XML.</p>
+
+<p>The execution of the template takes some time, so OPT tries to optimize the process. When you run a template for the first time, OPT <em>compiles</em> it into pure PHP code, which can be executed much faster. Moreover, the result is saved on the hard disk and later, OPT simply loads the precompiled version. This implicates some issues that you must know about. First of all, OPT is not a Document Object Model. The script cannot modify every tag it likes and whenever it likes unless it was programmed in the template itself. However, a huge majority of programmers do not need such functionality, so this is not a real limitation for them. Otherwise, you should think over whether the template engines are the right choice.</p>
+
+<h2>OPT philosophy</h2>
+
+<p>Before we start, let us tell abot the syntax philosophy.</p>
+
+<dl>
+<dt>Configurable compatibility</dt>
+<dd>The XML parser used by OPT is very flexible and allows to set a wide variety of compatibility levels with XML standard.</dd>
+
+<dt>KISS</dt>
+<dd>The simple things should be simple to achieve.</dd>
+
+<dt>DRY</dt>
+<dd>There is no need to reinvent the wheel every time we write a new template.</dd>
+
+<dt>Declarative style</dt>
+<dd>Declarative style means that we only specify, <em>what</em> we want to see, not <em>how</em> to do this. Unlike many other template engines, OPT contains built-in declarative instructions. Such style is very convenient for people who know little about programming, but not only. Also the programmers should enjoy the simplicity and clearness of OPT templates.</dd>
+
+<dt>No programming in templates</dt>
+<dd>The templates full of loops, conditions and logical operations are very hard to maintain and understand. You should avoid it, if possible.</dd>
+</dl>
+
+<h2>How much PHP is in OPT syntax?</h2>
+
+<p>Like many other template engines, OPT compiles the templates into the native PHP code. This means that usually the syntax is based on that language and includes some sort of support for the default PHP types, etc. The programmers can even put PHP code snippets in the templates. It has some disadvantages, like:</p>
+
+<ol>
+<li>Poor code reusability - sometimes the code sample cannot be reused again in another place even inside the same PHP application!</li>
+<li>Problems with refactoring - as the applications grow, we may need to change some solutions. The templates must be rewritten as well.</li>
+<li>Problems with portability - what about backends? They often share the same layout. Do we need to write the templates every time we start something new?</li>
+</ol>
+
+<p>In OPT we decided to divide the syntax into two parts:</p>
+
+<ol>
+<li>Abstract, platform- and type-independent part.</li>
+<li>PHP-based part.</li>
+</ol>
+
+<p>In the first case, OPT automatically converts the code to the valid PHP parts according to the information provided by the script and the context. If you change the format, you simply modify your script and recompile templates. In the second case, OPT compiles everything as it is. It is you who must make sure that everything is correct, and who eventually will pay for it.</p>
+
+<p>The access to the PHP syntax part can be controlled in the compiler configuration. You can disable some minor issues, or simply turn it off to ensure that nobody tries to manipulate the internals of the objects passed to the templates. The security issues are discussed later.</p>
+
+<h2>Who is this chapter for?</h2>
+
+<p>We recommend the PHP programmers to read this chapter, too, because they can find here a lot of practical notices and advices. OPT syntax contains several programming instructions and ports to PHP language elements, and this document may be read by people who are not familiar with programming. Because of this, we marked the chapters:</p>
+
+<ol>
+<li>For everyone - recommended to read.</li>
+<li>Simple programming construct that is recommended.</li>
+<li>Programming construct that probably will not be necessary. You </li>
+</ol>
+
+<p>The second type is marked with:</p>
+
+<blockquote class="warning">
+  <p>This chapter contains <em>useful programming information</em> that are simple to understand. In case of questions, contact your programmer.</p>
+</blockquote>
+
+<p>The third type is marked with:</p>
+
+<blockquote class="warning">
+  <p>This chapter contains information about <em>programming constructs</em> that are not recommended to use. If you are only a template author, probably you will not have to use them. In case of questions, contact your programmer.</p>
+</blockquote>
+
+<p>Moreover, we are going to use additional information frames:</p>
+
+<blockquote class="information">
+  <p>Some information for programmers</p>
+</blockquote>
+
+<!-- ... -->
+
+<blockquote class="important">
+  <p>Important information</p>
+</blockquote>
+
+<!-- ... -->
+
+<blockquote class="error">
+  <p>This frame informs about common errors and mistakes.</p>
+</blockquote>
+
+<p>We will also use the following terms:</p>
+
+<dl>
+<dt>Template</dt>
+<dd>A file with the source template code that tells where to put the data and how to display them.</dd>
+
+<dt>Compiled template</dt>
+<dd>The template compiled into the PHP code.</dd>
+
+<dt>Template result, output</dt>
+<dd>The code that is produced by putting the data into a template and is ready to be sent to the browser.</dd>
+</dl>
+<dl class="location location-bottom"><dt>3. Template syntax<br/><a href="index.html">Table of Contents</a></dt><dd class="prev"><a href="installation.phar.html">&laquo; Previous</a><br/>2.2. PHAR installation</dd><dd class="next"><a href="syntax.compiler-modes.html">Next &raquo;</a><br/>3.1. Compiler modes</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

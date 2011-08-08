@@ -1,0 +1,17 @@
+Check the entity() function features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{u:entity('nbsp')}
+{u:entity('#184')}
+{u:entity('#xB8')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+&nbsp;
+&#184;
+&#xB8;

@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>New caching systems - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>New caching systems</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.caching-systems.html">New caching systems</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.html">5. Extending OPT</a><br/>5.6. New caching systems</dt><dd class="prev">5.5. New output systems<br/><a href="extending.output-systems.html">&laquo; Previous</a></dd><dd class="next">5.7. New data formats<br/><a href="extending.data-formats.html">Next &raquo;</a></dd></dl>	<h1>5.6. New caching systems</h1><p>OPT does not come bundled with any native caching system, although one is being developed as a part of <em>Open Power Classes</em> project. This article shows, how to connect the template engine to an external caching system, provided (for example) by your framework. All you need is to implement the <code>Opt_Caching_Interface</code> in one of your classes. The interface consists of two methods:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> templateCacheStart<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> templateCacheStop<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The first method must perform the following operations:</p>
+
+<ol>
+<li>Check, if the cached content needs to be refreshed.</li>
+<li>If the cache must be refreshed, the method is expected to start capturing the content and return <strong>false</strong>.</li>
+<li>Otherwise, it must read and display the content with <strong>echo</strong> and return <strong>true</strong>.</li>
+</ol>
+
+<p>The second method is executed at the end of cache rebuilding. Its purpose is to finalize the capturing and save the new content.</p>
+
+<p>A sample implementation could look like this:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> myCache implements Opt_Caching_Interface
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_refresh</span> <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> refresh<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_refresh <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end refresh();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> templateCacheStart<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/file_exists"><span style="color: #990000;">file_exists</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./'</span><span style="color: #339933;">.</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getTemplate</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'.txt'</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">||</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_refresh<span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> Opl_Registry<span style="color: #339933;">::</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+            <span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setBufferState</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'cache'</span><span style="color: #339933;">,</span><span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+            <a href="http://www.php.net/ob_start"><span style="color: #990000;">ob_start</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">return</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+        <span style="color: #b1b100;">echo</span> <a href="http://www.php.net/file_get_contents"><span style="color: #990000;">file_get_contents</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./cache.txt'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end templateCacheStart();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> templateCacheStop<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <a href="http://www.php.net/file_put_contents"><span style="color: #990000;">file_put_contents</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./'</span><span style="color: #339933;">.</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getTemplate</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'.txt'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/ob_get_clean"><span style="color: #990000;">ob_get_clean</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+        <span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> Opl_Registry<span style="color: #339933;">::</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setBufferState</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'cache'</span><span style="color: #339933;">,</span><span style="color: #009900; font-weight: bold;">false</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end templateCacheStop();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end myCache;</span></pre>
+
+<p>Such caching object can be registered now in the <code>Opt_View</code> object to enable caching features.</p>
+
+<blockquote class="help">
+  <p>If you are working with Zend Framework, please take a look at the <a href="http://www.invenzzia.org/en/projects/ports/opl4zf">OPL for Zend Framework port</a> which contains a plugin that allows to use the <code>Zend_Cache</code> component with OPT.</p>
+</blockquote>
+
+<p>If you are wondering, why our caching system needs the main OPT object and why we are calling <code>setBufferState()</code>, please read the chapter below.</p>
+
+<h2>Capturing <code>&lt;opt:dynamic&gt;</code></h2>
+
+<p>The <a href="syntax.instructions.dynamic.html" title="3.7.6. opt:dynamic">opt:dynamic</a> instruction informs that the specified part of template must remain dynamic even after caching. In order to use this feature, the caching system must support it. Here, we are going to describe, how to capture the dynamic content of the template.</p>
+
+<p>When using <code>opt:dynamic</code>, the caching system must combine the cache file from the static parts of the template and the PHP code snippets that must remain dynamic. This means that the output cache file must be a PHP script, instead of a file with static text. The static content is collected by <code>Opt_View</code> object that processes the template, and PHP snippets can be found in the compilation directory. Once we use <code>opt:dynamic</code>, the template compiler produces two output files - the new one, with <code>.dyn</code> extension, contains the serialized array of the PHP code for our caching system.</p>
+
+<p>The concatenation must be done in <code>templateCacheStop()</code> and below, you can find a sample implementation:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> templateCacheStop<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">hasDynamicContent</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$staticParts</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getOutputBuffers</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$dynamicParts</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/unserialize"><span style="color: #990000;">unserialize</span></a><span style="color: #009900;">&#40;</span><a href="http://www.php.net/file_get_contents"><span style="color: #990000;">file_get_contents</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span>_convert<span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getTemplate</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+        <span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">''</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$cnt</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/sizeof"><span style="color: #990000;">sizeof</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$staticParts</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">for</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$i</span> <span style="color: #339933;">=</span> <span style="color: #cc66cc;">0</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span> <span style="color: #339933;">&lt;</span> <span style="color: #000088;">$cnt</span><span style="color: #339933;">;</span> <span style="color: #000088;">$i</span><span style="color: #339933;">++</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #000088;">$output</span> <span style="color: #339933;">.=</span> <span style="color: #000088;">$staticParts</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$i</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">;</span>
+            <span style="color: #000088;">$output</span> <span style="color: #339933;">.=</span> <span style="color: #0000ff;">'&lt;'</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'?php '</span><span style="color: #339933;">.</span><span style="color: #000088;">$dynamicParts</span><span style="color: #009900;">&#91;</span><span style="color: #000088;">$i</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">' ?'</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'&gt;'</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+        <span style="color: #000088;">$output</span> <span style="color: #339933;">.=</span> <a href="http://www.php.net/ob_get_flush"><span style="color: #990000;">ob_get_flush</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #666666; font-style: italic;">// save the file...</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #b1b100;">else</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// static cache here...</span>
+    <span style="color: #009900;">&#125;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end templateCacheStop();</span></pre>
+
+<blockquote class="warning">
+  <p>In the source code, we can see that we need to close the last output buffer manually with <code>ob_get_flush()</code>. The output buffer must be flushed, too. Otherwise, it won't appear on the script when the cache is regenerated.</p>
+</blockquote>
+
+<p><code>opt:dynamic</code> requires us to use the advisory output buffer management provided by the <code>Opt_Class</code> to detect, whether the caching output buffering has actually been used. This means that <code>templateCacheStart()</code> must call: <code>$tpl-&gt;setBufferState('cache',true);</code> and <code>templateCacheStop()</code> - <code>$tpl-&gt;setBufferState('cache',false)</code>.</p>
+<h4>See also:</h4><ul><li><a href="guide.cache.html">4.11. Caching</a></li></ul><dl class="location location-bottom"><dt>5.6. New caching systems<br/><a href="extending.html">5. Extending OPT</a></dt><dd class="prev"><a href="extending.output-systems.html">&laquo; Previous</a><br/>5.5. New output systems</dd><dd class="next"><a href="extending.data-formats.html">Next &raquo;</a><br/>5.7. New data formats</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+Checks the default DTD templates
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:dtd template="html5" />
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<!DOCTYPE html>

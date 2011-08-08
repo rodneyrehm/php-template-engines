@@ -1,0 +1,16 @@
+Check whether the snippets are overloaded properly according to the template inheritance rules.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="foo">Foo</opt:snippet>
+<opt:snippet name="foo">Bar</opt:snippet>
+<opt:snippet name="foo">Joe</opt:snippet>
+<opt:insert snippet="foo" />
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Foo

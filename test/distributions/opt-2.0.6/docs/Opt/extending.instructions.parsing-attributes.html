@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Parsing attributes - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Parsing attributes</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.instructions.html">New instructions</a> &raquo; <a href="extending.instructions.parsing-attributes.html">Parsing attributes</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.instructions.html">5.8. New instructions</a><br/>5.8.3. Parsing attributes</dt><dd class="prev">5.8.2. Generating PHP code<br/><a href="extending.instructions.generating-php.html">&laquo; Previous</a></dd><dd class="next">5.8.4. XML manipulations<br/><a href="extending.instructions.xml-manipulations.html">Next &raquo;</a></dd></dl>	<h1>5.8.3. Parsing attributes</h1><p>Usually, the instruction tags take some attributes to configure themselves. OPT supports parsing the attribute list with a convenient method, <code>_extractAttributes()</code>. The sample use can be found here:</p>
+
+<pre class="php"><span style="color: #000088;">$params</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'attr1'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">REQUIRED</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">EXPRESSION</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'attr2'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">REQUIRED</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">ID</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'attr3'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">OPTIONAL</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">ID</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'attr4'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">OPTIONAL</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">EXPRESSION</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_extractAttributes<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #339933;">,</span> <span style="color: #000088;">$params</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The <code>$params</code> array contains a configuration. Each attribute is described by some flags:</p>
+
+<ol>
+<li><code>REQUIRED</code>, if the attribute is required; otherwise - <code>OPTIONAL</code></li>
+<li>The attribute type:
+
+<ul>
+<li><code>HARD_STRING</code> - any string</li>
+<li><code>NUMBER</code> - any number (decimal or hexadecimal)</li>
+<li><code>ID</code> - a valid identifier</li>
+<li><code>ID_EMP</code> - a valid identifier or empty value</li>
+<li><code>BOOL</code> - <code>yes</code> or <code>no</code></li>
+<li><code>EXPRESSION</code> - an OPT expression</li>
+<li><code>ASSIGN_EXPR</code> - an OPT expression with assignments allowed</li>
+<li><code>STRING</code> - an OPT expression with string value by default</li>
+</ul></li>
+<li>Default value for optional attributes.</li>
+</ol>
+
+<p>The configuration is passed by reference and the method replaces it with the extracted attribute values.</p>
+
+<h2>Attribute types</h2>
+
+<p>The attribute types divide into two groups. The first one are ordinary values - they are used by the compiler and the end user cannot read their values from a template variable or an expression. Moreover, the end user cannot change the expected type. This group includes <code>HARD_STRING</code>, <code>NUMBER</code>, <code>ID</code>, <code>ID_EMP</code> and <code>BOOL</code>. Another group are the OPT expressions, where the user may specify a template variable, function call etc. There are three such types: <code>EXPRESSION</code>, <code>ASSIGN_EXPR</code> and <code>STRING</code>. Note that the user may switch between these three types by changing the attribute namespace, so even if you have specified <code>STRING</code>, you must be prepared to work with an expression, too.</p>
+
+<p>The instruction processor <strong>does not</strong> get an expression result in this place, but the expression compiled to PHP code that should be pasted to one of the code snippets and inserted to code buffers. There is no way to predict the expression value during the compilation. Sample use:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$params</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+        <span style="color: #0000ff;">'test'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">REQUIRED</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">EXPRESSION</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_extractAttributes<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #339933;">,</span> <span style="color: #000088;">$params</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">addBefore</span><span style="color: #009900;">&#40;</span>Opt_Xml_Buffer<span style="color: #339933;">::</span><span style="color: #004000;">TAG_BEFORE</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">' if('</span><span style="color: #339933;">.</span><span style="color: #000088;">$params</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'test'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'){ '</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">addAfter</span><span style="color: #009900;">&#40;</span>Opt_Xml_Buffer<span style="color: #339933;">::</span><span style="color: #004000;">TAG_AFTER</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">' } '</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_process<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span></pre>
+
+<h2>Variable number of attributes</h2>
+
+<p>To handle a variable number of attributes, we have to add a special attribute item to the configuration that will specify the expected type for all the "unknown" attributes:</p>
+
+<pre class="php"><span style="color: #000088;">$params</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'attr1'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">REQUIRED</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">EXPRESSION</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'__UNKNOWN__'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">OPTIONAL</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">EXPRESSION</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$unknown</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_extractAttributes<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #339933;">,</span> <span style="color: #000088;">$params</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The extra attributes are <strong>returned</strong> as a separate array, so that the instruction processor could distinguish them from the predefined attributes.</p>
+
+<h2>Specific cases</h2>
+
+<p>If we are programming the instruction attribute, we cannot use the <code>_extractAttributes()</code> method to parse the attribute value. Let's consider the following code:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:myinstruction</span>=<span style="color: #ff0000;">&quot;$variable&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We want to parse the attribute value as an expression and to do this, we need to call the <code>compileExpression()</code> compiler function manually:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processAttribute<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #339933;">,</span> Opt_Xml_Attribute <span style="color: #000088;">$attr</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$expression</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_compiler<span style="color: #339933;">-&gt;</span><span style="color: #004000;">compileExpression</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$attr</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getValue</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #339933;">,</span> Opt_Compiler_Class<span style="color: #339933;">::</span><span style="color: #004000;">ESCAPE_ON</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">addBefore</span><span style="color: #009900;">&#40;</span>Opt_Xml_Buffer<span style="color: #339933;">::</span><span style="color: #004000;">TAG_BEFORE</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">' if('</span><span style="color: #339933;">.</span><span style="color: #000088;">$expression</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'){ '</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">addAfter</span><span style="color: #009900;">&#40;</span>Opt_Xml_Buffer<span style="color: #339933;">::</span><span style="color: #004000;">TAG_AFTER</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">' } '</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processAttribute();</span></pre>
+
+<p>The method takes three arguments:</p>
+
+<ol>
+<li>The expression to compile</li>
+<li>Whether we allow to use the assignment operator (<strong>true</strong>) or not (<strong>false</strong>)</li>
+<li>The escaping policy settings: <code>Opt_Compiler_Class::ESCAPE_ON</code>, <code>Opt_Compiler_Class::ESCAPE_OFF</code> or <code>Opt_Compiler_Class::ESCAPE_BOTH</code> to make the user choose.</li>
+</ol>
+
+<p>Unless we are going to parse the value as an expression, we have to process the value on our own.</p>
+<dl class="location location-bottom"><dt>5.8.3. Parsing attributes<br/><a href="extending.instructions.html">5.8. New instructions</a></dt><dd class="prev"><a href="extending.instructions.generating-php.html">&laquo; Previous</a><br/>5.8.2. Generating PHP code</dd><dd class="next"><a href="extending.instructions.xml-manipulations.html">Next &raquo;</a><br/>5.8.4. XML manipulations</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

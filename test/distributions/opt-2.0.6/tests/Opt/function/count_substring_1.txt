@@ -1,0 +1,22 @@
+Testing the countSubstring() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{countSubstring('foo bar joe bar goo', 'bar')}
+{countSubstring($strings, 'bar')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$view->strings = array(
+	'foo bar joe',
+	'moo goo hoo',
+	'bar bar foo'
+);
+
+>>>>result.txt
+2
+3

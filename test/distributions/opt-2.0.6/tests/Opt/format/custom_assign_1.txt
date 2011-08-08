@@ -1,0 +1,26 @@
+Testing the custom assignments that are possible with data formats.
+
+>>>>templates/test.tpl
+{$foo}
+{$goo}
+{$foo is 'joe'}
+{$goo is 'joe'}
+{$foo}
+{$goo}
+
+>>>>data.php
+Opl_Registry::register('data', array(
+	'foo' => 'bar',
+	'goo' => 'hoo'
+));
+$view->setFormat('foo', 'Test');
+$view->setFormat('goo', 'Test');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+bar
+hoo
+joe
+joe

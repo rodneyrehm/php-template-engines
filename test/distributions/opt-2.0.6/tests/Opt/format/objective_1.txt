@@ -1,0 +1,19 @@
+Objective format: the "variable" namespace.
+
+>>>>templates/test.tpl
+{$variable}
+{$global.variable}
+
+>>>>data.php
+$view->variable = 'FOO';
+Opt_View::assignGlobal('variable', 'BAR');
+
+$view->setFormat('variable', 'Objective');
+Opt_View::setFormatGlobal('variable', 'Objective');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+BAR

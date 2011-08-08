@@ -1,0 +1,22 @@
+Test, if the double default value causes an exception - part 2.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="class">
+	<opt:value test="$val1 == 'foo'">a</opt:value>
+	<opt:value test="$val1 == 'bar'">b</opt:value>
+	<opt:value>c</opt:value>
+	<opt:value>d</opt:value>
+</opt:attribute>
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->val1 = 'foo';
+$view->val2 = 'bar';
+$view->val3 = 'joe';
+
+>>>>expected.txt
+Opt_AttributeNotDefined_Exception

@@ -1,0 +1,10 @@
+Test if the single tag detection works.
+
+>>>>templates/test.tpl
+<foo></foo>
+<foo></foo>
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+Opt_XmlRootElement_Exception

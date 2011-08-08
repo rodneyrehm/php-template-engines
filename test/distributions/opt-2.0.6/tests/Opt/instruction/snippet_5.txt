@@ -1,0 +1,11 @@
+Detect infinite recursion.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="foo">Snippet:<opt:insert snippet="foo"/></opt:snippet>
+<opt:insert snippet="foo" />
+</opt:root>
+
+>>>>expected.txt
+Opt_SnippetRecursion_Exception

@@ -1,0 +1,38 @@
+Is the doubly nested opt:show for the same section handled correctly?
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:show name="sect">
+Foo:
+<opt:show name="sect">
+Bar:
+<opt:section>
+{$sect.val1}
+</opt:section>
+Eos
+</opt:show>
+Eof
+</opt:show>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Foo:
+Bar:
+A
+C
+E
+G
+Eos
+Eof
+
+>>>>data.php
+$view->sect = array(
+	array('val1' => 'A', 'val2' => 'B'),
+	array('val1' => 'C', 'val2' => 'D'),
+	array('val1' => 'E', 'val2' => 'F'),
+	array('val1' => 'G', 'val2' => 'H'),
+);

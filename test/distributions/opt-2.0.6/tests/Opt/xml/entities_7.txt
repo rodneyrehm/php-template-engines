@@ -1,0 +1,22 @@
+Check whether the special OPT entities are recognized.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+&amp;
+&lb;
+&rb;
+</foo>
+
+>>>>data.php
+$this->tpl->htmlEntities=false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+&amp;
+{
+}
+</foo>

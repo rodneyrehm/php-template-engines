@@ -1,0 +1,15 @@
+Test if the multiple root tags work.
+
+>>>>templates/test.tpl
+<foo></foo>
+<foo></foo>
+>>>>data.php
+$this->tpl->prologRequired = false;
+$this->tpl->singleRootNode = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo></foo>
+<foo></foo>

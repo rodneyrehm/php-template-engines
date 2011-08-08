@@ -1,0 +1,15 @@
+Testing the upper() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{upper('hi universe')}
+{upper('Hi UnIvErSe')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+HI UNIVERSE
+HI UNIVERSE

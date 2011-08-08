@@ -1,0 +1,13 @@
+Testing the regexReplace() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{regexReplace('follow the white rabbit with whispers.', '/wh[a-z]+([^a-z])/', 'test$1')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+follow the test rabbit with test.

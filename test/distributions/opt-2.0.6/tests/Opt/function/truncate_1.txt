@@ -1,0 +1,20 @@
+Check the truncate() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@text is 'This is a very long text that needs to be truncated'}
+{truncate(@text, 17)}
+{truncate(@text, 17, '...')}
+{truncate(@text, 500, '...')}
+{truncate(@text, 17, '...', false)}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+This is a very lo
+This is a very lo...
+This is a very long text that needs to be truncated
+This is a very...

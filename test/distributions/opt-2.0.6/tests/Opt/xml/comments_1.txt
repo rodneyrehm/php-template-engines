@@ -1,0 +1,19 @@
+Check the nested commenting.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+<!--
+ foo
+  <!--
+    joe
+  -->
+  bar
+-->
+</foo>
+
+>>>>data.php
+$this->tpl->printComments = true;
+
+>>>>expected.txt
+Opt_XmlComment_Exception

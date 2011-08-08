@@ -1,0 +1,19 @@
+Check the correctness of attribute parsing: mixing quotes and double quotes.
+
+>>>>templates/test.tpl
+<foo>
+<tag attribute1="foo ' fff" attribute2="bar ' fff" />
+<tag attribute3='foo " fff' attribute4='bar " fff' />
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+<tag attribute1="foo ' fff" attribute2="bar ' fff" />
+<tag attribute3="foo &quot; fff" attribute4="bar &quot; fff" />
+</foo>

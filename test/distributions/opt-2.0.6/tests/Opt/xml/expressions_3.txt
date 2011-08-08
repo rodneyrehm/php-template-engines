@@ -1,0 +1,13 @@
+Check, what happens, if the expression is empty.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+An expression: {}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+An expression: 

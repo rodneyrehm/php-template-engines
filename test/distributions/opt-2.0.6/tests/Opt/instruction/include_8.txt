@@ -1,0 +1,20 @@
+Check the opt:include "view" attribute behaviour, if the object is not a valid
+view.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a view -->
+<opt:root>
+Foo
+<opt:include view="$view">
+Sorry
+</opt:include>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooSorry
+>>>>data.php
+$view->view = 'Foo';

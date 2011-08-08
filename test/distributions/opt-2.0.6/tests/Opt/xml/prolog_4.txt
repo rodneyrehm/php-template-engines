@@ -1,0 +1,17 @@
+Check if the prolog attributes are passed to the prolog object in OPT.
+
+>>>>templates/test.tpl
+<?xml version="1.0" standalone="no" encoding="UTF-8" ?>
+<foo>
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<?xml version="1.0" standalone="no" encoding="UTF-8" ?>
+<foo>
+</foo>

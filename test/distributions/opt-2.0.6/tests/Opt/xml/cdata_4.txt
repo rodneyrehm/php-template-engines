@@ -1,0 +1,15 @@
+A static content without XML characters.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+ABC
+</foo>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+ABC
+</foo>

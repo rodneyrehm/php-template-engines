@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Available data formats - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Available data formats</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.data-formats.html">Data formats</a> &raquo; <a href="guide.data-formats.available.html">Available data formats</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.data-formats.html">4.6. Data formats</a><br/>4.6.1. Available data formats</dt><dd class="prev">4.6. Data formats<br/><a href="guide.data-formats.html">&laquo; Previous</a></dd><dd class="next">4.6.2. Formats and expressions<br/><a href="guide.data-formats.expressions.html">Next &raquo;</a></dd></dl>	<h1>4.6.1. Available data formats</h1><p>There are five default data formats available in OPT, and three features they may implement:</p>
+
+<ol>
+<li>Ordinary variables</li>
+<li>Sections</li>
+<li>Section elements</li>
+</ol>
+
+<p>In this chapter, we will describe them and show, how they should be used.</p>
+
+<h2>Available formats</h2>
+
+<dl>
+<dt><code>Array</code></dt>
+<dd>The default format, implements variables, sections and section elements.</dd>
+
+<dt><code>SingleArray</code></dt>
+<dd>Very similar to <code>Generic</code>. The only difference is how the child section data are handled.</dd>
+
+<dt><code>Objective</code></dt>
+<dd>Implements variables, sections and section elements. Assumes that the data are objects that may implement one of the standard interfaces, like <code>Iterator</code> in case of sections.</dd>
+
+<dt><code>StaticGenerator</code></dt>
+<dd>The format that generates the data on the fly when they are really needed. It implements only sections.</dd>
+
+<dt><code>RuntimeGenerator</code></dt>
+<dd>Similar to <code>StaticGenerator</code>, but if no generator is provided, it assumes that the script assigned some static data for the sections.</dd>
+
+<dt><code>SplDatastructure</code></dt>
+<dd>Section format that iterates through SPL doubly linked list from PHP 5.3. It is available since OPT 2.0.5.</dd>
+</dl>
+
+<h2>Array</h2>
+
+<p>This is the default data format for OPT. It evaluates all the containers as ordinary PHP arrays:</p>
+
+<pre class="xml">{$container.item} is equivalent to {$container['item']}</pre>
+
+<p>The section data are also parsed as arrays. The data format requires a separate template variable to store the data of nested sections in the following style:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;s1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    {$s1.item}
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;s2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        {$s2.item}
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The PHP code to populate the section with this data format:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">s1</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Foo'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Bar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Joe'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">s2</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #cc66cc;">0</span> <span style="color: #339933;">=&gt;</span>
+    <span style="color: #666666; font-style: italic;">// The data for &quot;s2&quot; items that are in the relationship with &quot;Foo&quot;.</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'A'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'B'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #666666; font-style: italic;">// The data for &quot;s2&quot; items that are in the relationship with &quot;Bar&quot;.</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'C'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'D'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #666666; font-style: italic;">// The data for &quot;s2&quot; items that are in the relationship with &quot;Joe&quot;.</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'E'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'F'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>And so on for the deeper relationships.</p>
+
+<blockquote class="error">
+  <p>This data format requires the section element indexes to start from 0 and be continuous, i.e. 0, 1, 2, 3, etc. Any holes in the index enumeration are not supported.</p>
+</blockquote>
+
+<h2>SingleArray</h2>
+
+<p>This data format is an extension to the ordinary <code>Array</code> format. It modifies the section behavior, so that the nested sections are taken from the appropriate items of the upper-level sections. To populate the sections presented above, we would use the following code:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">s1</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Foo'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'s2'</span> <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'A'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'B'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Bar'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'s2'</span> <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'C'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'D'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Joe'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'s2'</span> <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'E'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'F'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'s1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'SingleArray'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>  <span style="color: #666666; font-style: italic;">// This is not necessary, as the top-level sections are not affected.</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'s2'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'SingleArray'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>In other words, the data for the nested sections must be stored under the upper-level section item variable whose name corresponds to the nested section name. In the example the nested section is called <code>s2</code>, so the item with its data in <code>s1</code> must also be called <code>s2</code>.</p>
+
+<p>The other aspects of <code>Array</code> format are not changed and work in the same way, including the index enumeration issue.</p>
+
+<h2>Objective</h2>
+
+<p>This data format evaluates the containers as the object calls:</p>
+
+<pre class="xml">{$container.item} is equivalent to {$container::item}</pre>
+
+<p>It can be also applied to sections, allowing to iterate through objects that implement both <code>Countable</code> and <code>Traversable</code> interfaces (i.e. <code>Iterator</code> or <code>IteratorAggregate</code>). The nested section data are taken from the appropriate upper-level section item field, like in <code>SingleArray</code>. The data format also supports the section item variables that are evaluated as object field calls.</p>
+
+<blockquote class="information">
+  <p>This data format does not put any special requirements on section element indexes.</p>
+</blockquote>
+
+<h2>StaticGenerator</h2>
+
+<p>This data format can be used with sections only and allows to lazy-load their data when they are really needed. The script must provide an object of <code>Opt_Generator_Interface</code> to the section variable instead of the list of elements.</p>
+
+<blockquote class="important">
+  <p>The data format <strong>must</strong> be decorated in order to specify, what type of data the requested function is going to generate.</p>
+</blockquote>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> myGenerator implements Opt_Generator_Interface
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> generate<span style="color: #009900;">&#40;</span><span style="color: #000088;">$what</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">return</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Item 1'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Item 2'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+            <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Item 3'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end generate();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end myGenerator;</span>
+&nbsp;
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'view.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">section</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> myGenerator<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'RuntimeGenerator/Array'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The format is especially useful, if our web application supports many different themes. Some sections may be not used in some themes and with the generators, the web application does not waste the time to return the unnecessary data for them.</p>
+
+<h2>RuntimeGenerator</h2>
+
+<p>This data format is an extension to the <code>StaticGenerator</code>. It allows to provide the generator optionally. If we do not specify the generator, the sections will look for the ordinary data.</p>
+
+<h2>SplDatastructure</h2>
+
+<p>PHP 5.3.0 introduced a group of SPL classes implementing various generic data structures. This data format allows section iteration over <code>SplDoublyLinkedList</code> objects, making use of their extra features such as iteration mode. <code>SplDatastructure</code> may be decorated with another format to specify the type of each collection element. By default, they instantiate into arrays or scalar values:</p>
+
+<pre class="php"><span style="color: #000088;">$list</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> SplDoublyLinkedList<span style="color: #339933;">;</span>
+<span style="color: #000088;">$list</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">push</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'foo'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$list</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">push</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'bar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$list</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">push</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'joe'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">collection</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$list</span><span style="color: #339933;">;</span>
+<span style="color: #666666; font-style: italic;">// List elements can be arrays or scalar values.</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'collection'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'SplDatastructure'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The format handles the section <code>order</code> attribute in the following manner:</p>
+
+<h2><code>order="asc"</code> - iterates in the default data structure order. I.e. for a queue, it displays elements from the first to the last one, but for a stack - starting from the top.</h2>
+
+<h2><code>order="desc"</code> - iterates in the data structure order opposite to the default. For a queue - from the last to the first one, and for a stack - starting from the bottom.</h2>
+
+<p>If the data is not a valid <code>SplDoublyLinkedList</code> object or the specified list is empty, OPT skips the section and optionally jumps into the alternative block.</p>
+
+<blockquote class="information">
+  <p><code>SplDatastructure</code> format is available since Open Power Template 2.0.5.</p>
+</blockquote>
+
+<!-- ... -->
+
+<blockquote class="warning">
+  <p><code>SplDatastructure</code> does not support variable access. It means that (according to the presented example) you cannot write for example <code>{$collection}</code> in the template and access some methods directly.</p>
+</blockquote>
+<dl class="location location-bottom"><dt>4.6.1. Available data formats<br/><a href="guide.data-formats.html">4.6. Data formats</a></dt><dd class="prev"><a href="guide.data-formats.html">&laquo; Previous</a><br/>4.6. Data formats</dd><dd class="next"><a href="guide.data-formats.expressions.html">Next &raquo;</a><br/>4.6.2. Formats and expressions</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

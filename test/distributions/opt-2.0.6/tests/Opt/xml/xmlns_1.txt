@@ -1,0 +1,18 @@
+Check if adding the appropriate xmns to opt:root does not
+crash anything.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root xmlns:opt="http://xml.invenzzia.org/opt">
+<foo>
+Text &lt; foo &gt;
+</foo>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+Text &lt; foo &gt;
+</foo>

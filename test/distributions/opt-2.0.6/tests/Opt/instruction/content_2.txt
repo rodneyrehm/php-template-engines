@@ -1,0 +1,19 @@
+Checking opt:content with more complex expressions.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<p opt:content="$c+$d">Default content</p>
+<p opt:content="$a+$b">Default content</p>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+$view->a = 5;
+$view->b = 3;
+
+>>>>result.txt
+<p>Default content</p>
+<p>8</p>

@@ -1,0 +1,13 @@
+Checking whether the namespaces are parsed correctly - part one.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo xyz:attr="bar"></foo>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo xyz:attr="bar"></foo>

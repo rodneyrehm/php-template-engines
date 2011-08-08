@@ -1,0 +1,24 @@
+This test checks the attribute management.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:component from="$component">
+<com:div foo="bar">
+Foo.
+</com:div>
+</opt:component>
+
+>>>>data.php
+
+$view->component = new myComponent;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+ATTRIBUTE MANAGEMENT FOR: div
+foo: bar
+<div foo="bar">
+Foo.
+</div>

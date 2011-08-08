@@ -1,0 +1,22 @@
+SplDatastructure format: sections.
+
+>>>>templates/test.tpl
+<opt:section name="foo">
+{$foo.item}
+</opt:section>
+
+>>>>data.php
+
+$spl1 = new SplDoublyLinkedList;
+$spl1->push(array('item' => 'FOO'));
+$spl1->push(array('item' => 'BAR'));
+
+$view->foo = $spl1;
+$view->setFormat('foo', 'SplDatastructure');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+BAR

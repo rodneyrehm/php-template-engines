@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>List of configuration options - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>List of configuration options</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.initialization.html">Initialization</a> &raquo; <a href="guide.initialization.configuration.html">List of configuration options</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.initialization.html">4.1. Initialization</a><br/>4.1.1. List of configuration options</dt><dd class="prev">4.1. Initialization<br/><a href="guide.initialization.html">&laquo; Previous</a></dd><dd class="next">4.2. Working with views<br/><a href="guide.views.html">Next &raquo;</a></dd></dl>	<h1>4.1.1. List of configuration options</h1><p>Below, you can find a list of the configuration options available in OPT.</p>
+
+<h2>Paths and directories</h2>
+
+<dl>
+<dt><code>sourceDir</code></dt>
+<dd>The path to the directory with the XML templates. It must be readable by the script.</dd>
+
+<dd>The associative list of paths and their identifiers that contain XML templates. They must be readable by the script.</dd>
+
+<dt><code>compileDir</code></dt>
+<dd>The path to the directory with the compiled PHP templates. The script must have a write access to it.</dd>
+
+<dt><code>pluginDir</code></dt>
+<dd>The path to the directory that contains OPT plugins.</dd>
+
+<dd>The list of paths to the directories with OPT plugins.</dd>
+
+<dt><code>pluginDataDir</code></dt>
+<dd>The path to the directory, where the plugin engine may store some internal information to speed up the plugin loading. You can set it to the same directory as <code>compileDir</code>.</dd>
+</dl>
+
+<h2>Front-end options</h2>
+
+<dl>
+<dt><code>compileMode</code></dt>
+<dd><code>Opt_Class::CM_DEFAULT</code> - the templates are recompiled only if they have been modified. Recommended for the development environment.</dd>
+
+<dd><code>Opt_Class::CM_PERFORMANCE</code> - the templates are never recompiled. Recommended for the production environment with the assumption that we will not be modifying the templates directly on the server.</dd>
+
+<dd><code>Opt_Class::CM_REBUILD</code> - the templates are recompiled every request. Recommended for the OPT instruction developers.</dd>
+
+<dt><code>charset</code></dt>
+<dd>The default charset used by <a href="api.opt-output-http.set-content-type.html" title="7.3.4. Opt_Output_Http::setContentType()">Opt_Output_Http::setContentType()</a>. Default value: <code>utf-8</code></dd>
+
+<dt><code>contentType</code></dt>
+<dd>The default content type used by <a href="api.opt-output-http.set-content-type.html" title="7.3.4. Opt_Output_Http::setContentType()">Opt_Output_Http::setContentType()</a>. Default value: <code>Opt_Output_Http::XHTML</code>.</dd>
+
+<dt><code>gzipCompression</code></dt>
+<dd><strong>True</strong> to enable the output compression in <a href="api.opt-output-http.html" title="7.3. Opt_Output_Http">Opt_Output_Http</a> output system. You need to have the <em>zlib</em> extension installed in order to use this feature. Please note that it is recommended to enable the compression directly in the HTTP server, not in the script. Default value: <strong>true</strong></dd>
+
+<dt><code>headerBuffering</code></dt>
+<dd><strong>True</strong> to buffer the HTTP headers by <a href="api.opt-output-http.html" title="7.3. Opt_Output_Http">Opt_Output_Http</a> and send them just before the HTML code. This allows to overwrite the previously set header. Default value: <strong>false</strong></dd>
+
+<dt><code>contentNegotiation</code></dt>
+<dd><strong>True</strong> to enable content negotiation for <a href="api.opt-output-http.set-content-type.html" title="7.3.4. Opt_Output_Http::setContentType()">Opt_Output_Http::setContentType()</a>. You need to have the <em>Open Power Classes</em> library installed in order to use this feature.</dd>
+
+<dt><code>errorReporting</code></dt>
+<dd>The default error reporting during the template execution. After the template is executed, OPT restores the previous script settings. Default value: <code>E_ALL^E_NOTICE</code></dd>
+
+<dt><code>stdStream</code></dt>
+<dd>The default identifier of the <code>sourceDir</code> path used, if the identifier is not specified explicitly. Default value: <code>file</code>.</dd>
+
+<dt><code>debugConsole</code></dt>
+<dd><strong>True</strong> to enable the debug console for OPT. Remember to disable this option in your production environment! Default value: <strong>false</strong></dd>
+
+<dt><code>allowRelativePaths</code></dt>
+<dd>Controls whether the relative paths are available as template names. This is disabled by default.</dd>
+
+<dd>Available since OPT 2.0.1.</dd>
+</dl>
+
+<h2>Compiler options</h2>
+
+<dl>
+<dt><code>mode</code></dt>
+<dd><code>Opt_Class::CHOOSE_MODE</code> - the compilation mode is chosen by the output system.</dd>
+
+<dd><code>Opt_Class::XML_MODE</code> - the templates are compiled in the XML mode.</dd>
+
+<dd><code>Opt_Class::QUIRKS_MODE</code> - the templates are compiled in the quirks mode.</dd>
+
+<dt><code>unicodeNames</code></dt>
+<dd>Whether to allow the Unicode characters in the XML tags. Default to <strong>false</strong> due to the performance issues.</dd>
+
+<dt><code>htmlAttributes</code></dt>
+<dd>Whether to allow the shortened form of attributes, for example <code>&lt;tag attribute&gt;</code> as a synonym to <code>&lt;tag attribute="attribute"&gt;</code>. Default to <strong>false</strong>.</dd>
+
+<dt><code>printComments</code></dt>
+<dd>Whether to print the template comments in the output. Default to <strong>false</strong>.</dd>
+
+<dt><code>prologRequired</code></dt>
+<dd>Whether the XML prolog is required. The default setting, <strong>true</strong> means that the output prolog must be generated with <code>opt:prolog</code> instruction. Otherwise, the prologs are checked for the valid syntax and rewritten to the output.</dd>
+
+<dt><code>stripWhitespaces</code></dt>
+<dd>Whether to strip the unnecessary white spaces from the template. Default to <strong>true</strong>.</dd>
+
+<dt><code>singleRootNode</code></dt>
+<dd>Whether a single root node is obligatory. Default to <strong>true</strong>.</dd>
+
+<dt><code>basicOOP</code></dt>
+<dd>Whether the use of OOP in OPT expressions is allowed. Default to <strong>true</strong></dd>
+
+<dt><code>advancedOOP</code></dt>
+<dd>Whether the templates can create objects and clone them. Default to <strong>true</strong>.</dd>
+
+<dt><code>backticks</code></dt>
+<dd>A callback to the backtick handler.</dd>
+
+<dd><strong>NULL</strong>, if the backticks are not supported.</dd>
+
+<dt><code>strictCallbacks</code></dt>
+<dd>If set to <strong>true</strong> (the default setting), OPT strictly checks the callbacks during the compilation to ensure that the requested functions really exist.</dd>
+
+<dt><code>escape</code></dt>
+<dd>Whether to escape the displayed expression values by default. Default to <strong>true</strong>.</dd>
+
+<dt><code>variableAccess</code></dt>
+<dd><code>Opt_Class::ACCESS_LOCAL</code> - the template variables are local. The access to global variables is possible via <code>$global</code>. This is the default setting.</dd>
+
+<dd><code>Opt_Class::ACCESS_GLOBAL</code> - the template variables are global by default. The access to local variables is possible via <code>$this</code>.</dd>
+
+<dt><code>defaultFormat</code></dt>
+<dd>The default data format used by OPT.</dd>
+</dl>
+
+<h2>Misc. options</h2>
+
+<dl>
+<dt><code>compileId</code></dt>
+<dd>Allows to add an extra identifier to the compiled template name.</dd>
+
+<dt><code>moneyFormat</code></dt>
+<dd>The default money format used by the <a href="syntax.functions.money.html" title="3.6.19. money()">money()</a> function.</dd>
+
+<dt><code>numberDecimals</code></dt>
+<dd>The default setting for the first argument of <a href="syntax.functions.number.html" title="3.6.21. number()">number()</a> function.</dd>
+
+<dt><code>numberDecPoint</code></dt>
+<dd>The default setting for the second argument of <a href="syntax.functions.number.html" title="3.6.21. number()">number()</a> function.</dd>
+
+<dt><code>numberThousandSep</code></dt>
+<dd>The default setting for the third argument of <a href="syntax.functions.number.html" title="3.6.21. number()">number()</a> function.</dd>
+
+<dt><code>pluralForms</code></dt>
+<dd>The plural form configuration used by <a href="syntax.functions.pluralize.html" title="3.6.23. pluralize()">pluralize()</a> function.</dd>
+</dl>
+<dl class="location location-bottom"><dt>4.1.1. List of configuration options<br/><a href="guide.initialization.html">4.1. Initialization</a></dt><dd class="prev"><a href="guide.initialization.html">&laquo; Previous</a><br/>4.1. Initialization</dd><dd class="next"><a href="guide.views.html">Next &raquo;</a><br/>4.2. Working with views</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

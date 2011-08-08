@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>XML manipulations - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>XML manipulations</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.instructions.html">New instructions</a> &raquo; <a href="extending.instructions.xml-manipulations.html">XML manipulations</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.instructions.html">5.8. New instructions</a><br/>5.8.4. XML manipulations</dt><dd class="prev">5.8.3. Parsing attributes<br/><a href="extending.instructions.parsing-attributes.html">&laquo; Previous</a></dd><dd class="next">5.8.5. $system special variable<br/><a href="extending.instructions.system.html">Next &raquo;</a></dd></dl>	<h1>5.8.4. XML manipulations</h1><p>The instruction processors operate on an XML tree. Its organization is quite similar to the Document Object Model and if you have worked with them, you should feel familiar with OPT. However, there are some significant differences and OPT-specific solutions implemented. This chapter shows some aspects of working with OPT-XML trees.</p>
+
+<h2>Node types</h2>
+
+<p>The XML tree may contain the nodes of the following types:</p>
+
+<ol>
+<li><code>Opt_Xml_Element</code> - represents the XML tags. May contain subnodes.</li>
+<li><code>Opt_Xml_Text</code> - contrary to DOM, this class is just a container for the text nodes: <code>Opt_Xml_Cdata</code> and <code>Opt_Xml_Expression</code>.</li>
+<li><code>Opt_Xml_Cdata</code> - the character data node, contains the text values.</li>
+<li><code>Opt_Xml_Expression</code> - represents the OPT expressions in curly brackets mixed with the static text.</li>
+<li><code>Opt_Xml_Root</code> - the root node of the tree.</li>
+<li><code>Opt_Xml_Comment</code> - represents XML comments.</li>
+<li><code>Opt_Xml_Attribute</code> - represents an XML attribute. Unlike other node types, these nodes are managed separately by <code>Opt_Xml_Element</code>.</li>
+<li><code>Opt_Xml_Dtd</code> - represents a DTD. Unlike other node types, these nodes are managed separately by <code>Opt_Xml_Root</code>.</li>
+<li><code>Opt_Xml_Prolog</code> - represents an XML prolog. Unlike other node types, these nodes are managed separately by <code>Opt_Xml_Root</code>.</li>
+</ol>
+
+<h2>Retrieving the nodes</h2>
+
+<p>The children of a node can be retrieved with a simple <strong>foreach</strong>:</p>
+
+<pre class="php"><span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span> <span style="color: #b1b100;">as</span> <span style="color: #000088;">$subnode</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// do something with $subnode here</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>The <code>Opt_Xml_Scannable</code> class that is a base for <code>Opt_Xml_Element</code>, <code>Opt_Xml_Root</code> and <code>Opt_Xml_Text</code>, provides also several methods to retrieve certain nodes of a specified type:</p>
+
+<pre class="php"><span style="color: #000088;">$list</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsByTagName</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'foo'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$list</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsByTagNameNS</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'foo'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$list</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsExt</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'foo'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The first method searches for the <code>foo</code> node with an empty namespace. The second argument informs, that this must be a recursive search: we visit all the descendants of the node, not only the direct children. The second method is a generalization of <code>getElementsByTagName()</code> - it allows also searching for a certain namespace. You may use an asterisk to ignore a certain argument:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// search for all the descendants in &quot;opt&quot; namespace</span>
+<span style="color: #000088;">$list</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsByTagNameNS</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'*'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// the same, as getElementsByTagName()</span>
+<span style="color: #000088;">$list</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsByTagNameNS</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'*'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'foo'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The last method is OPT-specific. It visits all the descendants, but once it finds a matching node, it ignores its descendants. Take a look at the example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Hello world!<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:bar<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:foo<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>And the PHP code:</p>
+
+<pre class="php"><span style="color: #000088;">$barNodes</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsByTagNameNS</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'bar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The code returns only the first occurrence of <code>opt:bar</code> and does not reach the deeper node. This is a very important feature of this method, especially in the instruction context. Suppose that your instruction consists of several tags and moreover it may be nested one in another. The outer instruction must not find and operate on the inner instruction tags and it can be achieved with <code>getElementsExt()</code>.</p>
+
+<p>If you need yet another way of visiting the nodes, take a look at the following PHP code template that you might extend to suit your needs:</p>
+
+<pre class="php"><span style="color: #000088;">$queue</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> SplQueue<span style="color: #339933;">;</span>
+<span style="color: #000088;">$queue</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">enqueue</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">while</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$queue</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">count</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">&gt;</span> 0<span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$item</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$queue</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">dequeue</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #666666; font-style: italic;">// do something here</span>
+&nbsp;
+    <span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$item</span> <span style="color: #b1b100;">as</span> <span style="color: #000088;">$subitem</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$queue</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">enqueue</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$subitem</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<blockquote class="error">
+  <p>Remember, <strong>never</strong> use the true recursion with XML trees!</p>
+</blockquote>
+
+<h2>Node comparison</h2>
+
+<p>To compare the two nodes, use the <code>===</code> operator:</p>
+
+<pre class="php"><span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$node1</span> <span style="color: #339933;">===</span> <span style="color: #000088;">$node2</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// some action here...</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>The <strong>==</strong> operator causes the object properties to be compared, which slows down the compiler and produces recursive calls.</p>
+
+<h2>Inserting and appending the nodes</h2>
+
+<p>The instructions may insert or replace the nodes within the XML tree. The node types that are allowed to contain children, extend the <code>Opt_Xml_Scannable</code> class that provides the common node management methods. You may use the following methods to insert new nodes into a tree and they are used similarly to their DOM equivalents:</p>
+
+<ul>
+<li><code>appendChild()</code> - appends the node to the end of the children list.</li>
+<li><code>insertBefore()</code> - inserts the node before the specified node.</li>
+<li><code>replaceChild()</code> - replaces the node with the new node.</li>
+</ul>
+
+<p>The new node is provided always as the first argument. The second one identifies the reference node which may be specified either with an order number or the node object.</p>
+
+<h2>Removing the nodes</h2>
+
+<p>To remove the children from a node, you may use the following methods:</p>
+
+<ul>
+<li><code>removeChild()</code> - removes the specified node from the children list.</li>
+<li><code>removeChildren()</code> - clears the children list.</li>
+<li><code>moveChildren()</code> - moves the children to another node. </li>
+</ul>
+
+<p>Note that the physical removal of a node takes place only once you remove the last reference to it.</p>
+
+<blockquote class="warning">
+  <p>The PHP garbage collector does not detect reference cycles in PHP 5.2 and earlier. As a result, the node objects that contain some children, <strong>are not deleted</strong> even if you remove all the external references to them. In order to prepare a node to be deleted, you must call the <code>dispose()</code> method that prepares the node and its contents to be collected:</p>
+
+<pre class="php"><span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">dispose</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<a href="http://www.php.net/unset"><span style="color: #990000;">unset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+</blockquote>
+
+<h2>Sorting the nodes</h2>
+
+<p>As the PHP code snippets are inserted into the XML node code buffers, sometimes it is necessary to guarantee the correct node order in the children list. OPT provides a special method that sorts the nodes on the children list, using the user-specified criteria:</p>
+
+<pre class="php"><span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">sort</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'opt:foo'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'opt:bar'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'opt:joe'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'*'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The array passed as an argument specifies the element names in the requested order. The array must contain the <code>*</code> element which identifies all the other nodes that may appear on the children list.</p>
+<dl class="location location-bottom"><dt>5.8.4. XML manipulations<br/><a href="extending.instructions.html">5.8. New instructions</a></dt><dd class="prev"><a href="extending.instructions.parsing-attributes.html">&laquo; Previous</a><br/>5.8.3. Parsing attributes</dd><dd class="next"><a href="extending.instructions.system.html">Next &raquo;</a><br/>5.8.5. $system special variable</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

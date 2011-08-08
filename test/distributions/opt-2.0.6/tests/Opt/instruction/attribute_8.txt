@@ -1,0 +1,21 @@
+The test checks the static namespace and dynamic name.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute str:ns="foo" name="$name" str:value="def" />
+bar
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->name = 'abc';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo foo:abc="def">
+bar
+</foo>

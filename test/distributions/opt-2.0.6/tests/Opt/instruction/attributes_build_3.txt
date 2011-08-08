@@ -1,0 +1,30 @@
+The test checks ignoring attributes.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo opt:attributes-build="$input" opt:attributes-ignore="$ignore">
+bar
+</foo>
+<foo opt:attributes-build="$input" opt:attributes-ignore="'abc,foo'">
+bar
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->input = array(
+	'abc' => 'def',
+	'foo' => 'bar'
+);
+$view->ignore = array('abc');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo foo="bar">
+bar
+</foo>
+<foo>
+bar
+</foo>

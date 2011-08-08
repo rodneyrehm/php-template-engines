@@ -1,0 +1,20 @@
+Test checks the basic iteration features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Return an exception. -->
+<opt:root>
+<opt:foreach array="$data" index="idx">
+{@idx}::
+</opt:foreach>
+</opt:root>
+
+>>>>expected.txt
+Opt_AttributeNotDefined_Exception
+>>>>data.php
+	$view->data = array(
+		'key1' => 'Value 1',
+		'key2' => 'Value 2',
+		'key3' => 'Value 3',
+		'key4' => 'Value 4'
+	);

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Opt_View class - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Opt_View class</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-view.html">Opt_View</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.html">7. API Reference</a><br/>7.2. Opt_View class</dt><dd class="prev">7.1.10. setup()<br/><a href="api.opt-class.setup.html">&laquo; Previous</a></dd><dd class="next">7.2.1. __construct()<br/><a href="api.opt-view.__construct.html">Next &raquo;</a></dd></dl>	<h1>7.2. Opt_View class</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="api.opt-view.__construct.html">7.2.1. __construct()</a></li><li><a href="api.opt-view.__get.html">7.2.2. __get()</a></li><li><a href="api.opt-view.__isset.html">7.2.3. __isset()</a></li><li><a href="api.opt-view.__set.html">7.2.4. __set()</a></li><li><a href="api.opt-view.__unset.html">7.2.5. __unset()</a></li><li><a href="api.opt-view.assign.html">7.2.6. assign()</a></li><li><a href="api.opt-view.assign-global.html">7.2.7. assignGlobal()</a></li><li><a href="api.opt-view.assign-group.html">7.2.8. assignGroup()</a></li><li><a href="api.opt-view.assign-group-global.html">7.2.9. assignGroupGlobal()</a></li><li><a href="api.opt-view.assign-ref.html">7.2.10. assignRef()</a></li><li><a href="api.opt-view.assign-ref-global.html">7.2.11. assignRefGlobal()</a></li><li><a href="api.opt-view.clear.html">7.2.12. clear()</a></li><li><a href="api.opt-view.defined.html">7.2.13. defined()</a></li><li><a href="api.opt-view.defined-global.html">7.2.14. definedGlobal()</a></li><li><a href="api.opt-view.get.html">7.2.15. get()</a></li><li><a href="api.opt-view.get-branch.html">7.2.16. getBranch()</a></li><li><a href="api.opt-view.get-cache.html">7.2.17. getCache()</a></li><li><a href="api.opt-view.get-global.html">7.2.18. getGlobal()</a></li><li><a href="api.opt-view.get-output-buffers.html">7.2.19. getOutputBuffers()</a></li><li><a href="api.opt-view.get-template.html">7.2.20. getTemplate()</a></li><li><a href="api.opt-view.get-time.html">7.2.21. getTime()</a></li><li><a href="api.opt-view.has-dynamic-content.html">7.2.22. hasDynamicContent()</a></li><li><a href="api.opt-view.inherit.html">7.2.23. inherit()</a></li><li><a href="api.opt-view.remove.html">7.2.24. remove()</a></li><li><a href="api.opt-view.remove-global.html">7.2.25. removeGlobal()</a></li><li><a href="api.opt-view.set-branch.html">7.2.26. setBranch()</a></li><li><a href="api.opt-view.set-cache.html">7.2.27. setCache()</a></li><li><a href="api.opt-view.set-format.html">7.2.28. setFormat()</a></li><li><a href="api.opt-view.set-format-global.html">7.2.29. setFormatGlobal()</a></li><li><a href="api.opt-view.set-template.html">7.2.30. setTemplate()</a></li></ul><div class="tf_reference"><table><tr><th>Construct</th><td>Class</td></tr><tr><th>Versions</th><td>since <code>2.0-dev7</code></td></tr>
+</table><hr/></div><p>This class represents a view which is an OPT template and the data associated to it. The views can be rendered using the output systems or the <a href="syntax.instructions.include.html" title="3.7.12. opt:include">opt:include</a> instruction in the templates. It must be pointed that the view contains also all the inherited templates.</p>
+
+<h2>Using views</h2>
+
+<p>To use a view, we must begin with creating a view object. You should use different object for different templates in your script. Once this step is done, we may assign some data from the script. By default, they will be visible only for the view template, however - we are also able to create global template variables.</p>
+
+<pre class="php"><span style="color: #000088;">$view1</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template_1.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view2</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template_2.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Assign the data to local template variables</span>
+&nbsp;
+<span style="color: #000088;">$view2</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">bar</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'bar'</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view2</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">foo</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'joe'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$view1</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">foo</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'foo'</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view1</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">includedView</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$view2</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Assign the data to global template variables</span>
+&nbsp;
+Opt_View<span style="color: #339933;">::</span><span style="color: #004000;">assignGlobal</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'globalVar'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'foo'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Render the views:</span>
+&nbsp;
+<span style="color: #000088;">$out</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+<span style="color: #000088;">$out</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view1</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>In order to display the <code>$view2</code>, the template <code>template_1.tpl</code> from <code>$view1</code> must contain the following code:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">view</span>=<span style="color: #ff0000;">&quot;$includedView&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+<dl class="location location-bottom"><dt>7.2. Opt_View class<br/><a href="api.html">7. API Reference</a></dt><dd class="prev"><a href="api.opt-class.setup.html">&laquo; Previous</a><br/>7.1.10. setup()</dd><dd class="next"><a href="api.opt-view.__construct.html">Next &raquo;</a><br/>7.2.1. __construct()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

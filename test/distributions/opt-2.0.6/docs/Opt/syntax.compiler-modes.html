@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Compiler modes - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Compiler modes</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.compiler-modes.html">Compiler modes</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.html">3. Template syntax</a><br/>3.1. Compiler modes</dt><dd class="prev">3. Template syntax<br/><a href="syntax.html">&laquo; Previous</a></dd><dd class="next">3.2. CDATA sections<br/><a href="syntax.cdata.html">Next &raquo;</a></dd></dl>	<h1>3.1. Compiler modes</h1><p>The template syntax is quite flexible and depends on various compiler settings and modes. We set them so that they fully suit our needs.</p>
+
+<dl>
+<dt><strong>XML mode</strong></dt>
+<dd>This is the default work mode. The compiler processes the input file as a valid XML document with prolog. The attribute syntax is strictly checked, as well as tag closing order, including the static ones, that are a part of the output document.</dd>
+
+<dt><strong>HTML mode</strong></dt>
+<dd>The compiler allows to be less restrictive, when it comes to some syntax elements. Although this mode is still too strict in some areas, when it comes to HTML compatibility (for example, the tags must be closed in the correct order), but in fact, this allows to produce nice and clean HTML documents.</dd>
+
+<dt><strong>Quirks mode</strong></dt>
+<dd>OPT recognizes and processes only its own tags. The rest is parsed as a static text, including ordinary XML/HTML tags. The mode quite resembles the OPT 1.x with XML compatibility mode enabled. Quirks mode does not use so much resources during the compilation, as the two modes above.</dd>
+</dl>
+
+<p>For generating website output code, we recommend to use the first or the second mode. Thanks to the (X)HTML code analysis, the instructions may cooperate with ordinary tags much better than in other template engines, PHP or the quirks mode.</p>
+
+<p>The full list of issues concerning XML can be found below:</p>
+
+<ol>
+<li>Document prolog - in the XML mode it is required in all templates, however it it is not sent to the output system. To display an XML prolog in the template result, we must use <code>opt:prolog</code> instruction.</li>
+<li>DTD - currently OPT does nothing with DTD, but it can be changed in the future versions. In the XML mode, it is recommended to use <code>opt:dtd</code> instruction with some predefined DOCTYPE templates.</li>
+<li>Root node - in the XML mode, the document may contain only one root node. For sub-templates that generate only a small part of the output, <code>opt:root</code> instruction is designed.</li>
+<li>CDATA sections - they are sent to the output, but its content is not parsed by OPT. The exact behavior can be controlled by <code>opt:literal</code> instruction.</li>
+<li>Comments - by default they are ignored by the parser, but there is a possibility to send them to the output.</li>
+<li>White spaces - the programmer may decide whether to cut out the unnecessary white spaces.</li>
+<li>Unicode - the XML standard allows to use Unicode characters in the tag names. By default, this is disabled in out due to performance issues, but it can be turned on.</li>
+<li>Namespaces - it the namespace is registered in OPT, the elements assigned to it are processed by the parser. The rest is sent to the output.</li>
+</ol>
+
+<p>Below, we present two simple templates of a tiny website written in the XML mode:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000066;">encoding</span>=<span style="color: #ff0000;">&quot;UTF-8&quot;</span> <span style="color: #000066;">standalone</span>=<span style="color: #ff0000;">&quot;no&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:prolog</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:dtd</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;xhtml10transitional&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://www.w3.org/1999/xhtml&quot;</span> <span style="color: #000066;">xml:lang</span>=<span style="color: #ff0000;">&quot;pl&quot;</span> <span style="color: #000066;">lang</span>=<span style="color: #ff0000;">&quot;pl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;meta</span> <span style="color: #000066;">http-equiv</span>=<span style="color: #ff0000;">&quot;Content-Type&quot;</span> <span style="color: #000066;">content</span>=<span style="color: #ff0000;">&quot;text/html; charset=UTF-8&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/title<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;logo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>A small website<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;navigation&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;navigation&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">parse:href</span>=<span style="color: #ff0000;">&quot;$navigation.url&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$navigation.tytul}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Menu<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;class&quot;</span> <span style="color: #000066;">if</span>=<span style="color: #ff0000;">&quot;$menu.important&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>important<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:attribute<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">parse:href</span>=<span style="color: #ff0000;">&quot;$menu.url&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$menu.tytul}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Copyright ABC 2007<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In XML mode, only one template can be sent do the browser directly and this is why the example below contains the entire HTML code of a website. However, we still can use smaller templates for website parts. This is done with <code>opt:include</code> and <code>opt:section</code> provides a loop, so we can load more sub-templates. They may contain forms, lists, galleries etc. and they will appear inside <code>&lt;div id="content"&gt;</code> tag.</p>
+
+<p>The XML prolog that we can see in the template, will not be sent to the browser. It means that we must use <code>opt:prolog</code> in order to provide there a valid XML document. It sets the correct XML version and the encoding, taking the necessary information from the library configuration.</p>
+
+<p>Because our template is an XML document, we cannot put the data everywhere we want to. In the tag content, we must use curly brackets and to make the tag attribute value dynamic, we must change its namespace into <code>parse</code>. Otherwise, the value will be treated as a static text. In order to generate an optional attribute that appears only from time to time, we use <code>opt:attribute</code> tag with the additional condition in <code>opt:if</code> attribute that defines, when to show this attribute.</p>
+
+<p>This is a sample sub-template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000066;">encoding</span>=<span style="color: #ff0000;">&quot;UTF-8&quot;</span> <span style="color: #000066;">standalone</span>=<span style="color: #ff0000;">&quot;no&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Title<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a page content.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We must put there the XML prolog, too, and add a root node. OPT helps us here with <code>opt:root</code>. With this instruction, you can also set some template-specific settings. If such style does not suit you, all you have to do is to change some configuration directives to make the compiler less restrictive.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Title<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a page content.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The template above can also be accepted by the compiler.</p>
+
+<h2>For programmers</h2>
+
+<p>In the script-side, there are only two real modes: XML and quirks. The HTML mode is in fact a set of additional settings that can be turned on or off, depending on our needs. To mark that we mean both XML and HTML modes, we will use the "XML/HTML" name in the next chapters of this documentation.</p>
+
+<p>In the quirks mode, the output document can be generated from separate templates parsed one by another. In XML/HTML, we can parse only one template directly, but it can include sub-templates. This assures the compiler that the sum of valid XML templates will also give a valid output with the tags enclosed in the correct order. The output is buffered, and in case of error, the default error handler deletes the current content and displays the message instead. The errors are handled as exceptions, so it is not hard to change the default behavior.</p>
+<dl class="location location-bottom"><dt>3.1. Compiler modes<br/><a href="syntax.html">3. Template syntax</a></dt><dd class="prev"><a href="syntax.html">&laquo; Previous</a><br/>3. Template syntax</dd><dd class="next"><a href="syntax.cdata.html">Next &raquo;</a><br/>3.2. CDATA sections</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

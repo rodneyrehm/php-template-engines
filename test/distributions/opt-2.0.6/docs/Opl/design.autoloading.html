@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Autoloading - Open Power Libs</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Libs 2.0</h1>
+		<h2>Autoloading</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="design.html">Design and concepts</a> &raquo; <a href="design.autoloading.html">Autoloading</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="design.html">3. Design and concepts</a><br/>3.1. Autoloading</dt><dd class="prev">3. Design and concepts<br/><a href="design.html">&laquo; Previous</a></dd><dd class="next">3.2. Coding standards<br/><a href="design.coding-standards.html">Next &raquo;</a></dd></dl>	<h1>3.1. Autoloading</h1><p>The OPL core provides its own general-purpose autoloader designed to handle the libraries that use the <code>Foo_Bar_Joe</code> class naming format. The autoloader provides an abstraction layer for the automatic class loading using various rules. Thus, you do not have to remember, how a certain library is organized and where the required classes are really located. The filesystem mapping rules are:</p>
+
+<pre><code>Foo -&gt; Foo.php
+Foo_Bar -&gt; Foo/Bar.php
+Foo_Bar_Joe -&gt; Foo/Bar/Joe.php
+</code></pre>
+
+<h2>The autoloading process</h2>
+
+<p>The autoloader is not limited to OPL libraries. Using it, you can also handle third party pieces of code, if they follow similar naming conventions, for example Zend Framework or Doctrine. The autoloader groups the classes into <em>libraries</em>, using the first part of the name. The class <code>Foo_Bar</code> is assumed to be a part of <code>Foo</code> library.</p>
+
+<p>The autoloader features:</p>
+
+<ul>
+<li>Specifying the location of all the libraries.</li>
+<li>Specifying an extra handler to deal with library-specific autoloading needs (i.e. loading models in ORM).</li>
+<li>Specifying per-library settings: the location and handler.</li>
+<li>Mapping single classes to specific locations in the filesystem.</li>
+</ul>
+
+<blockquote class="information">
+  <p>Currently, the autoloader does not support PHP 5.3 namespaces, however, they will be introduced very soon.</p>
+</blockquote>
+
+<h2>The common configuration</h2>
+
+<p>Let's create a common autoloader configuration:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// The autoloader itself must be loaded manually</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setDirectory</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setDefaultHandler</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl_Loader'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'oplHandler'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Now we can load the classes</span></pre>
+
+<p>The code snippet above configures the common autoloading settings for all the libraries:</p>
+
+<ul>
+<li>The libraries are located in <code>./libs/</code> directory (for example: <code>./libs/Opl/</code> or <code>./libs/Foo</code>).</li>
+<li>All the class loading requests go through the OPL handler.</li>
+</ul>
+
+<blockquote class="help">
+  <p>In this example, the <code>setDefaultHandler()</code> does not have to be used, as this handler is active by default.</p>
+</blockquote>
+
+<h2>Library-specific settings</h2>
+
+<p>The last example has one disadvantage: the libraries that do not belong to OPL project probably won't want to follow the rules specified by the OPL handler. In this case we can configure everything manually:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// The autoloader itself must be loaded manually</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setDirectory</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setDefaultHandler</span><span style="color: #009900;">&#40;</span><span style="color: #009900; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'handler'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl_Loader'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'oplHandler'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opt'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'handler'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl_Loader'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'oplHandler'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'ExtraLibrary'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'handler'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'someExtraHandler'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Now we can load the classes</span></pre>
+
+<p>Both OPL and OPT use the OPL handler and we have configured it for them, but the extra library uses different special rules and must use different handler.</p>
+
+<p>Besides the handler, we may also define the library paths:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// The autoloader itself must be loaded manually</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'ExtraLib1'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'directory'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./vendor/ExtraLib1/'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'ExtraLib2'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'basePath'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./vendor/'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The difference between <code>directory</code> and <code>basePath</code> is clear, if we take a look at the directory structure:</p>
+
+<pre><code>/vendor
+/vendor/ExtraLib1
+/vendor/ExtraLib1/File.php
+/vendor/ExtraLib2
+/vendor/ExtraLib2/File.php
+/vendor/ExtraLib1.php
+/vendor/ExtraLib2.php
+</code></pre>
+
+<h2>Handling unregistered libraries</h2>
+
+<p>By default, OPL autoloader tries to handle every possible class, but sometimes this is not the correct behavior. Let's take a look at the Doctrine ORM autoloader which also loads the model classes with the name <code>ModelName</code>, so we want OPL autoloader to skip them. The solution is provided below:</p>
+
+<pre class="php"><span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">setHandleUnknownLibraries</span><span style="color: #009900;">&#40;</span><span style="color: #009900; font-weight: bold;">false</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'basePath'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./libs/'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+Opl_Loader<span style="color: #339933;">::</span><span style="color: #004000;">addLibrary</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Doctrine'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'basePath'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'./libs/'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'handler'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<a href="http://www.php.net/spl_autoload_register"><span style="color: #990000;">spl_autoload_register</span></a><span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Doctrine'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'autoload'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$myModel</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> MyModel<span style="color: #339933;">;</span></pre>
+
+<p>When handling unknown libraries is disabled, the autoloader skips all the classes that do not belong to the libraries registered with <code>addLibrary()</code>. In the example above, we have registered <code>Opl</code> and <code>Doctrine</code> only. All the classes whose names do not begin with those two identifiers are skipped and left for the next autoloader in the queue.</p>
+
+<h2>PHAR-s</h2>
+
+<p>The autoloader can easily work with PHAR archives:</p>
+
+<pre class="php"><span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/opl.phar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/opt.phar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Yes, it is so simple, because PHAR-s are self-configurable and their stubs may automatically set the necessary options and handlers.</p>
+
+<h2>Conclusion</h2>
+
+<p>As we can see, the OPL autoloader is a quite powerful tool that is able to help you managing the increasing number of classes and files.</p>
+<h4>See also:</h4><ul><li><a href="api.opl-loader.html">4.5. Opl_Loader</a></li></ul><dl class="location location-bottom"><dt>3.1. Autoloading<br/><a href="design.html">3. Design and concepts</a></dt><dd class="prev"><a href="design.html">&laquo; Previous</a><br/>3. Design and concepts</dd><dd class="next"><a href="design.coding-standards.html">Next &raquo;</a><br/>3.2. Coding standards</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

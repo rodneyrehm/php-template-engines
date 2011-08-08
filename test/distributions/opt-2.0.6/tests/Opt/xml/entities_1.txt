@@ -1,0 +1,15 @@
+Check, whether the normal entities are not damaged during the compilation.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+Text &lt; foo &gt;
+</foo>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+Text &lt; foo &gt;
+</foo>

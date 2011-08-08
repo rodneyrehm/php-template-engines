@@ -1,0 +1,80 @@
+Testing runtime generator.
+
+>>>>templates/test.tpl
+<opt:root>
+<opt:section name="sect1">
++{$sect1.val}
+<opt:show name="sect2">
+<opt:section>
+++{$sect2.val}
+<opt:show name="sect3">
+<opt:section>
++++{$sect3.val}
+</opt:section>
+</opt:show>
+</opt:section>
+</opt:show>
+</opt:section>
+
+<opt:section name="foo">
+{$foo.item}
+</opt:section>
+</opt:root>
+
+>>>>data.php
+
+$view->foo = array(0 =>
+	array('item' => 'FOO'),
+	array('item' => 'BAR')
+);
+$view->sect1 = new generator;
+$view->setFormat('sect1', 'RuntimeGenerator/SingleArray');
+$view->setFormat('sect2', 'RuntimeGenerator/SingleArray');
+$view->setFormat('sect3', 'RuntimeGenerator/SingleArray');
+$view->setFormat('foo', 'RuntimeGenerator/SingleArray');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
++1
+++1.1
++++1.1.1
++++1.1.2
++++1.1.3
+++1.2
++++1.2.1
++++1.2.2
++++1.2.3
+++1.3
++++1.3.1
++++1.3.2
++++1.3.3
++2
+++2.1
++++2.1.1
++++2.1.2
++++2.1.3
+++2.2
++++2.2.1
++++2.2.2
++++2.2.3
+++2.3
++++2.3.1
++++2.3.2
++++2.3.3
++3
+++3.1
++++3.1.1
++++3.1.2
++++3.1.3
+++3.2
++++3.2.1
++++3.2.2
++++3.2.3
+++3.3
++++3.3.1
++++3.3.2
++++3.3.3
+FOO
+BAR

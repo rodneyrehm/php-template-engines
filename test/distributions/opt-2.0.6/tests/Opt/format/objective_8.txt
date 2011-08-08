@@ -1,0 +1,35 @@
+Objective format: sections and order="desc"
+Covers bugs #119 and #120
+
+>>>>templates/test.tpl
+<opt:root>
+<opt:section name="foo" order="desc">
+{$foo.item}
+</opt:section>
+
+<opt:show name="foo" order="desc">
+<p opt:section="foo">{$foo.item}</p>
+</opt:show>
+</opt:root>
+
+>>>>data.php
+
+$obj1 = new stdClass;
+$obj1->item = 'FOO';
+$obj2 = new stdClass;
+$obj2->item = 'BAR';
+
+$view->foo = new ArrayObject(array(0 =>
+	$obj1, $obj2
+
+));
+$view->setFormat('foo', 'Objective');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BAR
+FOO
+<p>BAR</p>
+<p>FOO</p>

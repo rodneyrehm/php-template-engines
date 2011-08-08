@@ -1,0 +1,22 @@
+If the value cannot be calculated, the attribute should not be shown.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute name="class">
+	<opt:value test="$val1 == 'foo'">a</opt:value>
+	<opt:value test="$val1 == 'bar'">b</opt:value>
+</opt:attribute>
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->val1 = 'joe';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+</foo>

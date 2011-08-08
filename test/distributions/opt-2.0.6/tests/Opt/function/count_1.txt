@@ -1,0 +1,22 @@
+Testing the count() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{count($vars)}
+{count($notAContainer)}
+</opt:root>
+
+>>>>data.php
+$view->vars = array(
+	'v1' => 1,
+	'v2' => 3,
+	'v3' => 5
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+3
+0

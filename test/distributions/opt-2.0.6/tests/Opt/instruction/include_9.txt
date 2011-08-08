@@ -1,0 +1,27 @@
+In addition to import a value, a data format should be imported, too.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Foo{$variable.bar}
+<opt:include file="included.tpl" import="yes" />
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Bar{$variable.bar}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooABarA
+>>>>data.php
+$obj = new stdClass;
+$obj->bar = 'A';
+$view->variable = $obj;
+$view->setFormat('variable', 'Objective');

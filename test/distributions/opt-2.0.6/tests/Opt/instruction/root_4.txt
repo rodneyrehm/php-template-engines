@@ -1,0 +1,21 @@
+Testing the "opt:root" include attribute.
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+	<opt:snippet name="foo">
+		<p>foo</p>
+	</opt:snippet>
+</opt:root>
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root include="included.tpl">
+<opt:insert snippet="foo" />
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<p>foo</p>

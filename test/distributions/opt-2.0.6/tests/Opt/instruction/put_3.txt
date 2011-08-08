@@ -1,0 +1,26 @@
+In OPT 2.0-RC1, there was found a problem in the compiler that caused the code buffer
+linking twice, if the specified node was the last on the queue in the current nesting
+level. This unit test reproduces this situation with opt:put.
+
+>>>>templates/test.tpl
+The test checks the basic opt:put functionality.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<p><opt:put value="$sect.item" opt:section="sect" str:separator=" / "/></p>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<p>A / B / C / D</p>
+
+>>>>data.php
+$view->sect = array(0 =>
+	array('item' => 'A'),
+	array('item' => 'B'),
+	array('item' => 'C'),
+	array('item' => 'D')
+);

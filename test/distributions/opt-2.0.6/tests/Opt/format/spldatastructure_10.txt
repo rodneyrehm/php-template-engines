@@ -1,0 +1,39 @@
+SplDatastructure format and decoration.
+
+>>>>templates/test.tpl
+<opt:section name="foo">
+{$foo.item}:{$system.section.foo.size}
+</opt:section>
+
+>>>>data.php
+
+class SplDatastructure10Class implements Countable
+{
+	public $item;
+	public $extra;
+
+	public function count()
+	{
+		return 2;
+	} // end count();
+}
+
+$obj1 = new SplDatastructure10Class;
+$obj1->item = 'FOO';
+
+$obj2 = new SplDatastructure10Class;
+$obj2->item = 'BAR';
+
+$spl1 = new SplDoublyLinkedList;
+$spl1->push($obj1);
+$spl1->push($obj2);
+
+$view->foo = $spl1;
+$view->setFormat('foo', 'SplDatastructure/Objective');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO:2
+BAR:2

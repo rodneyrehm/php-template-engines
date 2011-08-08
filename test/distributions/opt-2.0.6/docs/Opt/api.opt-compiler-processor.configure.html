@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>configure() - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>configure()</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-compiler-processor.html">Opt_Compiler_Processor</a> &raquo; <a href="api.opt-compiler-processor.configure.html">Opt_Compiler_Processor::configure()</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.opt-compiler-processor.html">7.7. Opt_Compiler_Processor class</a><br/>7.7.7. configure()</dt><dd class="prev">7.7.6. _process()<br/><a href="api.opt-compiler-processor._process.html">&laquo; Previous</a></dd><dd class="next">7.7.8. getName()<br/><a href="api.opt-compiler-processor.get-name.html">Next &raquo;</a></dd></dl>	<h1>7.7.7. configure()</h1><div class="tf_reference"><table><tr><th>Construct</th><td>Optional method for implementation by the programmer</td></tr><tr><th>Visibility</th><td>public</td></tr><tr><th>Reference</th><td><code>void configure()</code></td></tr></table><hr/></div><p>Performs an initial configuration of the instruction processor and informs about the tags and attributes parsed by it. The instruction programmer should extend this method and call there <a href="api.opt-compiler-processor._add-instructions.html" title="7.7.3. Opt_Compiler_Processor::_addInstructions()">Opt_Compiler_Processor::_addInstructions()</a> and <a href="api.opt-compiler-processor._add-attributes.html" title="7.7.2. Opt_Compiler_Processor::_addAttributes()">Opt_Compiler_Processor::_addAttributes()</a>:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> Opt_Instruction_Foo <span style="color: #000000; font-weight: bold;">extends</span> Opt_Compiler_Processor
+<span style="color: #009900;">&#123;</span>
+    protected <span style="color: #000088;">$_name</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'foo'</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> configure<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// Configure the processor</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_addInstructions<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt:foo'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_addAttributes<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt:foo'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end configure();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// Process the tags.</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processAttribute<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #339933;">,</span> Opt_Xml_Attribute <span style="color: #000088;">$attr</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// Process the attributes.</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processAttribute();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opt_Instruction_Foo;</span></pre>
+<dl class="location location-bottom"><dt>7.7.7. configure()<br/><a href="api.opt-compiler-processor.html">7.7. Opt_Compiler_Processor class</a></dt><dd class="prev"><a href="api.opt-compiler-processor._process.html">&laquo; Previous</a><br/>7.7.6. _process()</dd><dd class="next"><a href="api.opt-compiler-processor.get-name.html">Next &raquo;</a><br/>7.7.8. getName()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

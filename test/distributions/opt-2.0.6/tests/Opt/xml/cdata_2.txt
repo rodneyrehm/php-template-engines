@@ -1,0 +1,10 @@
+Check whether the normal static content does not allow the XML-specific characters
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+A < B
+</foo>
+
+>>>>expected.txt
+Opt_XmlInvalidCharacter_Exception

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>processNode() - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>processNode()</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-compiler-processor.html">Opt_Compiler_Processor</a> &raquo; <a href="api.opt-compiler-processor.process-node.html">Opt_Compiler_Processor::processNode()</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.opt-compiler-processor.html">7.7. Opt_Compiler_Processor class</a><br/>7.7.12. processNode()</dt><dd class="prev">7.7.11. processAttribute()<br/><a href="api.opt-compiler-processor.process-attribute.html">&laquo; Previous</a></dd><dd class="next">7.7.13. processSystemVar()<br/><a href="api.opt-compiler-processor.process-system-var.html">Next &raquo;</a></dd></dl>	<h1>7.7.12. processNode()</h1><div class="tf_reference"><table><tr><th>Construct</th><td>Optional method for implementation by the programmer</td></tr><tr><th>Visibility</th><td>public</td></tr><tr><th>Reference</th><td><code>void processNode(Opt_Xml_Node $node)</code></td></tr><tr><th>Argument list</th><td><dl><dt><code>$node</code> <small>- <a href="api.opt-xml-node.html">Opt_Xml_Node</a></small></dt><dd>The node to process.</dd></dl></td></tr></table><hr/></div><p>This method is used to implement, how to process the XML tags registered by the instruction processor. It is called automatically by the compiler every time it founds any matching tag and is executed <em>before</em> the tag children. As an argument, it takes the node to be processed.</p>
+
+<blockquote class="warning">
+  <p>OPT does not send the instruction node children to be processed by the compiler. The processor has to do it on its own with <a href="api.opt-compiler-processor._process.html" title="7.7.6. Opt_Compiler_Processor::_process()">Opt_Compiler_Processor::_process()</a>.</p>
+</blockquote>
+
+<p>In order to illustrate, how to implement the content of this method, we show one of the real implementations from OPT source code: the <code>opt:for</code> instruction:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// Step 1</span>
+    <span style="color: #000088;">$params</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+        <span style="color: #0000ff;">'begin'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">REQUIRED</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">ASSIGN_EXPR</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #0000ff;">'while'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">REQUIRED</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">ASSIGN_EXPR</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #0000ff;">'iterate'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">REQUIRED</span><span style="color: #339933;">,</span> <span style="color: #000000; font-weight: bold;">self</span><span style="color: #339933;">::</span><span style="color: #004000;">ASSIGN_EXPR</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #0000ff;">'separator'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getSeparatorConfig</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_extractAttributes<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #339933;">,</span> <span style="color: #000088;">$params</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #666666; font-style: italic;">// Step 2</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_nesting<span style="color: #339933;">++;</span>
+&nbsp;
+    <span style="color: #666666; font-style: italic;">// Step 3</span>
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">addBefore</span><span style="color: #009900;">&#40;</span>Opt_Xml_Buffer<span style="color: #339933;">::</span><span style="color: #004000;">TAG_BEFORE</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">' for('</span><span style="color: #339933;">.</span><span style="color: #000088;">$params</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'begin'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'; '</span><span style="color: #339933;">.</span><span style="color: #000088;">$params</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'while'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'; '</span><span style="color: #339933;">.</span><span style="color: #000088;">$params</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'iterate'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'){ '</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">addAfter</span><span style="color: #009900;">&#40;</span>Opt_Xml_Buffer<span style="color: #339933;">::</span><span style="color: #004000;">TAG_AFTER</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">' } '</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">processSeparator</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'$__for'</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_nesting<span style="color: #339933;">,</span> <span style="color: #000088;">$params</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'separator'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #666666; font-style: italic;">// Step 4</span>
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">set</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'postprocess'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_process<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span></pre>
+
+<p>The description of the steps:</p>
+
+<ol>
+<li><p>As this processor registers only one tag, we are sure that <code>$node</code> always points to the <code>opt:for</code>. We begin the compilation with parsing the instruction attributes with <a href="api.opt-compiler-processor._extract-attributes.html" title="7.7.5. Opt_Compiler_Processor::_extractAttributes()">Opt_Compiler_Processor::_extractAttributes()</a>.</p></li>
+<li><p>We modify some of the processor object fields. In this case, <code>$this-&gt;_nesting</code> represents the current <code>opt:for</code> nesting level. We need this value to create unique variable names for the very loop.</p></li>
+<li><p>With <a href="api.opt-xml-buffer.add-before.html" title="7.9.2. Opt_Xml_Buffer::addBefore()">Opt_Xml_Buffer::addBefore()</a> and <a href="api.opt-xml-buffer.add-after.html" title="7.9.1. Opt_Xml_Buffer::addAfter()">Opt_Xml_Buffer::addAfter()</a> we bind some PHP code that will replace the instruction tag in the output file to the node buffers. Note that we fill the parts of the <code>for</code> declaration with the attribute values that have already been parsed as OPT expressions.</p></li>
+<li><p>As the node content is not processed by default, we have to call <a href="api.opt-compiler-processor._process.html" title="7.7.6. Opt_Compiler_Processor::_process()">Opt_Compiler_Processor::_process()</a> on the node. This method registers its children in the processing queue. Moreover, once the children are processed, we have to decrement the nesting counter. We can do it by setting <code>postprocess</code> to <strong>true</strong> on the <code>$node</code>. It forces the compiler to send our <code>opt:for</code> again to the processor after it finishes with the children. However, the next processing will be performed by <a href="api.opt-compiler-processor.postprocess-node.html" title="7.7.10. Opt_Compiler_Processor::postprocessNode()">Opt_Compiler_Processor::postprocessNode()</a>.</p></li>
+</ol>
+
+<p>Some instructions may require much more sophisticated implementations.</p>
+<h4>See also:</h4><ul><li><a href="api.opt-compiler-processor.postprocess-node.html">7.7.10. Opt_Compiler_Processor::postprocessNode()</a></li></ul><dl class="location location-bottom"><dt>7.7.12. processNode()<br/><a href="api.opt-compiler-processor.html">7.7. Opt_Compiler_Processor class</a></dt><dd class="prev"><a href="api.opt-compiler-processor.process-attribute.html">&laquo; Previous</a><br/>7.7.11. processAttribute()</dd><dd class="next"><a href="api.opt-compiler-processor.process-system-var.html">Next &raquo;</a><br/>7.7.13. processSystemVar()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

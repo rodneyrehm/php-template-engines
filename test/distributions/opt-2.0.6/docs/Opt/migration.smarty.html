@@ -1,0 +1,459 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Smarty™ - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Smarty™</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="migration.html">Migration</a> &raquo; <a href="migration.smarty.html">Smarty™</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="migration.html">6. Migration</a><br/>6.3. Smarty™</dt><dd class="prev">6.2. PHP<br/><a href="migration.php.html">&laquo; Previous</a></dd><dd class="next">7. API Reference<br/><a href="api.html">Next &raquo;</a></dd></dl>	<h1>6.3. Smarty™</h1><p>Smarty™ is the most popular template engine for PHP. This chapter covers the migration issues from Smarty 2.6.x to OPT 2.0 and provides a help for the programmers that would like to switch from it.</p>
+
+<h2>Basic issues and ideas</h2>
+
+<p>The most important difference between the template engines is the syntax. Smarty packs its instructions and commands into curly brackets. The rest of the document is treated as static text and there is no possibility to manipulate its structure. Open Power Template treats the templates as XML documents. The instructions are represented by tags in the <code>opt:</code> namespace and furthermore, the parser understands the HTML structure. The curly brackets are still present, but their usage is limited to put the variables and expressions into a static text:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This is a text {$variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The basic idea behind both of the template engines is the same. The template is firstly compiled into the PHP code, and then the template engine simply executes it as a normal script.</p>
+
+<p>When it comes to the project structure, Smarty features imperative programming on the template side, using similar control flow instructions, like in PHP. We use loops and conditional instructions to achieve the required effect. There is also a limited number of eye-candy functions like <code>{mailto}</code> or <code>{html_radios}</code>. Open Power Template favors declarative programming. Although the ordinary programming instructions are still present, they should not be used unless necessary. The template engine offers a set of portable high-level instructions such as <a href="syntax.instructions.section.html" title="3.7.19. opt:section">opt:section</a> or <a href="syntax.instructions.component.html" title="3.7.4. opt:component">opt:component</a> to solve the common problems appearing in the templates. The key is to concentrate on the final effect we want to achieve rather than the implementation. Well-written OPT templates are very portable, clean and actually free from the implementation-specific details.</p>
+
+<blockquote class="warning">
+  <p>OPT requires the template to be a correct XML document. Especially, the tags must be closed in the proper order.</p>
+</blockquote>
+
+<h2>Syntax elements: instructions and expressions</h2>
+
+<p>In Smarty, we work with template functions and expressions containing variables. The template provided a limited number of built-in advanced functions, and the operations on the variable values were possible with <em>modifiers</em>:</p>
+
+<pre class="smarty"><span style="color: #008080; font-style: italic;">{* displaying a variable *}</span>
+<span style="color: #D36900;">&#123;</span><span style="color: #00aaff;">$variable</span><span style="color: #D36900;">&#125;</span>
+&nbsp;
+<span style="color: #008080; font-style: italic;">{* a built-in function *}</span>
+<span style="color: #D36900;">&#123;</span><a href="http://smarty.php.net/if"><span style="color: #0600FF;">if</span></a> <span style="color: #00aaff;">$something</span><span style="color: #D36900;">&#125;</span>
+    Hi universe!
+<span style="color: #D36900;">&#123;</span><span style="color: #D36900;">/</span><a href="http://smarty.php.net/if"><span style="color: #0600FF;">if</span></a><span style="color: #D36900;">&#125;</span>
+&nbsp;
+<span style="color: #008080; font-style: italic;">{* a modifier *}</span>
+<span style="color: #D36900;">&#123;</span><span style="color: #00aaff;">$variable</span>|spacify:<span style="color: #ff0000;">&quot; &quot;</span><span style="color: #D36900;">&#125;</span></pre>
+
+<p>Open Power Template structure is completely different. The variables and operators form expressions, like <code>$a + $b</code>. The expression syntax is very similar to the one from the PHP and other programming languages. The expressions may contain functions, also taken from the ordinary programming languages:</p>
+
+<pre class="xml"><span style="color: #808080; font-style: italic;">&lt;!-- displaying a variable value --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #808080; font-style: italic;">&lt;!-- a more complex expression --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$a + $b}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #808080; font-style: italic;">&lt;!-- a function as a part of the expression --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{spacify($variable, ' ')}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The functions operate on the argument values and produce a result, similarly to PHP. To create conditions, loops and the rest of this piece of stuff, Open Power Template uses the concept of <em>instructions</em>. An instruction may consist of one or more XML tags or attributes, for example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:if</span> <span style="color: #000066;">test</span>=<span style="color: #ff0000;">&quot;$variable&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>A conditionally displayed text<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Alternative text.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/opt:else<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:if<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">opt:if</span>=<span style="color: #ff0000;">&quot;$variable&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>A conditionally displayed tag.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>As the template is an XML document, we cannot use curly brackets directly in the tag, like <code>&lt;tag {$variable}&gt;</code>. Instead, OPT provides several possible techniques, depending on our needs:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">parse:class</span>=<span style="color: #ff0000;">&quot;$dynamicallySelectedClass&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>...<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:attribute</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;$attrName&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;$attrValue&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>Some text...<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In the first case, we simply want to use a dynamic value of an attribute. In this case, we simply change the tag namespace to <code>parse:</code>. In the second one, we want to create a dynamic attribute, where we do not know the name during the compilation. The <code>opt:attribute</code> instruction helps us then.</p>
+
+<h2>Expressions</h2>
+
+<p>The <a href="syntax.expressions.html" title="3.5. Expressions">expression language</a> uses the syntax typical to the ordinary programming languages. Below, you can find a short list of the supported features:</p>
+
+<ol>
+<li>Template variables: <code>$variable</code>.</li>
+<li>Local template variables: <code>@variable</code> - they are created and managed by the template only to avoid potential naming collisions with the script data.</li>
+<li>Containers: <code>$variable.item</code></li>
+<li>Language variables: <code>$group@text_id</code> - a part of the <a href="guide.i18n.html" title="4.9. Internationalization">internationalization system</a>.</li>
+<li>Mathematical operators: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code></li>
+<li>Logical operators: <code>and</code>, <code>or</code>, <code>xor</code>, <code>not</code></li>
+<li>Assignment operator: <code>=</code>, <code>is</code>: <code>$a is 5</code></li>
+<li>The strings are written using <strong>single quotes only</strong>. Double quotes are not allowed!</li>
+<li>Special backtick strings, programmable by the user.</li>
+<li>PHP structures syntax: arrays and <a href="syntax.expressions.objects.html" title="3.5.6. Objects">objects</a>.</li>
+<li>Functions: <code>functionName(arguments)</code></li>
+</ol>
+
+<p>Contrary to Smarty and PHP, template variables do not have actually to be variables. Open Power Template provides an abstraction layer called <a href="guide.data-formats.html" title="4.6. Data formats">data formats</a>. Data formats decide, what the particular syntax elements are. It makes the code more portable and frees it from the implementation details. For example, it is not recommended to specify directly the data structure-specific syntax elements:</p>
+
+<pre class="xml"><span style="color: #808080; font-style: italic;">&lt;!-- not recommended! --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$user['id']}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$anotherUser::name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Instead, we could use containers and select the appropriate data format on the script side:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$user.id}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$anotherUser.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The PHP code:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'user'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'Array'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'user'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'Objective'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The effect is the same, but now the code is more refactorization-friendly.</p>
+
+<h2>Loops</h2>
+
+<p>In the template engines, loops are usually used to produce various lists. Smarty offers the programmer two loops: <code>{foreach}</code>, similar to the same control structure in PHP, and <code>{section}</code>. Although Smarty sections had a nice number of features, both of the loops are rather low-level control structures which usually requires to write more code with a higher level of complexity. Let's take a look at a nested loop in Smarty using <code>{foreach}</code>:</p>
+
+<pre class="smarty"><span style="color: #D36900;">&#123;</span><a href="http://smarty.php.net/foreach"><span style="color: #0600FF;">foreach</span></a> <span style="color: #6A0A0A;">from</span><span style="color: #D36900;">=</span><span style="color: #00aaff;">$categories</span> <span style="color: #6A0A0A;">key</span><span style="color: #D36900;">=</span>categoryId <span style="color: #6A0A0A;">item</span><span style="color: #D36900;">=</span>category<span style="color: #D36900;">&#125;</span>
+<span style="color: #009000;">&lt;div id=&quot;c{$categoryId}&quot;&gt;</span>
+    <span style="color: #009000;">&lt;h1&gt;</span><span style="color: #D36900;">&#123;</span><span style="color: #00aaff;">$category</span>.<span style="color: #6A0A0A;">name</span><span style="color: #D36900;">&#125;</span><span style="color: #009000;">&lt;/h1&gt;</span>
+    <span style="color: #009000;">&lt;ol&gt;</span>
+    <span style="color: #D36900;">&#123;</span><a href="http://smarty.php.net/foreach"><span style="color: #0600FF;">foreach</span></a> <span style="color: #6A0A0A;">from</span><span style="color: #D36900;">=</span><span style="color: #00aaff;">$category</span>.<span style="color: #006600;">products</span> <span style="color: #6A0A0A;">key</span><span style="color: #D36900;">=</span>productId <span style="color: #6A0A0A;">item</span><span style="color: #D36900;">=</span>product<span style="color: #D36900;">&#125;</span>
+        <span style="color: #009000;">&lt;li&gt;</span><span style="color: #D36900;">&#123;</span><span style="color: #00aaff;">$product</span>.<span style="color: #6A0A0A;">name</span><span style="color: #D36900;">&#125;</span><span style="color: #009000;">&lt;/li&gt;</span>    
+    <span style="color: #D36900;">&#123;</span><span style="color: #D36900;">/</span><a href="http://smarty.php.net/foreach"><span style="color: #0600FF;">foreach</span></a><span style="color: #D36900;">&#125;</span>
+    <span style="color: #009000;">&lt;/ol&gt;</span>
+<span style="color: #009000;">&lt;/div&gt;</span>
+<span style="color: #D36900;">&#123;</span><span style="color: #D36900;">/</span><a href="http://smarty.php.net/foreach"><span style="color: #0600FF;">foreach</span></a><span style="color: #D36900;">&#125;</span></pre>
+
+<p>The same effect using sections is horrible:</p>
+
+<pre class="smarty"><span style="color: #D36900;">&#123;</span><a href="http://smarty.php.net/section"><span style="color: #0600FF;">section</span></a> <span style="color: #6A0A0A;">name</span><span style="color: #D36900;">=</span>i <span style="color: #6A0A0A;">loop</span><span style="color: #D36900;">=</span><span style="color: #00aaff;">$categories</span><span style="color: #D36900;">&#125;</span>
+<span style="color: #009000;">&lt;div id=&quot;c{$categories[i].id}&quot;&gt;</span>
+    <span style="color: #009000;">&lt;h1&gt;</span><span style="color: #D36900;">&#123;</span><span style="color: #00aaff;">$categories</span><span style="color: #D36900;">&#91;</span>i<span style="color: #D36900;">&#93;</span>.<span style="color: #6A0A0A;">name</span><span style="color: #D36900;">&#125;</span><span style="color: #009000;">&lt;/h1&gt;</span>
+    <span style="color: #009000;">&lt;ol&gt;</span>
+    <span style="color: #D36900;">&#123;</span><a href="http://smarty.php.net/section"><span style="color: #0600FF;">section</span></a> <span style="color: #6A0A0A;">name</span><span style="color: #D36900;">=</span>j <span style="color: #6A0A0A;">loop</span><span style="color: #D36900;">=</span><span style="color: #00aaff;">$products</span><span style="color: #D36900;">&#91;</span>i<span style="color: #D36900;">&#93;</span><span style="color: #D36900;">&#125;</span>
+        <span style="color: #009000;">&lt;li&gt;</span><span style="color: #D36900;">&#123;</span><span style="color: #00aaff;">$products</span><span style="color: #D36900;">&#91;</span>i<span style="color: #D36900;">&#93;</span><span style="color: #D36900;">&#91;</span>j<span style="color: #D36900;">&#93;</span>.<span style="color: #6A0A0A;">name</span><span style="color: #D36900;">&#125;</span><span style="color: #009000;">&lt;/li&gt;</span> 
+    <span style="color: #D36900;">&#123;</span><span style="color: #D36900;">/</span><a href="http://smarty.php.net/section"><span style="color: #0600FF;">section</span></a><span style="color: #D36900;">&#125;</span>
+    <span style="color: #009000;">&lt;/ol&gt;</span>
+<span style="color: #009000;">&lt;/div&gt;</span>
+<span style="color: #D36900;">&#123;</span><span style="color: #D36900;">/</span><a href="http://smarty.php.net/section"><span style="color: #0600FF;">section</span></a><span style="color: #D36900;">&#125;</span></pre>
+
+<p>Open Power Template provides four types of loops:</p>
+
+<ol>
+<li><a href="syntax.instructions.for.html" title="3.7.8. opt:for">opt:for</a></li>
+<li><a href="syntax.instructions.foreach.html" title="3.7.9. opt:foreach">opt:foreach</a></li>
+<li><a href="syntax.instructions.repeat.html" title="3.7.17. opt:repeat">opt:repeat</a></li>
+<li><a href="syntax.topics.sections.html" title="3.9.1. Sections">sections</a></li>
+</ol>
+
+<p>However, in most cases you would only need the last one. OPT sections have almost nothing to do with Smarty's. They provide, abstract, high-level interface to display lists on the template side, hiding all the implementation details from the template designer. Let's take at the same example in OPT:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">parse:id</span>=<span style="color: #ff0000;">&quot;'c'~$categories.id&quot;</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$categories.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li</span> <span style="color: #000066;">opt:section</span>=<span style="color: #ff0000;">&quot;products&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$products.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Here, we used the attribute form, but sections can be also expressed with an <code>&lt;opt:section&gt;</code> tag. Note that we do not have to tell explicitly that products are connected with a relationship with categories. OPT always assumes that the nested section is related to its parent, and if the default behavior does not suit us, we may change it with the <code>parent</code> attribute.</p>
+
+<p>Another advantage of sections is the fact that the template code is completely independent from the real section nature. In the Smarty example, both of the code snippets accepted different data formats:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// For the example with foreach</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'categories'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Category 1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'products'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 1'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 2'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 3'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// For the example with section</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'categories'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Category 1'</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'products'</span><span style="color: #339933;">,</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 1'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 2'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 3'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>OPT sections use the data formats, mentioned earlier, to deal with such details. We do not have to know them during writing the templates, we just write the PHP script and select the appropriate data format:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// Version 1</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'categories'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'SingleArray'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'products'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'SingleArray'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">categories</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Category 1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'products'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 1'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 2'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 3'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Version 2</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'categories'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'Array'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'products'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'Array'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">categories</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Category 1'</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">products</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 1'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 2'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'name'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Product 3'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<h2>HTML forms</h2>
+
+<p>Smarty actually does not provide any support for HTML forms, except five custom functions to produce lists of checkboxes or <code>&lt;select&gt;</code> options. The entire form processing code must be written from scratch. The situation in Open Power Template 2 is completely different. The template engine provides a feature called <em>components</em> which provides the necessary abstraction layer to render and manage the form layouts.</p>
+
+<p>A component consists of two parts:</p>
+
+<ul>
+<li>Component object - it is simply a PHP object of the class that implements the <code>Opt_Component_Interface</code>.</li>
+<li>Component port - a special place in the template, where the component objects could be rendered.</li>
+</ul>
+
+<p>The division is quite similar to the MVC pattern. Component objects provide the form field logic, whereas the ports decide, how to display them. Furthermore, they are quite independent, as they are connected one to each other during the execution. This means that it is very easy to produce a dynamic HTML form, generated entirely by the script, still retaining the control over the layout in the templates.</p>
+
+<p>To simplify the construction of small or specific ports, OPT supports two types of component ports:</p>
+
+<ul>
+<li>Dynamically deployed - the component object is created by the application and assigned to already existing port through a template variable.</li>
+<li>Statically deployed - the component object is created by the port itself.</li>
+</ul>
+
+<p>Below, we can find a sample statically deployed port:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form:input</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;name&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:component-attributes</span>=<span style="color: #ff0000;">&quot;default&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;label</span> <span style="color: #000066;">parse:for</span>=<span style="color: #ff0000;">&quot;$system.component.name&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Name:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/label<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Error: {$system.component.error}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form:input<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The <code>form:input</code> tag can be assigned to the component class that produces a text input field which will be used to create the component object. The components can have various parameters (in the example above, we have one - <code>name</code> with the field identifier). The other features include:</p>
+
+<ul>
+<li><p>Event handling - the component objects may generate events that will cause to display some extra content around the field, for example the error messages, if the field was filled incorrectly.</p></li>
+<li><p>Tag attribute management. In the example above, the <code>opt:component-attributes</code> attribute means that the component object can modify the list of the tag attributes, for example to set a different CSS class for incorrectly filled fields.</p></li>
+<li><p>Displaying themselves: the <code>&lt;opt:display/&gt;</code> tag specifies, where the <code>&lt;input&gt;</code> tag will be displayed.</p></li>
+</ul>
+
+<p>The dynamically deployed ports must load an existing object from a template variable:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:component</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$someField&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:component-attributes</span>=<span style="color: #ff0000;">&quot;default&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;label</span> <span style="color: #000066;">parse:for</span>=<span style="color: #ff0000;">&quot;$system.component.id&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$system.component.title}:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/label<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Error: {$system.component.error}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:component<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Such port can handle any field.</p>
+
+<blockquote class="important">
+  <p>OPT does not provide ready-to-use components. The programmer must write them on his/her own.</p>
+</blockquote>
+
+<h2>Template modularization</h2>
+
+<p>Usually, the application output is constructed of smaller templates. Smarty provides the <code>{include}</code> function:</p>
+
+<pre class="smarty"><span style="color: #009000;">&lt;div class=&quot;content&quot;&gt;</span>
+    <span style="color: #D36900;">&#123;</span><a href="http://smarty.php.net/include"><span style="color: #0600FF;">include</span></a> <span style="color: #6A0A0A;">file</span><span style="color: #D36900;">=</span><span style="color: #ff0000;">'content.tpl'</span> title<span style="color: #D36900;">=</span><span style="color: #00aaff;">$someTitle</span> otherStuff<span style="color: #D36900;">=</span><span style="color: #00aaff;">$foo</span><span style="color: #D36900;">&#125;</span>
+<span style="color: #009000;">&lt;/div&gt;</span></pre>
+
+<p>Furthermore, as the templates are treated as plain text files, it is possible to concatenate the output on the script-side:</p>
+
+<pre class="smarty"><span style="color: #008080; font-style: italic;">{* header.tpl *}</span>
+<span style="color: #009000;">&lt;html&gt;</span>
+<span style="color: #009000;">&lt;head&gt;</span>
+...
+<span style="color: #009000;">&lt;/head&gt;</span>
+<span style="color: #009000;">&lt;body&gt;</span>
+&nbsp;
+<span style="color: #008080; font-style: italic;">{* content.tpl *}</span>
+    <span style="color: #009000;">&lt;div&gt;</span>
+        ...
+    <span style="color: #009000;">&lt;/div&gt;</span>
+&nbsp;
+<span style="color: #008080; font-style: italic;">{* footer.tpl *}</span>
+<span style="color: #009000;">&lt;/body&gt;</span>
+<span style="color: #009000;">&lt;/html&gt;</span></pre>
+
+<p>This is not possible in Open Power Template unless you work with the quirks mode. Because of the XML nature of the language, the opened HTML tag must be closed in the same template. The template language provides the <code>opt:include</code> instruction and a feature called <strong>template inheritance</strong>.</p>
+
+<p><code>opt:include</code> works similarly to Smarty, except that it can operate on OPT views:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">str:file</span>=<span style="color: #ff0000;">&quot;some_template.tpl&quot;</span> <span style="color: #000066;">localVar</span>=<span style="color: #ff0000;">&quot;$ourVariable&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">view</span>=<span style="color: #ff0000;">&quot;$viewObject&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<blockquote class="warning">
+  <p>Smarty templates work within the same variable scope. In Open Power Template, the views have their own private scopes and do not see each other's variables. When working with <code>opt:include</code>, we can assign the local view variables with the custom attributes or use the <code>import</code> attribute to import the variables from the current view:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">str:file</span>=<span style="color: #ff0000;">&quot;some_template.tpl&quot;</span> <span style="color: #000066;">import</span>=<span style="color: #ff0000;">&quot;yes&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+</blockquote>
+
+<p><code>opt:include</code> can be also integrated with sections:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;content&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The template inheritance treats the templates similarly to classes in the object-oriented programming. The template contents are grouped into <a href="syntax.instructions.snippet.html" title="3.7.23. opt:snippet">snippets</a>, and a template can extend another template, providing new or overwriting different snippets. The base template provides a structure, where the snippets are rendered. More about the template inheritance and modularization in general can be found <a href="syntax.topics.modularization.html" title="3.9.4. Template modularization">here</a>.</p>
+
+<h2>API</h2>
+
+<p>Smarty API consists of one class-for-everything and the template compiler. OPT uses a more objective approach that resembles the ideas from the popular PHP frameworks. The base class, <code>Opt_Class</code> is used to keep the global configuration, whereas the script operates on <strong>views</strong>. A view is an object of <code>Opt_View</code> class which consists of the script data assigned to a specified template. To render a view, we need also an <strong>output system</strong> which decides, where to send the view output. A sample initialization can be found here:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// Configure the library</span>
+<span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">sourceDir</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'./templates/'</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">compileDir</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'./templates_c/'</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setup</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'some_template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">templateVariable</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'foo'</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">anotherVariable</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'bar'</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Furthermore, Open Power Template is not a standalone library, but a part of the <em>Open Power Libs</em> project and requires the OPL core in order to work. The core itself is quite small and provides such features, as:</p>
+
+<ul>
+<li>Generic autoloader for the <code>Library_Item_Subitem</code> class naming convention.</li>
+<li>Error handling</li>
+<li>Plugin architecture</li>
+<li>The global registry class</li>
+<li>Basic debugging features</li>
+</ul>
+
+<p>It is included in the OPT package, so you do not have to download anything extra.</p>
+
+<p>The errors are handled using the PHP5 exceptions. The library provides an advanced, default error handler which provides a rich context help for many exceptions that help identifying the problem and solving it.</p>
+
+<p>Below, you can find an API feature comparison for OPT and Smarty:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Item name</th>
+  <th>Smarty</th>
+  <th>Open Power Template</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>PHP version</td>
+  <td>PHP4, PHP5</td>
+  <td>PHP5</td>
+</tr>
+<tr>
+  <td>API design</td>
+  <td>Class-for-everything</td>
+  <td>Smaller, specialized classes</td>
+</tr>
+<tr>
+  <td>Views</td>
+  <td>No</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Separate variable scopes for templates</td>
+  <td>No</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Global configuration</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Output</td>
+  <td>Two hard-coded methods</td>
+  <td>Output systems</td>
+</tr>
+<tr>
+  <td>Template variable management</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Error handling</td>
+  <td>With <code>trigger_error()</code></td>
+  <td>With PHP5 exceptions</td>
+</tr>
+<tr>
+  <td>Plugin architecture</td>
+  <td>Yes</td>
+  <td>Yes</td>
+</tr>
+<tr>
+  <td>Caching</td>
+  <td>Yes</td>
+  <td>Interface only</td>
+</tr>
+<tr>
+  <td>Resources</td>
+  <td>Yes</td>
+  <td>No</td>
+</tr>
+</tbody>
+</table>
+
+<p>OPT does not provide any caching system, as it has been decided that this is not a task for template engines. Instead, it provides the <code>Opt_Caching_Interface</code> which can be used to connect any external caching engine to the library. The resource functionality has been dropped in the early development stage, because it can be implemented independently with <a href="http://docs.php.net/manual/en/book.stream.php">PHP streams</a> and the support from the template engine is not necessary.</p>
+
+<h2>Extending OPT</h2>
+
+<p>Similarly to Smarty, OPT provides a plugin architecture that can be used to extend the template engine with new features. The new features can be registered with <a href="api.opt-class.register.html" title="7.1.6. Opt_Class::register()">Opt_Class::register()</a> method or packed as <a href="extending.plugins.html" title="5.1. Introduction to plugins">plugins</a>.</p>
+
+<p>The features that the template engine can be extended with:</p>
+
+<ul>
+<li>New instructions</li>
+<li>New functions</li>
+<li>New data formats</li>
+<li>New caching systems</li>
+<li>New output systems</li>
+<li>New components and blocks</li>
+<li>New translation engines (for the multilingual websites).</li>
+</ul>
+
+<p>Note that many of them actually do not need the plugin architecture thanks to the object-oriented library design. Sometimes we just need to create an object of a specified class and assign it somewhere. The special plugin structure is required to instructions and the data formats only, the other plugins are just plain PHP scripts executed within the <code>Opt_Class</code> context.</p>
+
+<h2>Conclusion</h2>
+
+<p>There are many significant differences between Smarty and Open Power Template 2. The libraries feature different goals and approaches to the topic. Writing templates in OPT is a bit different from the ordinary programming known from PHP or many other template engines due to lots of declarative features and the concept of <em>Write, what you want to get, not - how it is supposed to work</em>.</p>
+<dl class="location location-bottom"><dt>6.3. Smarty™<br/><a href="migration.html">6. Migration</a></dt><dd class="prev"><a href="migration.php.html">&laquo; Previous</a><br/>6.2. PHP</dd><dd class="next"><a href="api.html">Next &raquo;</a><br/>7. API Reference</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

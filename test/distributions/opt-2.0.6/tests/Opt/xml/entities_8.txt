@@ -1,0 +1,22 @@
+Check whether the numeric entities are captured even if htmlEntities is set to false.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+&amp;
+&#184;
+&#xb8;
+</foo>
+
+>>>>data.php
+$this->tpl->htmlEntities=false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+&amp;
+¸
+¸
+</foo>

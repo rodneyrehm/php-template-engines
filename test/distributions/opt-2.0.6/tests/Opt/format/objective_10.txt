@@ -1,0 +1,38 @@
+Testing the element size.
+
+>>>>templates/test.tpl
+<opt:section name="foo">
+{$foo.item}:{$system.section.foo.size}
+</opt:section>
+
+>>>>data.php
+
+class Objective10Class implements Countable
+{
+	public $item;
+	public $extra;
+
+	public function count()
+	{
+		return 2;
+	} // end count();
+}
+
+$obj1 = new Objective10Class;
+$obj1->item = 'FOO';
+
+$obj2 = new Objective10Class;
+$obj2->item = 'BAR';
+$obj2->extra = 'JOE';
+
+$list = new ArrayObject(array($obj1, $obj2));
+
+$view->foo = $list;
+$view->setFormat('foo', 'Objective');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO:2
+BAR:2

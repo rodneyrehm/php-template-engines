@@ -1,0 +1,17 @@
+The escaping is disabled by the configuration.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{$htmlVariable}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+HTML: <tag>
+
+>>>>data.php
+$view->htmlVariable = 'HTML: <tag>';
+$this->tpl->escape = false;

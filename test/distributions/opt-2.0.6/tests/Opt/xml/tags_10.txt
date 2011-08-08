@@ -1,0 +1,15 @@
+Testing closing the final tags (bug #147).
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<html>
+<head>
+<title>Foo</title>
+</head>
+<body>
+<p>
+Text
+
+>>>>expected.txt
+Opt_UnclosedTag_Exception
+XML Error: the following tag has not been closed at the end of the template: p.

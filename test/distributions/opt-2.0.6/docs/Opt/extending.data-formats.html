@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>New data formats - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>New data formats</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.data-formats.html">New data formats</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.html">5. Extending OPT</a><br/>5.7. New data formats</dt><dd class="prev">5.6. New caching systems<br/><a href="extending.caching-systems.html">&laquo; Previous</a></dd><dd class="next">5.7.1. Variables<br/><a href="extending.data-formats.variables.html">Next &raquo;</a></dd></dl>	<h1>5.7. New data formats</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="extending.data-formats.variables.html">5.7.1. Variables</a></li><li><a href="extending.data-formats.items.html">5.7.2. Container items</a></li><li><a href="extending.data-formats.sections.html">5.7.3. Sections</a></li><li><a href="extending.data-formats.plugins.html">5.7.4. Format plugins</a></li></ul><p>Many OPT instructions and language structures do not have their true equivalent in PHP language which is used as a base language for the compiled templates. Data formats are the way to provide the compiler an implementation of these instructions and a flexibility for the programmer. On the template side, it is no more necessary to know the implementation issues - we just use the generic instructions and select the proper data format in the script, depending on its current needs. In this chapter we are going to show, how to write custom data formats for Open Power Template 2.</p>
+
+<h2>Data format - a closer look</h2>
+
+<p>From the compiler point of view, a data format is a class extending <code>Opt_Compiler_Format</code> containing various PHP code snippets. If the compiler or an instruction wants to generate a piece of PHP code, it sends to the data format a request with the snippet name and the format class should return it. Sometimes the data formats needs extra information from the caller. It is provided with extra arguments assigned similarly to the template variables in the views. Finally, the programmer may decorate one data format with another. This causes the certain snippets to use another snippets from the decorated format during the PHP code generation, thus extending the functionality and creating many different possible combinations.</p>
+
+<h2>Using data formats in the compiler</h2>
+
+<p>To use a data format in the compiler code, we have to obtain the data format object first. This can be done with <a href="api.opt-compiler-class.get-format.html" title="7.5.13. Opt_Compiler_Class::getFormat()">Opt_Compiler_Class::getFormat()</a> method. As arguments, we specify the identifier of a resource (the same as in <a href="api.opt-view.set-format.html" title="7.2.28. Opt_View::setFormat()">Opt_View::setFormat()</a>). Moreover, we may decide, whether to create a new object every time we call the method or restore an existing one, if possible:</p>
+
+<pre class="php"><span style="color: #000088;">$format</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">compiler</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getFormat</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Then, we can request a code snippet with <code>get()</code> method:</p>
+
+<pre class="php"><span style="color: #000088;">$format</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'variablename'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">echo</span> <span style="color: #000088;">$format</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable:main'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>As we can see, the data are assigned to the format with the <code>assign()</code> method. In this case, we requested the format to create a PHP call to the template variable <code>$variablename</code>, which is later printed. The PHP snippets belong to different groups providing a certain functionality. Before we start using the data format, it is recommended to check, if the returned object actually supports it:</p>
+
+<pre class="php"><span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$format</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">supports</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// our code goes here</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">else</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// we cannot process $variablename, because the data format does not support &quot;variable&quot; group</span>
+    throw <span style="color: #000000; font-weight: bold;">new</span> Opt_FormatNotSupported_Exception<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variablename'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'variable'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>Finally, we may request the data format to perform a certain action not connected with PHP code generation and check the value of the data format property:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// perform some action</span>
+<span style="color: #000088;">$format</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">action</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable:someaction'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$format</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">property</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable:someproperty'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// then do something extra...</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<h2>Implementing our data format</h2>
+
+<p>The data format is created by extending <code>Opt_Compiler_Format</code> class and overwriting the abstract method <code>_build()</code> used to prepare a snippet. Let's take a look at a simple data format:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> Opt_Custom_Format <span style="color: #000000; font-weight: bold;">extends</span> Opt_Compiler_Format
+<span style="color: #009900;">&#123;</span>
+    protected <span style="color: #000088;">$_supports</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    protected <span style="color: #000088;">$_properties</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable:assign'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    protected <span style="color: #000000; font-weight: bold;">function</span> _build<span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">switch</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #666666; font-style: italic;">// let the variable to become a function</span>
+            <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'variable:main'</span><span style="color: #339933;">:</span>
+                <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'myVariableGenerator(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\')'</span><span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'variable:assign'</span><span style="color: #339933;">:</span>
+                <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'myVariableModifier(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\', '</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'value'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">')'</span><span style="color: #339933;">;</span>
+&nbsp;
+            <span style="color: #666666; font-style: italic;">// some other snippets go here...</span>
+        <span style="color: #009900;">&#125;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end _build();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opt_Custom_Format;</span></pre>
+
+<p>The <code>$_supports</code> protected field contains a list of functionalities supported by a certain data format. The <code>$_properties</code> list contains a list of properties and their values in the data format. The construction of <code>_build()</code> method is quite simple. We just get the snippet name and decide, what piece of code to generate. We may obtain the format variables with <code>_getVar()</code> method.</p>
+
+<blockquote class="warning">
+  <p>Format variables are something completely different and independent from the view and template variables! Do not confuse these two ideas.</p>
+</blockquote>
+
+<p>To perform actions, we simply overwrite the <code>action()</code> method, for example:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> action<span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span> <span style="color: #339933;">==</span> <span style="color: #0000ff;">'section:forceItemVariables'</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_sectionItemVariables <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end action();</span></pre>
+
+<h2>Conclusion</h2>
+
+<p>The basics of writing data formats are easy, but you have probably noticed that we are already on the half of the way. We must learn about different snippets used in OPT and what the compiler expects there to be. It will be introduced in the next chapter. In the next chapters we are going to use the following terms:</p>
+
+<dl>
+<dt>piece of expression</dt>
+<dd>a part of PHP expression. It must not contain curly brackets, semicolons etc. and must be deployable via copy+paste in any valid PHP expression.</dd>
+
+<dt>piece of code</dt>
+<dd>any part of PHP code. Curly brackets, semicolons, PHP control structures are allowed.</dd>
+</dl>
+<dl class="location location-bottom"><dt>5.7. New data formats<br/><a href="extending.html">5. Extending OPT</a></dt><dd class="prev"><a href="extending.caching-systems.html">&laquo; Previous</a><br/>5.6. New caching systems</dd><dd class="next"><a href="extending.data-formats.variables.html">Next &raquo;</a><br/>5.7.1. Variables</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

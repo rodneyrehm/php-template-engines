@@ -1,0 +1,7 @@
+Check the backtick feature when it is disabled.
+
+>>>>templates/test.tpl
+{`test`}
+
+>>>>expected.txt
+Opt_NotSupported_Exception

@@ -1,0 +1,19 @@
+Check the snippet instruction.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="foo">Value:{$val}</opt:snippet>
+Foo:<opt:insert snippet="foo" />
+{$val is 'Joe'}
+Foo:<opt:insert snippet="foo" />
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Foo:Value:Bar
+Foo:Value:Joe
+>>>>data.php
+$view->val='Bar';

@@ -1,0 +1,25 @@
+Testing the money() function in the aggregate version.
+
+Warning: this test depends on the locale installed on your system!
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@vars is money($vars, '%i')}
+{@vars.v1}
+{@vars.v2}
+</opt:root>
+
+>>>>data.php
+setlocale(LC_MONETARY, 'en_US');
+$view->vars = array(
+	'v1' => 1516.32,
+	'v2' => 356
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+USD 1,516.32
+USD 356.00

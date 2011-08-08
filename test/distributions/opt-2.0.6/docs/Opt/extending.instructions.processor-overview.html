@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Processor overview - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Processor overview</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.instructions.html">New instructions</a> &raquo; <a href="extending.instructions.processor-overview.html">Processor overview</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.instructions.html">5.8. New instructions</a><br/>5.8.1. Processor overview</dt><dd class="prev">5.8. New instructions<br/><a href="extending.instructions.html">&laquo; Previous</a></dd><dd class="next">5.8.2. Generating PHP code<br/><a href="extending.instructions.generating-php.html">Next &raquo;</a></dd></dl>	<h1>5.8.1. Processor overview</h1><p>The code snippet below shows the general structure of an instruction processor:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+&nbsp;
+<span style="color: #000000; font-weight: bold;">class</span> Opt_Instruction_MyInstruction <span style="color: #000000; font-weight: bold;">extends</span> Opt_Compiler_Processor
+<span style="color: #009900;">&#123;</span>
+    protected <span style="color: #000088;">$_name</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'processorname'</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> configure<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_addInstructions<span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt:myInstruction1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'opt:myInstruction2'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_addAttributes<span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt:myAttribute1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'opt:myAttribute2'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end configure();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> <a href="http://www.php.net/reset"><span style="color: #990000;">reset</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// some code ...</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end reset();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// some code...</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processAttribute<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #339933;">,</span> Opt_Xml_Attribute <span style="color: #000088;">$attr</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// some code...</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processSystemVar<span style="color: #009900;">&#40;</span><span style="color: #000088;">$system</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">// some code...</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processSystemVar();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opt_Instruction_MyInstruction;</span></pre>
+
+<p>The most important method of the processor is <code>configure()</code>. Using <code>_addInstructions()</code> and <code>_addAttributes()</code> we define, what XML tags and attributes should be redirected to this processor. The <code>reset()</code> method is called once the compilation is finished. We may use it to clear the processor state before the next compilation.</p>
+
+<p>The rest of method processes everything possible. The processor operates on a template XML tree represented by various types of nodes and inserts the PHP code snippets to them. They will appear in the output compiled template after the linking. Basically, we may handle all the instructions or attributes in one method: <code>processNode()</code> or <code>processAttribute()</code>. However, we may also use the default implementations which redirect the execution to different protected methods, using the tag/attribute name. For example, <code>opt:example</code> tag will be redirected to <code>_processExample()</code>. It is up to you what way you are going to choose.</p>
+
+<blockquote class="information">
+  <p>The instruction processor class name does not have to begin with <code>Opt_Instruction</code> since OPT 2.0.1.</p>
+</blockquote>
+
+<h2>Processing the node children</h2>
+
+<p>If the specified tag name is assigned to one of the processor, Open Power Template compiler <strong>does not</strong> visit the children of such tag by default. The processor must decide what to do with them. It may process them with DOM-like API or redirect them to the processing manually:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// Visit also the children</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_process<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span></pre>
+
+<p>This method is recommended, if the specified node may contain the HTML code again and we would like to make it visible in the output. We may consider a complex instruction:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:instruction<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:tag1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>HTML goes here<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:tag1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:tag2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>HTML goes here<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:tag2<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:instruction<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We do not permit the HTML directly in <code>opt:instruction</code>, so we do not send this node to the processing, but rather use the DOM-like API to manipulate the data:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// do not perform recursive search</span>
+    <span style="color: #000088;">$tags1</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsByTagNameNS</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'tag1'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$tags2</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getElementsByTagNameNS</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'tag2'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/sizeof"><span style="color: #990000;">sizeof</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$tags1</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">!=</span> 1<span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        throw <span style="color: #000000; font-weight: bold;">new</span> Opt_InstructionTooManyItems_Exception<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt:tag1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'One'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><a href="http://www.php.net/sizeof"><span style="color: #990000;">sizeof</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$tags2</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">!=</span> 1<span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        throw <span style="color: #000000; font-weight: bold;">new</span> Opt_InstructionTooManyItems_Exception<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'opt:tag2'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'One'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #666666; font-style: italic;">// Send the contents of the subnodes to further processing</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_process<span style="color: #009900;">&#40;</span><span style="color: #000088;">$tags1</span><span style="color: #009900;">&#91;</span>0<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_process<span style="color: #009900;">&#40;</span><span style="color: #000088;">$tags2</span><span style="color: #009900;">&#91;</span>0<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span></pre>
+
+<h2>Postprocessing</h2>
+
+<p>The <code>processNode()</code> method is executed <strong>before</strong> entering the child nodes. Sometimes, we may also want to perform some operations after visiting the children. The postprocessing is activated on demand for a particular node:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$node</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">set</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'postprocess'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_process<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span>
+&nbsp;
+<span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> postprocessNode<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// do some extra stuff here...</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span></pre>
+
+<h2>Working with attributes</h2>
+
+<p>Working with instruction attributes is very similar to working with nodes. However, we get both the reference to the attribute and the node the attribute is assigned to. In this case, we do not have to send the children of the node to the processing manually. The postprocessing is activated for a particular attribute:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processAttribute<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #339933;">,</span> Opt_Xml_Attribute <span style="color: #000088;">$attr</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    doSomeStuff<span style="color: #009900;">&#40;</span><span style="color: #000088;">$attr</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getValue</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$attr</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">set</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'postprocess'</span><span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span>
+&nbsp;
+<span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> postprocessAttribute<span style="color: #009900;">&#40;</span>Opt_Xml_Node <span style="color: #000088;">$node</span><span style="color: #339933;">,</span> Opt_Xml_Attribute <span style="color: #000088;">$attr</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    doSomeStuff<span style="color: #009900;">&#40;</span><span style="color: #000088;">$attr</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">getValue</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processNode();</span></pre>
+<dl class="location location-bottom"><dt>5.8.1. Processor overview<br/><a href="extending.instructions.html">5.8. New instructions</a></dt><dd class="prev"><a href="extending.instructions.html">&laquo; Previous</a><br/>5.8. New instructions</dd><dd class="next"><a href="extending.instructions.generating-php.html">Next &raquo;</a><br/>5.8.2. Generating PHP code</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

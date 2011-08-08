@@ -1,0 +1,20 @@
+Testing the money() function.
+
+Warning: this test depends on the locale installed on your system!
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{money(1516.32, '%i')}
+{money(356, '%i')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>data.php
+setlocale(LC_MONETARY, 'en_US');
+
+>>>>result.txt
+USD 1,516.32
+USD 356.00

@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Sections - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Sections</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.topics.html">Topics</a> &raquo; <a href="syntax.topics.sections.html">Sections</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.topics.html">3.9. Topics</a><br/>3.9.1. Sections</dt><dd class="prev">3.9. Topics<br/><a href="syntax.topics.html">&laquo; Previous</a></dd><dd class="next">3.9.2. Blocks<br/><a href="syntax.topics.blocks.html">Next &raquo;</a></dd></dl>	<h1>3.9.1. Sections</h1><p>By <em>sections</em> we understand a group of instructions providing a comprehensive support for displaying various types of lists. They are strongly automated, intuitive and allow to achieve a lot without much effort. In many other template engines, similar solutions often depend on the data format and moreover, the template designer must connect the nested lists manually. In this place we must make it clear: if you do not use sections in OPT, you do not use this library properly. In this chapter we would like to provide a complete explanation of this topic then. The chapter contains the information common for all of the section types. The details and differences are explained in the particular section type reference.</p>
+
+<h2>Section types</h2>
+
+<p>There is a group of instructions that may be called <em>sections</em>. They share the common section API, but are used to display different types of lists. In OPT 2, we have the following section instructions:</p>
+
+<ol>
+<li><code>opt:section</code> - the basic sections to display flat lists.</li>
+<li><code>opt:selector</code> - they display flat lists, but allow to define more than one list element layouts that are chosen dynamically depending on the element settings.</li>
+<li><code>opt:tree</code> - sections to display hierarchical lists (tree data).</li>
+<li><code>opt:grid</code> - displays the data in a grid M x N elements.</li>
+</ol>
+
+<p>However, because they share the basic API, they can cooperate one with another.</p>
+
+<h2>Section structure</h2>
+
+<p>On the template side, the section consists of the opening and closing tag. Between them, we define the layout of the single list element. The details of this process depend on the section type. For example, to display a hierarchical list, the <code>opt:tree</code> instruction requires more information than <code>opt:section</code> needs to display a flat list. Below, you can find an example of a simple section:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$section.var1}, {$section.var2}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p><code>opt:section</code> displays the elements linearly, one after another. The code above informs that the elements must be displayed as HTML paragraphs. Each section has its own name that should be unique (there are some exceptions from this rule, however this will be explained later). As we see, using the section name, we can access the list element variables: <code>$section.var</code>, <code>$section.var2</code>. The template above will work for each list whose elements contain two variables: <code>var1</code> and <code>var2</code>.</p>
+
+<blockquote class="error">
+  <p>The section name <strong>must not</strong> be read from template variables: <code>&lt;opt:section name="$block"&gt;</code>.</p>
+</blockquote>
+
+<p>The sections must take the list data somehow, but we haven't even defined any datasource variable. It is not a mistake. We can always define the location with the optional <code>datasource</code> attribute, but OPT goes further. Our section has already its own unique name: <em>section</em>, so it would be nice if it read the data from the variable <code>$section</code>. In other words, if the datasource is not specified, the section uses its own name to find the data. The two sections below do exactly the same thing:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ....
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section&quot;</span> <span style="color: #000066;">datasource</span>=<span style="color: #ff0000;">&quot;$section&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Let's take a look at the element variables: <code>$section.var1</code> and <code>$section.var2</code>. OPT gives us here a couple of freedom. In practice, the section name does not have to be the first element of such container. We are allowed to follow it with any number of identifiers and the compiler will simply ignore them: <code>$foo.bar.joe.section.var1</code>. Once the section name is found in such call, the next identifier points to the element variable, and later, the identifiers works exactly like in typical containers. If <code>$section.var1</code> be a container with three elements: <em>foo</em>, <em>goo</em> and <em>hoo</em>, we would access them like that:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$section.var1.foo}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$section.var1.goo}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$section.var1.hoo}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Of course, if the variable <code>$foo.bar.joe</code> does not contain any of active section names, it is parsed as a normal variable or container.</p>
+
+<p>The section elements do not have to be containers, but also simple scalar values:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;section&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Here, the elements are simple, scalar values: {$section}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Data formats</h2>
+
+<p>As you have probably noticed, we have not said anything so far about the accompanying PHP code that would generate some useful data for our sections, and the data must have some certain structure in order to be readable. This is not a mistake. In other template engines, the loop data layout is left up to the programmer who must deal with it on the template side, or forced by the particular instruction. However, in Open Power Template the sections do not have any single "PHP representation". Their exact behaviour after the compilation depends on the selected data format.</p>
+
+<p>Data formats are a unique feature of OPT. They are responsible for the very high level of abstraction presented by OPT instructions. 
+While writing templates, you do not have to worry about the implementation issues. Instead, if you want to populate your section with objects, you choose <code>Objective</code> data format for it, and if you want arrays, you choose either <code>Array</code> or <code>SingleArray</code>. The compiler will do the rest and make the section support objects or arrays. The result is much more portable and simpler to maintain. Notice that the data format change does not affect the template code. All you have to do is to change the format within the script and recompile the templates.</p>
+
+<p>Let's sum up. The data format independence is one of the most important section features. They do not have any specific PHP representation. As a template designer, you only mark, how should <em>some elements</em> containing <em>some kind of data</em> look like. The script and the compiler does the rest.</p>
+
+<blockquote class="information">
+  <p>In order to get to know, how to populate sections with some PHP data, please take a look at the chapter about <a href="guide.data-formats.html" title="4.6. Data formats">data formats</a>.</p>
+</blockquote>
+
+<h2>Nested sections</h2>
+
+<p>The sections can be nested one in another. Suppose we want to display a list of categories, and each of them must contain some sample products. The code below solves this problem:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Category: {$categories.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Featured products:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;products&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$products.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>OPT assumes that if we nest one section in another, their data are connected with an one-to-many relationship. The compiler automatically establishes a connection between the categories and products using the data format rules.</p>
+
+<p>If the default behavior does not satisfy us, OPT provides several management tools. The most important is the <code>parent</code> attribute which allows to choose the parent section for the one-to-many relationship. The asterisk value <code>*</code> means the section is not related to any upper-level ones. Below, we can find a more complex version of the last example. Now we have some discounts for each category, but we do not want to display them above the product list. Instead, the discounts should be repeated for each product, because we want to create a links that allow to check the new price etc. So, the discount section must be located in <code>products</code>, but connected with a relationship to <code>categories.</code></p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Category: {$categories.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Featured products:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;products&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$products.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Discounts: 
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;discounts&quot;</span> <span style="color: #000066;">parent</span>=<span style="color: #ff0000;">&quot;categories&quot;</span> <span style="color: #000066;">str:separator</span>=<span style="color: #ff0000;">&quot;, &quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">parse:href</span>=<span style="color: #ff0000;">&quot;'discount.php?did='~$discounts.id~'&amp;amp;prodid='~$products.id&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Discount  {$discount.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>This example also shows that in the nested sections we still have the full access to the upper-level section data.</p>
+
+<p>To sum up, the following codes do exactly the same:</p>
+
+<h6>Version 1:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Category: {$categories.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Featured products:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;products&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$products.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h6>Version 2:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Category: {$categories.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Featured products:<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;products&quot;</span> <span style="color: #000066;">parent</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$products.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="warning">
+  <p>If you use the <code>datasource</code> attribute, such section must not be connected with a relationship to any other upper-level section. The <code>parent</code> attribute is ignored then. Of course, you can always create such relationship manually, by specifying one of the upper section element variables as a datasource, but we do not guarantee you this will always work correctly. It will decrease the code portability and partially, get you dependent on the data formats.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;upper&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;lower&quot;</span> <span style="color: #000066;">datasource</span>=<span style="color: #ff0000;">&quot;$upper.someVariable&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+  
+  <p>We strongly <strong>do not recommend</strong> using such code.</p>
+</blockquote>
+
+<h2>Section attributes</h2>
+
+<p>Below, you can find a list of section tag attributes:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type (values)</th>
+  <th align="left">DEscription</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>name</td>
+  <td>hard string</td>
+  <td align="left">The section name. It is the only required attribute,</td>
+</tr>
+<tr>
+  <td>parent</td>
+  <td>hard string</td>
+  <td align="left">The name of the upper-level and active section to create an one-to-many relationship. The asterisk <code>*</code> means "no relationship". By default, the sections are connected to the parent section.</td>
+</tr>
+<tr>
+  <td>datasource</td>
+  <td>expression</td>
+  <td align="left">Specifies the data source for the current section. If we use this attribute, <code>parent</code> is ignored.</td>
+</tr>
+<tr>
+  <td>order</td>
+  <td>asc, desc</td>
+  <td align="left">Specifies the element display order. The <code>desc</code> displays the elements in the descending order. Not all of the sections support it. In this case this attribute is ignored.</td>
+</tr>
+<tr>
+  <td>display</td>
+  <td>expression</td>
+  <td align="left">An optional expression that forces to display the alternative section content message, if evaluated to <strong>true</strong>.</td>
+</tr>
+<tr>
+  <td>separator</td>
+  <td>expression</td>
+  <td align="left">The separator that will be put between every two list elements. <a href="syntax.instructions.separator.html" title="3.7.21. opt:separator">More about separators</a>.</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Alternative section content</h2>
+
+<p>If the section contains no elements, we can specify the alternative content to display. In the section content we put the additional tag <code>opt:sectiontypeelse</code> (the exact name depends on the used section type), where we define the message:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Category: {$categories.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:sectionelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry but there are no categories in the system.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:sectionelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>opt:show instruction</h2>
+
+<p>OPT provides more complex way to support empty sections. It is the <a href="syntax.instructions.show.html" title="3.7.22. opt:show">opt:show</a> instruction:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;categories&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$categories.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry but there are no categories in the system.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:showelse<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In the example above, <code>opt:show</code> allows us not to display empty <code>&lt;ul&gt;</code> tags if there are no categories in the system. The detailed information on this instruction can be found on its documentation page. Here we will only give you the most basic rules.</p>
+
+<p>All the section attributes must be put in <code>opt:show</code> and the section tag <strong>must not contain them</strong>, because they are imported automatically to it. If the section tag contains them, OPT does not bind it with the <code>opt:show</code>. Suppose we have a list of products and if the products are displayed, we want to show also some bookmarks:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:show</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;products&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Bookmarks: <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;bookmarks&quot;</span> <span style="color: #000066;">str:separator</span>=<span style="color: #ff0000;">&quot;, &quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>{$bookmarks.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$products.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:show<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The first <code>opt:section</code> has attributes, so it is not bound to the <code>opt:show</code>. The second <code>opt:section</code> tag is empty and OPT imports the attributes from <code>opt:show</code> right here.</p>
+
+<blockquote class="warning">
+  <p>The <code>opt:show</code> instruction does not start a section. The access to the section elements like <code>$products.name</code> is possible only within <code>opt:section</code>. It is also not possible to connect <code>bookmarks</code> and <code>products</code> with a relationship in the example above.</p>
+</blockquote>
+
+<!-- ... -->
+
+<blockquote class="error">
+  <p>You must not define part of the attributes in <code>opt:show</code> and then add some extra ones in <code>opt:section</code> or similar.</p>
+</blockquote>
+
+<h2>Conditional sections</h2>
+
+<p>Sometimes we may want to show the section under a particular condition. OPT offers two ways to achieve this. The first one is the <code>display</code> attribute. If it is evaluated to <strong>true</strong>, the section shows the alternative content message even if it actually contains some items. To disable the section completely, we must use <code>opt:if</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000066;">opt:if</span>=<span style="color: #ff0000;">&quot;$someCondition&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    Section content
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>$sys special variable extensions</h2>
+
+<p>Using the <code>$sys.section.sectionName</code> special variable, you can get some extra information about the specified section. The available values are:</p>
+
+<ol>
+<li><code>$system.section.sectionName.count</code> - returns the number of the elements in the section.</li>
+<li><code>$system.section.sectionName.size</code> - returns the current section element size.</li>
+<li><code>$system.section.sectionName.iterator</code> - the current element index (warning: it may vary among various data formats!)</li>
+<li><code>$system.section.sectionName.first</code> - <strong>true</strong> if the current element is the first section element.</li>
+<li><code>$system.section.sectionName.last</code> - <strong>true</strong> if the current element is the last section element.</li>
+<li><code>$system.section.sectionName.extreme</code> - <strong>true</strong> if the current element is the first or the last section element.</li>
+</ol>
+
+<p>Some section types might define also additional values.</p>
+
+<blockquote class="stop">
+  <p>Remember that you must avoid attempts to modify any of the special variables above. Some of them are not in fact real variables, whereas others may cause unexpected behavior, when modified.</p>
+</blockquote>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.section.html">3.7.19. opt:section</a></li><li><a href="syntax.instructions.tree.html">3.7.25. opt:tree</a></li><li><a href="syntax.instructions.grid.html">3.7.10. opt:grid</a></li><li><a href="syntax.instructions.show.html">3.7.22. opt:show</a></li></ul><dl class="location location-bottom"><dt>3.9.1. Sections<br/><a href="syntax.topics.html">3.9. Topics</a></dt><dd class="prev"><a href="syntax.topics.html">&laquo; Previous</a><br/>3.9. Topics</dd><dd class="next"><a href="syntax.topics.blocks.html">Next &raquo;</a><br/>3.9.2. Blocks</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

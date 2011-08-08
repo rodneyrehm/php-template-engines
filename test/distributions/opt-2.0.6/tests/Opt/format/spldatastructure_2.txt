@@ -1,0 +1,40 @@
+SplDatastructure format: trees.
+
+>>>>templates/test.tpl
+<opt:tree name="tree">
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.item} START:
+<opt:content />
+NODE {$tree.item} END
+</opt:node>
+</opt:tree>
+
+>>>>data.php
+
+$spl1 = new SplDoublyLinkedList;
+$spl1->push(array('item' => 'FOO', 'depth' => 0));
+$spl1->push(array('item' => 'BAR', 'depth' => 1));
+$spl1->push(array('item' => 'JOE', 'depth' => 1));
+
+$view->tree = $spl1;
+$view->setFormat('tree', 'SplDatastructure');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+LIST START:
+NODE FOO START:
+LIST START:
+NODE BAR START:
+NODE BAR END
+NODE JOE START:
+NODE JOE END
+LIST END:
+NODE FOO END
+LIST END:

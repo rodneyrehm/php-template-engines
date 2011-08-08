@@ -1,0 +1,23 @@
+Check whether the XML prolog works.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<!DOCTYPE foo [ <!ELEMENT note (bar)>
+<!ELEMENT bar (#PCDATA)> ]>
+<foo>
+  <bar>...</bar>
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<?xml version="1.0" ?>
+<!DOCTYPE foo [ <!ELEMENT note (bar)>
+<!ELEMENT bar (#PCDATA)> ]>
+<foo>
+  <bar>...</bar>
+</foo>

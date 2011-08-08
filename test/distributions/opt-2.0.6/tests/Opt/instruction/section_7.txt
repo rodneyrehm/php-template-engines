@@ -1,0 +1,17 @@
+The test checks the detection of multiple sectionelse tags.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:section name="sect">
+{$sect.val1},{$sect.val2}
+<opt:sectionelse>NO DATA</opt:sectionelse>
+<opt:sectionelse>NO DATA</opt:sectionelse>
+</opt:section>
+</opt:root>
+
+>>>>expected.txt
+Opt_InstructionTooManyItems_Exception
+
+>>>>result.txt
+NO DATA

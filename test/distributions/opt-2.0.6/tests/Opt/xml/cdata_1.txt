@@ -1,0 +1,19 @@
+Check whether the CDATA content is ignored by the parser.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+<![CDATA[
+<bar> foo
+]]>
+</foo>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+<![CDATA[
+<bar> foo
+]]>
+</foo>

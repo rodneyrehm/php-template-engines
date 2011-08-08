@@ -1,0 +1,25 @@
+Testing the saving to the section variables.
+
+>>>>templates/test.tpl
+<opt:section name="foo">
+{$foo.item.subitem1 is 'BAR'}
+{$foo.item.subitem1}
+{$foo.item.subitem2}
+</opt:section>
+
+>>>>data.php
+
+$view->foo = array(0 =>
+	array('item' => array('subitem1' => 'ToModify', 'subitem2' => 'OK')),
+	array('item' => array('subitem1' => 'ToModify', 'subitem2' => 'OK')),
+);
+$view->setFormat('foo', 'Array');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BAR
+OK
+BAR
+OK

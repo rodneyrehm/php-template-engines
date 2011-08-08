@@ -1,0 +1,15 @@
+Check the opt:literal instruction to generate comments.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:literal type="comment">Foo<![CDATA[Bar]]>{$joe}<![CDATA[Goo]]>Hoo</opt:literal>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<!--FooBarJoeGooHoo-->
+>>>>data.php
+$view->joe = 'Joe';

@@ -1,0 +1,18 @@
+Bug #87 test - does stripWhitespaces trim too much?
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<p>&copy; <a href="http://www.invenzzia.org">Invenzzia Group</a> 2009</p>
+<p>Distributed under <a href="http://www.invenzzia.org/license/new-bsd">New BSD License</a></p>
+</opt:root>
+
+>>>>data.php
+$this->tpl->stripWhitespaces = true;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<p>© <a href="http://www.invenzzia.org">Invenzzia Group</a> 2009</p> 
+<p>Distributed under <a href="http://www.invenzzia.org/license/new-bsd">New BSD License</a></p>

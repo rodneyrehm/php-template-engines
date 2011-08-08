@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Programmer's Guide - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Programmer's Guide</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="index.html">Table of Contents</a><br/>4. Programmer's Guide</dt><dd class="prev">3.9.5. Quirks mode<br/><a href="syntax.topics.quirks.html">&laquo; Previous</a></dd><dd class="next">4.1. Initialization<br/><a href="guide.initialization.html">Next &raquo;</a></dd></dl>	<h1>4. Programmer's Guide</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="guide.initialization.html">4.1. Initialization</a></li><li><a href="guide.views.html">4.2. Working with views</a></li><li><a href="guide.output-systems.html">4.3. Working with output systems</a></li><li><a href="guide.error-handling.html">4.4. Error handling</a></li><li><a href="guide.sections.html">4.5. Working with sections</a></li><li><a href="guide.data-formats.html">4.6. Data formats</a></li><li><a href="guide.inheritance.html">4.7. Template inheritance</a></li><li><a href="guide.escaping.html">4.8. Custom escaping functions</a></li><li><a href="guide.i18n.html">4.9. Internationalization</a></li><li><a href="guide.components.html">4.10. Components and forms</a></li><li><a href="guide.cache.html">4.11. Caching</a></li></ul><p>The Programmer's Guide for OPT shows, how to use Open Power Template 2 library from the script-side. You can read these chapters from start to finish to get to know dozens of practical and helpful issues. Before we start, let us introduce the main concepts of OPT Application Programming Interface.</p>
+
+<h2>The structure of OPT</h2>
+
+<p>Open Power Template 2 is a part of <em>Open Power Libs 2</em> family (currently its only quite mature member). In order to provide a friendly cooperation between the libraries, they share a common core that provides the basic interfaces and features, such as autoloading, plugin system and error handling. When we talk about Open Power Template 2 API source code, we always mean the source code <em>together with the OPL core</em>.</p>
+
+<p>It does not mean that you have to visit the Invenzzia website again and download another package. The core is already included in the installation package of OPT and all you have to do is to copy the files to your project directory structure.</p>
+
+<p>In this guide, we will sometimes refer to the OPL core, explaining OPT-specific issues and the basic usage, however for the detailed information, you should also read the <em>OPL User Manual</em>.</p>
+
+<h2>How does OPT work?</h2>
+
+<p>Open Power Template 2 is a template engine that provides its own templating language instead of using plain PHP. Because of the performance reasons, the XML templates are not parsed and executed directly by OPT. Instead, the library uses a small trick. If it notices that a certain template is used for the first time or it has been modified, it compiles it into plain and simple PHP script and saves the result on the hard drive. Then, the library simply includes the compiled file and lets the PHP parser do the rest.</p>
+
+<p>The compilation requires a significant amount of work to be done, so the library consists of two, partially independent parts:</p>
+
+<ol>
+<li>The front-end - manages the script data and executes PHP templates.</li>
+<li>The compiler - compiles the XML templates to the PHP code.</li>
+</ol>
+
+<p>The front-end is quite small, and moreover - OPL core automatically loads most of the code on demand, so that your script is not overloaded by the template compiler or exception handler if it is not used.</p>
+
+<h2>System requirements</h2>
+
+<p>As it was said in the installation chapter, Open Power Template 2 was written for PHP 5.3. However, because this version has not been released yet, the OPL core provides a compatibility layer for PHP 5.2 that adds the missing classes and interfaces. It is automatically loaded, if the system requirements are not satisfied. Of course, the compatibility layer generates a small slowdown, but there is nothing to worry about. The extra classes and interfaces are used by the template compiler, not the front-end.</p>
+
+<h2>OPT versus other template engines</h2>
+
+<p>The standalone template engines available on the Internet, like Smarty, usually have a simple Application Programming Interface that consists of one general-purpose class. It is very simple in use, especially in smaller projects or for people that are not familiar with the object-oriented programming, but causes many problems if we are going to work with frameworks and bigger applications. On the other side, we have the template engines that are parts of popular frameworks, with nice, objective design. The OPT API resembles the framework solutions, providing several specialized classes that perform certain tasks and must be combined together in order to execute a template. If you are familiar with the first concept, this may be a bit confusing to you at the beginning, but once you master it, you will see that it is much more intuitive and powerful.</p>
+<dl class="location location-bottom"><dt>4. Programmer's Guide<br/><a href="index.html">Table of Contents</a></dt><dd class="prev"><a href="syntax.topics.quirks.html">&laquo; Previous</a><br/>3.9.5. Quirks mode</dd><dd class="next"><a href="guide.initialization.html">Next &raquo;</a><br/>4.1. Initialization</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

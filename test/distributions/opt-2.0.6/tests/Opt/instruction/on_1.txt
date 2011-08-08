@@ -1,0 +1,15 @@
+Check the basic opt:on features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<div opt:on="true">With a tag</div>
+<div opt:on="false">Without a tag</div>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<div>With a tag</div>
+Without a tag

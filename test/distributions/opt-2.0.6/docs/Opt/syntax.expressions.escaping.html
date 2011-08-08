@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>HTML escaping - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>HTML escaping</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.expressions.html">Expressions</a> &raquo; <a href="syntax.expressions.escaping.html">HTML escaping</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.expressions.html">3.5. Expressions</a><br/>3.5.7. HTML escaping</dt><dd class="prev">3.5.6. Objects<br/><a href="syntax.expressions.objects.html">&laquo; Previous</a></dd><dd class="next">3.6. Function reference<br/><a href="syntax.functions.html">Next &raquo;</a></dd></dl>	<h1>3.5.7. HTML escaping</h1><p>The variable values placed in the HTML code may break our output structure or add strange tags to the result. Here is an example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">parse:style</span>=<span style="color: #ff0000;">&quot;$foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Text<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>If for some reason the value of <code>$foo</code> was <code>&lt;div&gt;bar&lt;/div&gt;</code>, the result would be:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">style</span>=<span style="color: #ff0000;">&quot;&lt;div&gt;</span></span>bar<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>&quot;&gt;Text<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>However, in OPT it is not. The parser provides advanced escaping control that changes the dangerous characters into HTML entities so that they would not break the output code.</p>
+
+<h2>Attribute-level control</h2>
+
+<p>OPT assumes that on the attribute level, all the expressions placed as attribute values, must be escaped. Going back to our example, the result will be:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p</span> <span style="color: #000066;">style</span>=<span style="color: #ff0000;">&quot;&amp;lt;div&amp;gt;bar&amp;lt;/div&amp;gt;&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Text<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Text-level control</h2>
+
+<p>On the level of expressions in curly brackets, the escaping is controlled in three ways:</p>
+
+<ol>
+<li>In the OPT configuration, using the <code>escape</code> directive.</li>
+<li>In the current template - in <code>opt:root</code> or <code>opt:extend</code> instructions the attribute <code>escape</code> with the values <em>yes</em> or <em>no</em>.</li>
+<li>In the current expression with the modifiers <strong>e:</strong> and <strong>u:</strong></li>
+</ol>
+
+<p>This is an example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">escape</span>=<span style="color: #ff0000;">&quot;no&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This expression will not be escaped: {$variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>This expression will be escaped: {e:$variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The modifier <strong>e:</strong> at the beginning of the expression turns on the escaping, if it is disabled, and <strong>u:</strong> disables it.</p>
+
+<blockquote class="important">
+  <p>OPT is smart enough not to escape the same expression twice, if we turned it on both in the configuration and in the expression itself.</p>
+</blockquote>
+<dl class="location location-bottom"><dt>3.5.7. HTML escaping<br/><a href="syntax.expressions.html">3.5. Expressions</a></dt><dd class="prev"><a href="syntax.expressions.objects.html">&laquo; Previous</a><br/>3.5.6. Objects</dd><dd class="next"><a href="syntax.functions.html">Next &raquo;</a><br/>3.6. Function reference</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

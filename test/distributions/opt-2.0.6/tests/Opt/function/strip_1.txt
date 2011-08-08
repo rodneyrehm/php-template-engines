@@ -1,0 +1,13 @@
+Testing the lower() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:if test="strip('this   is	a     test') eq 'this is a test'">OK<opt:else>FAIL</opt:else></opt:if>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+OK

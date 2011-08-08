@@ -1,0 +1,15 @@
+Testing the indent() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{indent('this text needs
+a proper indentation', 3, 'r')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+this text needs
+rrra proper indentation

@@ -1,0 +1,29 @@
+Check the isUrl() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:if test="isUrl('http://www.example.com/')">URL<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl('//www.example.com/')">URL<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl('www.example.com')">URL<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl('www.example.com/directory/file.html')">URL<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl('http://www.example/com/directory/file.html?foo=bar')">URL<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl('bogus')">URL<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl('\\://')">IMAGE<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl(',,,kkklk;lk')">URL<opt:else>NOT URL</opt:else></opt:if>
+<opt:if test="isUrl('')">URL<opt:else>NOT URL</opt:else></opt:if>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+URL
+NOT URL
+NOT URL
+NOT URL
+URL
+NOT URL
+NOT URL
+NOT URL
+NOT URL

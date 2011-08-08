@@ -1,0 +1,15 @@
+Check the default content, opt:parent and ignoredefault attribute which should
+hide the default content from the parent.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="foo">Snippet<opt:parent/></opt:snippet>
+<opt:insert snippet="foo" ignoredefault="yes">NOSNIPPET</opt:insert>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Snippet

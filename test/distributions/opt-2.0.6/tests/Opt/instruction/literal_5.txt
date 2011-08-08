@@ -1,0 +1,22 @@
+opt:literal and XML comments - it should not generate a nested code.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:literal type="comment">
+A text with
+<!-- comments -->
+</opt:literal>
+</opt:root>
+
+>>>>data.php
+$this->tpl->printComments = true;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<!--
+A text with
+ comments 
+-->

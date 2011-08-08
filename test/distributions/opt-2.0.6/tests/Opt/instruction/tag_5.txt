@@ -1,0 +1,16 @@
+The test checks the single tag creation with extra attributes.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:tag name="foo" single="yes">
+<opt:attribute str:name="name" str:value="bar" />
+bar
+</opt:tag>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo name="bar" />

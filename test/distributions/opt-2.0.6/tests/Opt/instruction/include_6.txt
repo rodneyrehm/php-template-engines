@@ -1,0 +1,24 @@
+In both of the views the variable should have the same value, as the variables are imported.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Foo{$variable}
+<opt:include file="included.tpl" import="yes" />
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Bar{$variable}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooABarA
+>>>>data.php
+$view->variable = 'A';

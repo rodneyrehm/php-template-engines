@@ -1,0 +1,33 @@
+Test, if the conditional attribute value works with snippets.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="values1">
+	<opt:value test="$val1 == 'foo'">a</opt:value>
+	<opt:value test="$val1 == 'bar'">b</opt:value>
+</opt:snippet>
+<opt:snippet name="values2">
+	<opt:value test="$val2 == 'foo'">a</opt:value>
+	<opt:value test="$val2 == 'bar'">b</opt:value>
+</opt:snippet>
+<foo>
+<opt:attribute name="class" str:value="c" opt:use="values1" />
+</foo>
+<foo>
+<opt:attribute name="class" str:value="c" opt:use="values2" />
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->val1 = 'foo';
+$view->val2 = 'joe';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo class="a">
+</foo>
+<foo class="c">
+</foo>

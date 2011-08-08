@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Values - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Values</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.expressions.html">Expressions</a> &raquo; <a href="syntax.expressions.values.html">Values</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.expressions.html">3.5. Expressions</a><br/>3.5.2. Values</dt><dd class="prev">3.5.1. Variables<br/><a href="syntax.expressions.variables.html">&laquo; Previous</a></dd><dd class="next">3.5.3. Operators<br/><a href="syntax.expressions.operators.html">Next &raquo;</a></dd></dl>	<h1>3.5.2. Values</h1><p>In the expressions we are allowed to use constant values, too. Open Power Template supports the following types:</p>
+
+<ul>
+<li>Decimal numbers, for example <code>15</code>, <code>-3</code>.</li>
+<li>Hexadecimal numbers: <code>0x3abc5</code>, <code>-0x3ABC5</code>. Digits from A to F may be both lower and upper case.</li>
+<li>Floating point numbers: <code>3.141</code></li>
+<li>Strings: <code>'this is a text'</code>, <code>word</code></li>
+</ul>
+
+<p>Let's take a deeper look at the strings. They are enclosed in single quotes only, because double quotes are a part of XML syntax. In order to put a quote into a string, we follow it with a backslash: <code>\</code>. To display a backslash, we put two backslashes into the string.</p>
+
+<pre><code>'this is a text'
+'this is a text: \' - with a quote'
+'this is a text: \\ - with a backslash'
+</code></pre>
+
+<p>In some cases, it is allowed to write a string without quotes. However, it must fulfill two conditions. Firstly, it has to be a single word, and more precisely - an identifier. It must begin with an underscore or a letter, later we can also use numbers. Secondly, it must appear at the position, where strings are allowed in the expression:</p>
+
+<pre><code>word
+word1 neq word2
+eq eq eq
+</code></pre>
+
+<p>In all of these examples the condition 1 is fulfilled. Let's check the second one. In the first example, we have a single word at the beginning of the expression. No string operators are allowed here, and moreover, there is no operator called <code>word</code>, so it must be a string. In the second case, <code>word1</code> and <code>word2</code> are also treated as strings, because they are connected with the operator <code>neq</code>, and it must not have another operator as a neighbor. The most interesting is the last example. <code>eq</code> is an operator, but at the position 1 and 3, operators are not allowed. Here, this word will be a string. The second position is different. The two values must be connected with an operator, so the second <code>eq</code> will be processed in this way. If we replaced it with <code>word</code>, the template would not compile, because there would be no such operator.</p>
+
+<blockquote class="warning">
+  <p>The only keyword that breaks the rule described above is <code>is</code>. Currently, it cannot be used in the string context due to the parsing issues.</p>
+</blockquote>
+
+<p>In OPT, you must not put the data directly in the strings, like in PHP: <code>"foo $variable bar"</code>. Instead, you have to use the string concatenation operator <code>~</code></p>
+
+<pre><code>'foo '~$variable~' bar'
+</code></pre>
+
+<p>OPT supports also three special values (written in lower case):</p>
+
+<ul>
+<li><strong>true</strong> - logical true</li>
+<li><strong>false</strong> - logical false</li>
+<li><strong>null</strong> - no value</li>
+</ul>
+
+<p>It should be noted that they are treated as numbers by the parser.</p>
+<dl class="location location-bottom"><dt>3.5.2. Values<br/><a href="syntax.expressions.html">3.5. Expressions</a></dt><dd class="prev"><a href="syntax.expressions.variables.html">&laquo; Previous</a><br/>3.5.1. Variables</dd><dd class="next"><a href="syntax.expressions.operators.html">Next &raquo;</a><br/>3.5.3. Operators</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

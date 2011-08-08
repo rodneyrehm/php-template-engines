@@ -1,0 +1,21 @@
+Does CDATA disable escaping?
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<script type="text/javascript">
+<![CDATA[
+alert("I'm not <b>evil</b>");
+]]>
+</script>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<script type="text/javascript">
+<![CDATA[
+alert("I'm not <b>evil</b>");
+]]>
+</script>

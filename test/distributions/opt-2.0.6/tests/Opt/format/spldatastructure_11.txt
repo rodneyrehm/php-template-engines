@@ -1,0 +1,24 @@
+Testing the number of elements.
+
+>>>>templates/test.tpl
+<opt:show name="foo">
+<opt:section>
+{$foo.item}:{$system.section.foo.count}
+</opt:section>
+</opt:show>
+
+>>>>data.php
+
+$spl1 = new SplDoublyLinkedList;
+$spl1->push(array('item' => 'FOO'));
+$spl1->push(array('item' => 'BAR'));
+
+$view->foo = $spl1;
+$view->setFormat('foo', 'SplDatastructure');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO:2
+BAR:2

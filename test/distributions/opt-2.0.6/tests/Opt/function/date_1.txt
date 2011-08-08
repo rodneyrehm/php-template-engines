@@ -1,0 +1,16 @@
+Testing the date() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{date('d.m.Y', 1234530000)}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+13.02.2009
+
+>>>>data.php
+date_default_timezone_set('Europe/Warsaw');

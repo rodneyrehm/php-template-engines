@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Opt_Xml_Buffer class - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Opt_Xml_Buffer class</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-xml-buffer.html">Opt_Xml_Buffer</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.html">7. API Reference</a><br/>7.9. Opt_Xml_Buffer class</dt><dd class="prev">7.8.8. setValue()<br/><a href="api.opt-xml-attribute.set-value.html">&laquo; Previous</a></dd><dd class="next">7.9.1. addAfter()<br/><a href="api.opt-xml-buffer.add-after.html">Next &raquo;</a></dd></dl>	<h1>7.9. Opt_Xml_Buffer class</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="api.opt-xml-buffer.add-after.html">7.9.1. addAfter()</a></li><li><a href="api.opt-xml-buffer.add-before.html">7.9.2. addBefore()</a></li><li><a href="api.opt-xml-buffer.buffer-size.html">7.9.3. bufferSize()</a></li><li><a href="api.opt-xml-buffer.build-code.html">7.9.4. buildCode()</a></li><li><a href="api.opt-xml-buffer.clear.html">7.9.5. clear()</a></li><li><a href="api.opt-xml-buffer.copy-buffer.html">7.9.6. copyBuffer()</a></li><li><a href="api.opt-xml-buffer.get.html">7.9.7. get()</a></li><li><a href="api.opt-xml-buffer.get-buffer.html">7.9.8. getBuffer()</a></li><li><a href="api.opt-xml-buffer.set.html">7.9.9. set()</a></li></ul><div class="tf_reference"><table><tr><th>Construct</th><td>Abstract class</td></tr><tr><th>Extended by</th><td><code><a href="api.opt-xml-attribute.html">Opt_Xml_Attribute</a></code>, <code><a href="api.opt-xml-node.html">Opt_Xml_Node</a></code></td></tr></table><hr/></div><p><code>Opt_Xml_Buffer</code> provides the basis for all the XML tree classes. It implements the most important tools that allow to generate the PHP code from the template:</p>
+
+<ol>
+<li>Code buffers</li>
+<li>State variables</li>
+</ol>
+
+<h2>Code buffers</h2>
+
+<p>The XML nodes are not replaced with the PHP code line by line. The instruction processor may add the new code snippet to every node, even if it has already been parsed by other processor. The nodes contain a special data structure to keep the PHP snippets assigned to them. The snippets are grouped into buffers that indicate where the code is located in the final file (i.e. before the opening tag). The compilation is nothing more but generating the PHP code for the node buffers.</p>
+
+<p>Although there are many available buffers, the nodes may use only a part of them. They are identified by the <code>Opt_Xml_Buffer</code> constants:</p>
+
+<ol>
+<li><code>TAG_BEFORE</code></li>
+<li><code>TAG_AFTER</code></li>
+<li><code>TAG_OPENING_BEFORE</code></li>
+<li><code>TAG_OPENING_AFTER</code></li>
+<li><code>TAG_CONTENT_BEFORE</code></li>
+<li><code>TAG_CONTENT</code></li>
+<li><code>TAG_CONTENT_AFTER</code></li>
+<li><code>TAG_CLOSING_BEFORE</code></li>
+<li><code>TAG_CLOSING_AFTER</code></li>
+<li><code>TAG_SINGLE_BEFORE</code></li>
+<li><code>TAG_SINGLE_AFTER</code></li>
+<li><code>TAG_NAME</code></li>
+<li><code>TAG_ATTRIBUTES_BEFORE</code></li>
+<li><code>TAG_ATTRIBUTES_AFTER</code></li>
+<li><code>TAG_BEGINNING_ATTRIBUTES</code></li>
+<li><code>TAG_ENDING_ATTRIBUTES</code></li>
+<li><code>ATTRIBUTE_NAME</code></li>
+<li><code>ATTRIBUTE_VALUE</code></li>
+<li><code>ATTRIBUTE_BEGIN</code></li>
+<li><code>ATTRIBUTE_END</code></li>
+</ol>
+
+<p>The pictures below show, how they surround the XML tag.</p>
+
+<p><img src="media/code_buffers_1.png" alt="Location of the code buffers around the XML tag" title="Location of the code buffers around the XML tag" /></p>
+
+<p>We see that <code>TAG_BEFORE</code> and <code>TAG_AFTER</code> enclose the whole content, including the opening and closing tags. They are used the most often, because here we can locate the loop or condition that affects the entire tag. Next, <code>TAG_OPENING_BEFORE</code> and <code>TAG_OPENING_AFTER</code> allow to put some code around the opening tag, and there are similar buffers for the closures. Moreover, we have some buffers that influence the content only. <code>TAG_CONTENT_BEFORE</code> and <code>TAG_CONTENT_AFTER</code> are used <strong>if</strong> the tag contains at least one child node. Otherwise, the code in <code>TAG_CONTENT</code> may be used to generate it during the runtime.</p>
+
+<p>The situation changes a bit, if we have a single tag:</p>
+
+<p><img src="media/code_buffers_2.png" alt="Location of the code buffers around the single XML tag" title="Location of the code buffers around the single XML tag" /></p>
+
+<p>There is no content and there are <code>TAG_SINGLE_BEFORE</code> and <code>TAG_SINGLE_AFTER</code>. Note that in this way we have two types of code buffer that surround the tag. This is not a mistake as there is important difference. The linker always adds the <code>TAG_BEFORE</code> snippets, whereas <code>TAG_SINGLE_BEFORE</code> only if the tag is single.</p>
+
+<blockquote class="information">
+  <p>Note that the text and OPT expression nodes are surrounded only with <code>TAG_BEFORE</code> and <code>TAG_AFTER</code>.</p>
+</blockquote>
+
+<p>We can find the code buffers around the XML attributes, too:</p>
+
+<p><img src="media/code_buffers_3.png" alt="Location of the code buffers around XML attributes" title="Location of the code buffers around XML attributes" /></p>
+
+<h2>State variables</h2>
+
+<p>For each node, we can assign state variables that bind some extra information to it. They are used for some purposes:</p>
+
+<ol>
+<li>Setting messages for the compiler.</li>
+<li>Temporary information store - if the processor parses the same node more than once, we can save some data in order not to generate them again.</li>
+<li>Setting messages for other instruction processors.</li>
+</ol>
+
+<p>The template compiler recognizes the following state variables in the nodes:</p>
+
+<dl>
+<dt>dynamic</dt>
+<dd>(<code>boolean</code>) If set to <strong>true</strong>, the content of this node must keep dynamic even if the cache system is used.</dd>
+
+<dt>hidden</dt>
+<dd>(<code>boolean</code>) If set to <strong>true</strong>, the linker ignores this tag and its children - they will not appear in the output code. By default, all the nodes in the XML tree have <code>hidden</code> set to <strong>true</strong>. The compiler automatically changes its state, if it is going to process it.</dd>
+
+<dt>postprocess</dt>
+<dd>(<code>boolean</code>) By default, the compiler allows the instruction processor to parse the tags before going to their children. If the processor wants to do something also after the children are processed, it must set this variable to <strong>true</strong>. The compiler returns to the node then by calling <a href="api.opt-compiler-processor.postprocess-node.html" title="7.7.10. Opt_Compiler_Processor::postprocessNode()">Opt_Compiler_Processor::postprocessNode()</a> or <a href="api.opt-compiler-processor.postprocess-attribute.html" title="7.7.9. Opt_Compiler_Processor::postprocessAttribute()">Opt_Compiler_Processor::postprocessAttribute()</a> after the children parsing is completed.</dd>
+</dl>
+<dl class="location location-bottom"><dt>7.9. Opt_Xml_Buffer class<br/><a href="api.html">7. API Reference</a></dt><dd class="prev"><a href="api.opt-xml-attribute.set-value.html">&laquo; Previous</a><br/>7.8.8. setValue()</dd><dd class="next"><a href="api.opt-xml-buffer.add-after.html">Next &raquo;</a><br/>7.9.1. addAfter()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

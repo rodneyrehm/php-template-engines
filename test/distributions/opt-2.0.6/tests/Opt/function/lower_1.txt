@@ -1,0 +1,15 @@
+Testing the lower() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{lower('HI UNIVERSE')}
+{lower('Hi UnIvErSe')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+hi universe
+hi universe

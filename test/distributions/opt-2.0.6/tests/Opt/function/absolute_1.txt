@@ -1,0 +1,15 @@
+Testing the absolute() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{absolute(5)}
+{absolute(-5)}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+5
+5

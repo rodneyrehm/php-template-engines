@@ -1,0 +1,34 @@
+Check the linking between two sections with opt:show. In this test
+there should not be a relationship, because the section "sub" is not
+nested within opt:section, but opt:show.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:show name="sect">
+<opt:section name="sub" parent="sect">
+{$sub.item}
+</opt:section>
+Foo:
+<opt:section>
+{$sect.val1},{$sect.val2}
+</opt:section>
+Eof
+</opt:show>
+</opt:root>
+
+>>>>expected.txt
+Opt_SectionNotFound_Exception
+
+>>>>data.php
+$view->sect = array(
+	array('val1' => 'A', 'val2' => 'B'),
+	array('val1' => 'C', 'val2' => 'D'),
+	array('val1' => 'E', 'val2' => 'F'),
+	array('val1' => 'G', 'val2' => 'H'),
+);
+$view->sub = array(
+	array('item' => 'A'),
+	array('item' => 'B'),
+	array('item' => 'C'),
+);

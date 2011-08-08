@@ -1,0 +1,16 @@
+This test checks the empty parameter values (bug #63). The template should
+be executed properly.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:component from="$component" bar="">
+<opt:set name="foo" value="" />
+FOO
+</opt:component>
+
+>>>>data.php
+
+$view->component = new myComponent;
+
+>>>>expected.txt
+Opt_AttributeEmpty_Exception

@@ -1,0 +1,46 @@
+More advanced relationships. sect3 should be connected with sect1.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:section name="sect1">
+<opt:section name="sect2" parent="">
+<opt:section name="sect3" parent="sect1">
+{$sect1.value} {$sect2.value} {$sect3.value}
+</opt:section>
+</opt:section>
+</opt:section>
+</opt:root>
+
+>>>>data.php
+$view->sect1 = array(0 =>
+	array('value' => ':sect1-value1:'),
+	array('value' => ':sect1-value2:')
+);
+$view->sect2 = array(0 =>
+	array('value' => ':sect2-value1:'),
+	array('value' => ':sect2-value2:')
+);
+$view->sect3 = array(0 =>
+	array(0 =>
+		array('value' => ':sect3a-value1:'),
+		array('value' => ':sect3a-value2:')
+	),
+	array(0 =>
+		array('value' => ':sect3b-value1:'),
+		array('value' => ':sect3b-value2:')
+	)
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+:sect1-value1: :sect2-value1: :sect3a-value1:
+:sect1-value1: :sect2-value1: :sect3a-value2:
+:sect1-value1: :sect2-value2: :sect3a-value1:
+:sect1-value1: :sect2-value2: :sect3a-value2:
+:sect1-value2: :sect2-value1: :sect3b-value1:
+:sect1-value2: :sect2-value1: :sect3b-value2:
+:sect1-value2: :sect2-value2: :sect3b-value1:
+:sect1-value2: :sect2-value2: :sect3b-value2:

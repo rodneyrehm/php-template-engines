@@ -1,0 +1,22 @@
+Testing the stripTags() function in the aggregate version.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@vars is stripTags($vars)}
+{@vars.v1}
+{@vars.v2}
+</opt:root>
+
+>>>>data.php
+$view->vars = array(
+	'v1' => 'Text with <strong>HTML</strong>',
+	'v2' => 'Hi <em>universe</em>'
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+Text with HTML
+Hi universe

@@ -1,0 +1,33 @@
+The same, as test selector_2, but together with OPT:SHOW
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:show name="sect" test="ajtem">
+START
+<opt:selector>
+<opt:foo>FOO: {$sect.val1},{$sect.val2}</opt:foo>
+<opt:bar>BAR: {$sect.val1},{$sect.val2}</opt:bar>
+</opt:selector>
+END
+</opt:show>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+START
+FOO: A,B
+BAR: C,D
+FOO: E,F
+BAR: G,H
+END
+
+>>>>data.php
+$view->sect = array(
+	array('val1' => 'A', 'val2' => 'B', 'ajtem' => 'foo'),
+	array('val1' => 'C', 'val2' => 'D', 'ajtem' => 'bar'),
+	array('val1' => 'E', 'val2' => 'F', 'ajtem' => 'foo'),
+	array('val1' => 'G', 'val2' => 'H', 'ajtem' => 'bar'),
+);

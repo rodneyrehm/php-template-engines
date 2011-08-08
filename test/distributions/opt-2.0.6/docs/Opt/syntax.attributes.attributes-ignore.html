@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:attributes-ignore - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:attributes-ignore</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.attributes.html">OPT attributes</a> &raquo; <a href="syntax.attributes.attributes-ignore.html">opt:attributes-ignore</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.attributes.html">3.8. OPT attributes</a><br/>3.8.2. opt:attributes-ignore</dt><dd class="prev">3.8.1. opt:attributes-build<br/><a href="syntax.attributes.attributes-build.html">&laquo; Previous</a></dd><dd class="next">3.8.3. opt:capture<br/><a href="syntax.attributes.capture.html">Next &raquo;</a></dd></dl>	<h1>3.8.2. opt:attributes-ignore</h1><div class="tf_reference"><table><tr><th>Versions</th><td>since <code>2.0.1</code></td></tr>
+</table><hr/></div><p>The attribute is used to specify the list of ignored attributes for <a href="syntax.attributes.attributes-build.html" title="3.8.1. opt:attributes-build">opt:attributes-build</a>.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">opt:attributes-build</span>=<span style="color: #ff0000;">&quot;$attributeList&quot;</span> <span style="color: #000066;">opt:attributes-ignore</span>=<span style="color: #ff0000;">&quot;$ignoreList&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The ignored attribute list can be provided either as a container of names or a string in the format:</p>
+
+<pre><code>name1, name2, name3
+</code></pre>
+
+<p>The following script generating the data for the code above will produce the following result:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">attributeList</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'attr1'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'value1'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'attr2'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'value2'</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'attr3'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'value3'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">ignoreList</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'attr2'</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">attr1</span>=<span style="color: #ff0000;">&quot;value1&quot;</span> <span style="color: #000066;">attr3</span>=<span style="color: #ff0000;">&quot;value3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ....
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+<h4>See also:</h4><ul><li><a href="syntax.attributes.attributes-build.html">3.8.1. opt:attributes-build</a></li></ul><dl class="location location-bottom"><dt>3.8.2. opt:attributes-ignore<br/><a href="syntax.attributes.html">3.8. OPT attributes</a></dt><dd class="prev"><a href="syntax.attributes.attributes-build.html">&laquo; Previous</a><br/>3.8.1. opt:attributes-build</dd><dd class="next"><a href="syntax.attributes.capture.html">Next &raquo;</a><br/>3.8.3. opt:capture</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

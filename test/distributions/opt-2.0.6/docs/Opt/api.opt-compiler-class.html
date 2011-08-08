@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Opt_Compiler_Class class - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Opt_Compiler_Class class</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-compiler-class.html">Opt_Compiler_Class</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.html">7. API Reference</a><br/>7.5. Opt_Compiler_Class class</dt><dd class="prev">7.4. Opt_Output_Return class<br/><a href="api.opt-output-return.html">&laquo; Previous</a></dd><dd class="next">7.5.1. __construct()<br/><a href="api.opt-compiler-class.__construct.html">Next &raquo;</a></dd></dl>	<h1>7.5. Opt_Compiler_Class class</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="api.opt-compiler-class.__construct.html">7.5.1. __construct()</a></li><li><a href="api.opt-compiler-class.add-dependant-template.html">7.5.2. addDependantTemplate()</a></li><li><a href="api.opt-compiler-class.block.html">7.5.3. block()</a></li><li><a href="api.opt-compiler-class.clean-compiler.html">7.5.4. cleanCompiler()</a></li><li><a href="api.opt-compiler-class.compile.html">7.5.5. compile()</a></li><li><a href="api.opt-compiler-class.compile-expression.html">7.5.6. compileExpression()</a></li><li><a href="api.opt-compiler-class.component.html">7.5.7. component()</a></li><li><a href="api.opt-compiler-class.convert.html">7.5.8. convert()</a></li><li><a href="api.opt-compiler-class.create-format.html">7.5.9. createFormat()</a></li><li><a href="api.opt-compiler-class.escape.html">7.5.10. escape()</a></li><li><a href="api.opt-compiler-class.get.html">7.5.11. get()</a></li><li><a href="api.opt-compiler-class.get-current-template.html">7.5.12. getCurrentTemplate()</a></li><li><a href="api.opt-compiler-class.get-format.html">7.5.13. getFormat()</a></li><li><a href="api.opt-compiler-class.import-dependencies.html">7.5.14. importDependencies()</a></li><li><a href="api.opt-compiler-class.inherits.html">7.5.15. inherits()</a></li><li><a href="api.opt-compiler-class.is-block.html">7.5.16. isBlock()</a></li><li><a href="api.opt-compiler-class.is-class.html">7.5.17. isClass()</a></li><li><a href="api.opt-compiler-class.is-component.html">7.5.18. isComponent()</a></li><li><a href="api.opt-compiler-class.is-function.html">7.5.19. isFunction()</a></li><li><a href="api.opt-compiler-class.is-identifier.html">7.5.20. isIdentifier()</a></li><li><a href="api.opt-compiler-class.is-instruction.html">7.5.21. isInstruction()</a></li><li><a href="api.opt-compiler-class.is-namespace.html">7.5.22. isNamespace()</a></li><li><a href="api.opt-compiler-class.is-opt-attribute.html">7.5.23. isOptAttribute()</a></li><li><a href="api.opt-compiler-class.is-processor.html">7.5.24. isProcessor()</a></li><li><a href="api.opt-compiler-class.parse-entities.html">7.5.25. parseEntities()</a></li><li><a href="api.opt-compiler-class.parse-short-entities.html">7.5.26. parseShortEntities()</a></li><li><a href="api.opt-compiler-class.processor.html">7.5.27. processor()</a></li><li><a href="api.opt-compiler-class.set.html">7.5.28. set()</a></li><li><a href="api.opt-compiler-class.set-conversion.html">7.5.29. setConversion()</a></li><li><a href="api.opt-compiler-class.set-format-list.html">7.5.30. setFormatList()</a></li><li><a href="api.opt-compiler-class.set-inheritance.html">7.5.31. setInheritance()</a></li><li><a href="api.opt-compiler-class.unset-conversion.html">7.5.32. unsetConversion()</a></li></ul><div class="tf_reference"><table><tr><th>Construct</th><td>Class</td></tr></table><hr/></div><p>The main compiler class. A single compiler can compile only one template or inheritance chain at the same time. If you want to compile another template during the compilation, you have to create the new compiler object. Note that the default constructor can copy all the settings from the other compiler objects.</p>
+
+<h2>Compiler state variables</h2>
+
+<p>During the compilation, the processors have access to the compiler state variables with the <a href="api.opt-compiler-class.get.html" title="7.5.11. Opt_Compiler_Class::get()">Opt_Compiler_Class::get()</a> and <a href="api.opt-compiler-class.set.html" title="7.5.28. Opt_Compiler_Class::set()">Opt_Compiler_Class::set()</a> methods. The following variables are created and managed by the compiler or the standard instructions:</p>
+
+<dl>
+<dt><strong>template</strong></dt>
+<dd><code>string</code> The main template name that is being compiled.</dd>
+
+<dt><strong>currentTemplate</strong></dt>
+<dd><code>string</code> The currently compiled template (including the inherited ones).</dd>
+
+<dt><strong>mode</strong></dt>
+<dd><code>int</code> The compilation mode (XML or quirks).</dd>
+
+<dt><strong>escaping</strong></dt>
+<dd><code>boolean</code> Per-template HTML escaping rule.</dd>
+</dl>
+<dl class="location location-bottom"><dt>7.5. Opt_Compiler_Class class<br/><a href="api.html">7. API Reference</a></dt><dd class="prev"><a href="api.opt-output-return.html">&laquo; Previous</a><br/>7.4. Opt_Output_Return class</dd><dd class="next"><a href="api.opt-compiler-class.__construct.html">Next &raquo;</a><br/>7.5.1. __construct()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

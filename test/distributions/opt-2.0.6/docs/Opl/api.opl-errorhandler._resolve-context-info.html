@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>_resolveContextInfo() - Open Power Libs</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Libs 2.0</h1>
+		<h2>_resolveContextInfo()</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API reference</a> &raquo; <a href="api.opl-errorhandler.html">Opl_ErrorHandler</a> &raquo; <a href="api.opl-errorhandler._resolve-context-info.html">Opl_ErrorHandler::_resolveContextInfo()</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.opl-errorhandler.html">4.4. Opl_ErrorHandler class</a><br/>4.4.1. _resolveContextInfo()</dt><dd class="prev">4.4. Opl_ErrorHandler class<br/><a href="api.opl-errorhandler.html">&laquo; Previous</a></dd><dd class="next">4.4.2. display()<br/><a href="api.opl-errorhandler.display.html">Next &raquo;</a></dd></dl>	<h1>4.4.1. _resolveContextInfo()</h1><div class="tf_reference"><table><tr><th>Status</th><td>protected</td></tr><tr><th>Reference</th><td><code>void Opl_ErrorHandler::_resolveContextInfo( Opl_Exception $exception )</code></td></tr><tr><th>Versions</th><td>since <code>2.0.0-dev8</code></td></tr>
+</table><hr/></div><p>Displays the informers associated with the specified exception <code>$exception</code>.</p>
+
+<blockquote class="information">
+  <p><strong>Informer</strong> is a special method in the error handler that is able to display some extra information about the exception, for example the library configuration or the backtrace.</p>
+</blockquote>
+
+<p>The list of informers is stored in the protected field <code>$_context</code>. The method may be used in <code>display()</code> to display the context information in the specified place.</p>
+
+<h2>Context help</h2>
+
+<p>A sample list of informers may look like this:</p>
+
+<pre class="php">protected <span style="color: #000088;">$_context</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+    <span style="color: #0000ff;">'Exception_Name_1'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+        <span style="color: #0000ff;">'Informer1'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Informer arguments'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #0000ff;">'Informer2'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Informer arguments'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> 
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #0000ff;">'Exception_Name_2'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+        <span style="color: #0000ff;">'Informer1'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Informer arguments'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #0000ff;">'Informer2'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Informer arguments'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> 
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <span style="color: #666666; font-style: italic;">// For other exceptions</span>
+    <span style="color: #0000ff;">'__UNKNOWN__'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>
+        <span style="color: #0000ff;">'Informer1'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Informer arguments'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+        <span style="color: #0000ff;">'Informer2'</span> <span style="color: #339933;">=&gt;</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Informer arguments'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> 
+    <span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The informers are simple methods that take the exception object as the first argument, but optionally, they can take much more. The method name must begin with <code>_print</code>, so that <code>Informer1</code> points to <code>_printInformer1</code> method. The HTML code must be displayed with <code>echo</code>.</p>
+
+<h2>Available informers</h2>
+
+<p>OPL provides the following filters:</p>
+
+<ol>
+<li><code>ErrorInfo</code> - displays the text provided in the argument.</li>
+<li><code>StackInfo</code> - used to display stack assigned to the exception, with marking the last element as invalid. In the argument we can specify the stack title.</li>
+<li><code>BasicConfiguration</code> - used to print the basic library configuration. This method must be extended in the particular library error handlers in order to work.</li>
+<li><code>Backtrace</code> - prints the backtrace.</li>
+</ol>
+
+<p>The libraries may also provide their own informers.</p>
+<dl class="location location-bottom"><dt>4.4.1. _resolveContextInfo()<br/><a href="api.opl-errorhandler.html">4.4. Opl_ErrorHandler class</a></dt><dd class="prev"><a href="api.opl-errorhandler.html">&laquo; Previous</a><br/>4.4. Opl_ErrorHandler class</dd><dd class="next"><a href="api.opl-errorhandler.display.html">Next &raquo;</a><br/>4.4.2. display()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

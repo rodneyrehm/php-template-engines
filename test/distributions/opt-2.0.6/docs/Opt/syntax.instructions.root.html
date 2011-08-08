@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:root - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:root</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.root.html">opt:root</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.18. opt:root</dt><dd class="prev">3.7.17. opt:repeat<br/><a href="syntax.instructions.repeat.html">&laquo; Previous</a></dd><dd class="next">3.7.19. opt:section<br/><a href="syntax.instructions.section.html">Next &raquo;</a></dd></dl>	<h1>3.7.18. opt:root</h1><p><code>opt:root</code> provides a tag that may become a neutral root tag in the template. The XML standard permits only one main tag per file, but sometimes smaller templates represent a part of the code that does not follow this rule:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Without <code>opt:root</code>, we would have to remove one of the <code>&lt;div&gt;</code> tags in order to make the template standard compliant.</p>
+
+<p><code>opt:root</code> may also take optional attributes that apply to the current template.</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>include</td>
+  <td>Hard string</td>
+  <td>No</td>
+  <td align="left">The template file to be included before compilation.</td>
+</tr>
+<tr>
+  <td>dynamic</td>
+  <td>Option</td>
+  <td>No</td>
+  <td align="left">Do we allow dynamic inclusion for this template?</td>
+</tr>
+<tr>
+  <td>escaping</td>
+  <td>Option</td>
+  <td>No</td>
+  <td align="left">Per-template escaping settings.</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Escaping control</h2>
+
+<p>Using the <code>escaping</code> attribute you may control the HTML escaping in the current template expressions. If it is not specified, OPT uses the default OPT settings.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">escaping</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>The HTML in the variable values will be escaped in this template: {$variable}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Including external templates</h2>
+
+<p>Suppose we have two templates with HTML form code: <code>form1.tpl</code> and <code>form2.tpl</code>. We want to define a global layout for a form control in a snippet. It must be common for all the templates. If we achieve the modularity with <code>opt:include</code>, using the template inheritance is not very convenient:</p>
+
+<pre class="xml"><span style="color: #808080; font-style: italic;">&lt;!-- definitions.tpl --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;control&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #808080; font-style: italic;">&lt;!-- the control layout --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;content&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #808080; font-style: italic;">&lt;!-- form1.tpl --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;definitions.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #808080; font-style: italic;">&lt;!-- the form content that uses the &quot;control&quot; snippet. --&gt;</span>  
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In this case, we have to declare the form in the snippet, too. It must be loaded in <code>definitions.tpl</code> to be visible in the browser. Of course if we have other tasks for <code>defitions.tpl</code>, this is not so bad solution, but OPT provides another mechanism for such situations. <code>opt:root</code> can include an external template before the compilation just to load the snippets:</p>
+
+<pre class="xml"><span style="color: #808080; font-style: italic;">&lt;!-- definitions.tpl --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;control&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #808080; font-style: italic;">&lt;!-- the control layout --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #808080; font-style: italic;">&lt;!-- form1.tpl --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">include</span>=<span style="color: #ff0000;">&quot;definitions.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #808080; font-style: italic;">&lt;!-- the form content that uses the &quot;control&quot; snippet. --&gt;</span>  
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Now we do not have to pack the form content in a fake snippet, because we do not use the template inheritance.</p>
+
+<p>Note that the <code>include</code> attribute is processed during the template compilation and it is not possible to load its value from a variable. In the included template, all the content, except <code>opt:snippet</code> tags, is ignored, because it is hard to say, where it should appear. (Before? After the main template content? If so, then why?) OPT prevents us against the infinite recursive inclusions (A includes B, which includes A). The compilation is canceled and the library shows the error message.</p>
+
+<p>However, note that you may set the attribute <code>dynamic</code> to <code>yes</code>, which has the same effect as in <code>opt:extend</code> - it allows to set the template to be included by the script using the <a href="api.opt-view.inherit.html" title="7.2.23. Opt_View::inherit()">Opt_View::inherit()</a> method.</p>
+
+<blockquote class="warning">
+  <p>Note on the performance and script resources. We do not recommend to create compound inclusion chains (A includes B which includes C, which includes D etc.). The <code>include</code> attribute is the only part of the compiler that is processed recursively. In case of advanced dependencies between the templates, the compilation may cause PHP stack overflow (<em>Nesting level too deep</em> message).</p>
+</blockquote>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.extend.html">3.7.7. opt:extend</a></li></ul><dl class="location location-bottom"><dt>3.7.18. opt:root<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.repeat.html">&laquo; Previous</a><br/>3.7.17. opt:repeat</dd><dd class="next"><a href="syntax.instructions.section.html">Next &raquo;</a><br/>3.7.19. opt:section</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

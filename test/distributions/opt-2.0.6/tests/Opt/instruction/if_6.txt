@@ -1,0 +1,25 @@
+Test checks the basic iteration features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Print "NICE" -->
+<opt:root>
+<opt:if test="$fail">
+OK
+<opt:elseif test="$ok">
+NICE
+</opt:elseif>
+<opt:else>
+FAIL
+</opt:else>
+</opt:if>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+NICE
+>>>>data.php
+	$view->assign('ok', true);
+	$view->assign('fail', false);

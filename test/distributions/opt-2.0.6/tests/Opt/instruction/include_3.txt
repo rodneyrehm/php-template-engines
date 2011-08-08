@@ -1,0 +1,30 @@
+Load the views from a section.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include views from a section -->
+<opt:root>
+Foo
+<opt:section name="views">
+<opt:include from="views" />
+</opt:section>
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Included file -->
+<opt:root>
+Bar
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooBarBarBar
+>>>>data.php
+$view->views = array(0 =>
+	array('view' => new Opt_View('included.tpl')),
+	array('view' => new Opt_View('included.tpl')),
+	array('view' => new Opt_View('included.tpl'))
+);

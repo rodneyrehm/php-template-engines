@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:for - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:for</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.for.html">opt:for</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.8. opt:for</dt><dd class="prev">3.7.7. opt:extend<br/><a href="syntax.instructions.extend.html">&laquo; Previous</a></dd><dd class="next">3.7.9. opt:foreach<br/><a href="syntax.instructions.foreach.html">Next &raquo;</a></dd></dl>	<h1>3.7.8. opt:for</h1><blockquote class="warning">
+  <p>This chapter contains information about <em>programming constructs</em> that are not recommended to use. If you are only a template author, probably you will not have to use them. In case of questions, contact your programmer.</p>
+</blockquote>
+
+<p><code>opt:for</code> is a loop that repeats its content until the specified expressions are <strong>true</strong>. The syntax looks familiar for anyone who programmed in PHP or C language. We define three expressions:</p>
+
+<ol>
+<li>The initial expression executed before entering the loop.</li>
+<li>The ending condition tested to check if the loop must be finished.</li>
+<li>The iteration expression executed after each iteration.</li>
+</ol>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>begin</td>
+  <td>Assignment expr.</td>
+  <td>Yes</td>
+  <td align="left">The initial expression.</td>
+</tr>
+<tr>
+  <td>while</td>
+  <td>Assignment expr.</td>
+  <td>Yes</td>
+  <td align="left">The ending condition</td>
+</tr>
+<tr>
+  <td>iterate</td>
+  <td>Assignment expr.</td>
+  <td>Yes</td>
+  <td align="left">The iteration expression</td>
+</tr>
+<tr>
+  <td>separator</td>
+  <td>Expression</td>
+  <td>No</td>
+  <td align="left">The separator that will be put between every two list elements. <a href="syntax.instructions.separator.html" title="3.7.21. opt:separator">More about separators</a>.</td>
+</tr>
+</tbody>
+</table>
+
+<p>Below, you can find a sample code that displays numbers from 1 to 10:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:for</span> <span style="color: #000066;">begin</span>=<span style="color: #ff0000;">&quot;@i is 0&quot;</span> <span style="color: #000066;">while</span>=<span style="color: #ff0000;">&quot;@i lt 10&quot;</span> <span style="color: #000066;">iterate</span>=<span style="color: #ff0000;">&quot;@i++&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{@i + 1}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:for<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The result:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>3<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>4<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>5<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>6<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>7<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>8<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>9<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>10<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ol<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In the example, we create the <code>@i</code> variable that becomes our iteration counter. The initial value is set to 0. In the <code>while</code> attribute we specify that the loop must continue until the value of <code>@i</code> is less than 10, and every iteration we increment it by 1 (<code>iterate</code> attribute). It must be noted that the same effect can be achieved with much simpler construct, <code>opt:repeat</code>.</p>
+
+<p><code>opt:for</code> cooperates with separators:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:for</span> <span style="color: #000066;">begin</span>=<span style="color: #ff0000;">&quot;@i is 1&quot;</span> <span style="color: #000066;">while</span>=<span style="color: #ff0000;">&quot;@i lte 6&quot;</span> <span style="color: #000066;">iterate</span>=<span style="color: #ff0000;">&quot;@i++&quot;</span> <span style="color: #000066;">str:separator</span>=<span style="color: #ff0000;">&quot; / &quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{@i}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:for<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The result:</p>
+
+<pre><code>1 / 2 / 3 / 4 / 5 / 6
+</code></pre>
+
+<p>More separator examples can be found in the chapter explaining <a href="syntax.instructions.separator.html" title="3.7.21. opt:separator">separators</a>.</p>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.section.html">3.7.19. opt:section</a></li><li><a href="syntax.instructions.foreach.html">3.7.9. opt:foreach</a></li><li><a href="syntax.instructions.repeat.html">3.7.17. opt:repeat</a></li><li><a href="syntax.instructions.separator.html">3.7.21. opt:separator</a></li></ul><dl class="location location-bottom"><dt>3.7.8. opt:for<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.extend.html">&laquo; Previous</a><br/>3.7.7. opt:extend</dd><dd class="next"><a href="syntax.instructions.foreach.html">Next &raquo;</a><br/>3.7.9. opt:foreach</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

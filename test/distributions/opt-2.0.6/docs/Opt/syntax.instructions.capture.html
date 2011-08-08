@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:capture - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:capture</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.capture.html">opt:capture</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.3. opt:capture</dt><dd class="prev">3.7.2. opt:block<br/><a href="syntax.instructions.block.html">&laquo; Previous</a></dd><dd class="next">3.7.4. opt:component<br/><a href="syntax.instructions.component.html">Next &raquo;</a></dd></dl>	<h1>3.7.3. opt:capture</h1><p><code>opt:capture</code> captures the output of some template part and allows to paste it in other places.</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>as</td>
+  <td>ID</td>
+  <td>Yes</td>
+  <td align="left">The unique name of the captured output</td>
+</tr>
+</tbody>
+</table>
+
+<p>The access to the captured parts is possible with <code>$sys.capture.name</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:capture</span> <span style="color: #000066;">as</span>=<span style="color: #ff0000;">&quot;options&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">href</span>=<span style="color: #ff0000;">&quot;page/edit&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Edit<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> | <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">href</span>=<span style="color: #ff0000;">&quot;page/remove&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Remove<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:capture<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Some data<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+{$data1.text}
+&nbsp;
+{u:$sys.capture.options}
+&nbsp;
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Some other data<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+{$data2.text}
+&nbsp;
+{u:$sys.capture.options}</pre>
+
+<blockquote class="information">
+  <p>The code captured by one view is also visible in other views executed by OPT.</p>
+</blockquote>
+
+<!-- # -->
+
+<blockquote class="important">
+  <p>Contrary to <code>opt:snippet</code> and <code>opt:insert</code>, this instruction captures the output code that would normally be sent to the browser. If you change one of the variables used in the <code>opt:capture</code> block between two placements <code>$opt.capture.myBlock</code>, the change will not be visible:</p>
+
+<pre class="xml">{@foo is 1}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:capture</span> <span style="color: #000066;">as</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{@foo}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:capture<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+{$sys.capture.foo}
+{@foo is 2}
+{$sys.capture.foo}</pre>
+</blockquote>
+
+<!-- # -->
+
+<blockquote class="error">
+  <p>Remember that <code>$sys.capture.blockName</code> may be escaped when placed in the HTML code. If you are going to capture a lot of HTML, it is safe to display them with the <strong>u:</strong> modifier <code>{u:$sys.capture.alotofHTML}</code> just to be sure that it will not be escaped.</p>
+</blockquote>
+
+<p>The captured content can be also displayed with <a href="syntax.instructions.insert.html" title="3.7.13. opt:insert">opt:insert</a>. It allows to select the content dynamically:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:capture</span> <span style="color: #000066;">as</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+Some content here...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:capture<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+{@captured is 'foo'}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">captured</span>=<span style="color: #ff0000;">&quot;@captured&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+The default content.
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+<dl class="location location-bottom"><dt>3.7.3. opt:capture<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.block.html">&laquo; Previous</a><br/>3.7.2. opt:block</dd><dd class="next"><a href="syntax.instructions.component.html">Next &raquo;</a><br/>3.7.4. opt:component</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

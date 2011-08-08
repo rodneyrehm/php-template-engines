@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Working with output systems - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Working with output systems</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.output-systems.html">Working with output systems</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.html">4. Programmer's Guide</a><br/>4.3. Working with output systems</dt><dd class="prev">4.2. Working with views<br/><a href="guide.views.html">&laquo; Previous</a></dd><dd class="next">4.4. Error handling<br/><a href="guide.error-handling.html">Next &raquo;</a></dd></dl>	<h1>4.3. Working with output systems</h1><p>The OPT views introduced in the previous chapter are not able to execute themselves automatically. Our application must be able to determine, when to execute them and what to do with the results. In many template engines, this is a part of the main class and the destination place is chosen with different methods or their arguments and it has nothing to do with object-oriented programming. On the other hand, Open Power Template operates a term <em>output system</em>.</p>
+
+<blockquote class="information">
+  <p><em>Output system</em> is a class that is able to execute the views and decides, where to send the generated HTML code.</p>
+</blockquote>
+
+<p>The OPT package provides two default output systems: <em>HTTP</em> and <em>Return</em>.</p>
+
+<h2>Rendering the views</h2>
+
+<p>Let's back to the example from the previous chapter. We have created two view objects: <code>$layoutView</code> and <code>$moduleView</code> assigned to the first one. In order to render them and show something to the user, we have to create an output system object:</p>
+
+<pre class="php"><span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$layoutView</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>With this simple code, we have executed all the templates and the results have been sent to the browser. Now other people can visit our website. Note that we do not render <code>$moduleView</code>. This is not a mistake. The module view is automatically executed by the <a href="syntax.instructions.include.html" title="3.7.12. opt:include">opt:include</a> instruction used in <code>layout.tpl</code> file and processed with exactly the same output system. It does not mean that <code>$moduleView</code> suddenly starts to see the local variables of <code>$layoutView</code> unless explicitly specified in <code>opt:include</code> instruction.</p>
+
+<blockquote class="important">
+  <p>You must render the top-level view only.</p>
+</blockquote>
+
+<h2>Working with standard output systems</h2>
+
+<p>Now we are going to show the features of the standard output systems provided by PHP.</p>
+
+<h3><code>Opt_Output_Http</code></h3>
+
+<p>This output sends the generated result to the user browser. It provides several extra features:</p>
+
+<ol>
+<li>Additional XML validity control</li>
+<li>HTTP Header management</li>
+<li>Content-negotiation</li>
+</ol>
+
+<p>Let's take a look at the first point. Every bigger website is composed of more than one XML templates. They have to be nested one in another, because you cannot open an XML tag in one template and close it in another file, as it would break the XML rules. This leads us to the conclusion that our script <em>has to have</em> only one root template that defines the basic output HTML code structure. The <em>HTTP</em> output system must assure that we do not try to execute more than one top-level view, because this would automatically mean that we try to create an invalid XML output from valid templates. Check out the following code: you will notice that it will generate an exception:</p>
+
+<pre class="php"><span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<blockquote class="warning">
+  <p>The conclusion is simple. The <code>Opt_Output_Http::render()</code> method can be called only once, for only one view object.</p>
+</blockquote>
+
+<p><code>Opt_Output_Http</code> class helps us also with managing HTTP headers. In most cases, you will need to set the <code>Content-type</code> header together with the encoding information:</p>
+
+<pre class="php"><span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setContentType</span><span style="color: #009900;">&#40;</span>Opt_Output_Http<span style="color: #339933;">::</span><span style="color: #004000;">XHTML</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'utf-8'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>OPT provides a few predefined constants that define the most popular content-types, but you can also specify any other content type manually: <code>setContentType('text/plain')</code>. The predefined content types are:</p>
+
+<ol>
+<li><code>Opt_Output_Http::XHTML</code> - <code>application/xhtml+xml</code> or <code>text/html</code>, depending on the user browser.</li>
+<li><code>Opt_Output_Http::HTML</code> - <code>text/html</code>.</li>
+<li><code>Opt_Output_Http::FORCED_XHTML</code> - force <code>application/xhtml+xml</code> always, if the browser supports it.</li>
+<li><code>Opt_Output_Http::WML</code> - <code>text/vnd.wap.wml</code></li>
+<li><code>Opt_Output_Http::XML</code> - <code>application/xml</code></li>
+<li><code>Opt_Output_Http::TXT</code> - <code>text/plain</code></li>
+</ol>
+
+<p>By default, OPT checks the XHTML document content type accessibility only. The full content negotiation is available, when Open Power Template cooperates with Open Power Classes package. Unfortunately, it is at the early development stage and you need to wait for a while before it will be accessible.</p>
+
+<h3><code>Opt_Output_Return</code></h3>
+
+<p>This output system returns the generated code as a result of <code>render()</code> method. You can save it to a variable and use somehow in your script:</p>
+
+<pre class="php"><span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Return<span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$content</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>This output system does not have any limitations on the number of <code>render()</code> calls. The same output system instance can execute many OPT view objects.</p>
+<dl class="location location-bottom"><dt>4.3. Working with output systems<br/><a href="guide.html">4. Programmer's Guide</a></dt><dd class="prev"><a href="guide.views.html">&laquo; Previous</a><br/>4.2. Working with views</dd><dd class="next"><a href="guide.error-handling.html">Next &raquo;</a><br/>4.4. Error handling</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

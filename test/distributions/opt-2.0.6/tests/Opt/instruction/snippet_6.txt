@@ -1,0 +1,26 @@
+Checks, how opt:parent works.
+
+>>>>templates/test.tpl
+<opt:extend file="base.tpl">
+<opt:snippet name="example">
+<opt:parent />
+
+</opt:snippet>
+</opt:extend>
+
+>>>>templates/base.tpl
+<opt:root>
+<opt:insert snippet="example">
+<foo />
+</opt:insert>
+<opt:insert snippet="example" />
+</opt:root>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo />

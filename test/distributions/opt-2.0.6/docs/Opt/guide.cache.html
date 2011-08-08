@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Caching - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Caching</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="guide.html">Programmer's Guide</a> &raquo; <a href="guide.cache.html">Caching</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="guide.html">4. Programmer's Guide</a><br/>4.11. Caching</dt><dd class="prev">4.10. Components and forms<br/><a href="guide.components.html">&laquo; Previous</a></dd><dd class="next">5. Extending OPT<br/><a href="extending.html">Next &raquo;</a></dd></dl>	<h1>4.11. Caching</h1><p>Although Open Power Template does not have its own caching system, it provides an API to write and use external caching systems. To see, how to implement a caching system in OPT, please read <a href="extending.caching-systems.html" title="5.6. New caching systems">Extending OPT: Caching systems</a>. This chapter covers the topic of using it.</p>
+
+<h2>General overview</h2>
+
+<p>The caching systems are represented in OPT by objects implementing <code>Opt_Caching_Interface</code> interface. They may be enabled on two levels:</p>
+
+<ol>
+<li>Globally - the new views import the global caching system.</li>
+<li>Per-view - the caching system is enabled only in a single view. It overwrites the global setting.</li>
+</ol>
+
+<h2>Global caching settings</h2>
+
+<p>In order to enable a caching system globally, we need a caching system object and the object of <code>Opt_Class</code>:</p>
+
+<pre class="php"><span style="color: #000088;">$cache</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> cachingSystem<span style="color: #339933;">;</span>
+<span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+<span style="color: #666666; font-style: italic;">// ...</span>
+&nbsp;
+<span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setCache</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$cache</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>To disable a caching system, the <code>setCache()</code> method must be called without an argument:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setCache</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The newly created views will import the caching system into their scope.</p>
+
+<h2>Local caching settings</h2>
+
+<p>The view objects also provide <code>setCache()</code> method:</p>
+
+<pre class="php"><span style="color: #000088;">$cache</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> cachingSystem<span style="color: #339933;">;</span>
+<span style="color: #000088;">$view</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_View<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #666666; font-style: italic;">// ...</span>
+&nbsp;
+<span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">setCache</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$cache</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>It overwrites the global setting and is applied only for the view template.</p>
+
+<h2>Caching system configuration</h2>
+
+<p>Open Power Template interface provides only the necessary methods to communicate with the caching system. The certain settings depend on the used caching system implementation and have nothing to do with OPT. Refer to your caching system manual in order to learn, how to configure it properly.</p>
+
+<h2>Where to get the caching systems from?</h2>
+
+<p>You might wonder why OPT does not have its own caching system. The answer is simple: this is not a template engine task, even if it makes use of it. Many frameworks already provide their own advanced and robust implementations of caching libraries. Following the Ockham rule, we do not see the point in reinventing the wheel. The <code>Opt_Caching_Interface</code> is simple enough to make the integration very easy and you might check out the existing framework ports as they may offer ready implementations.</p>
+<h4>See also:</h4><ul><li><a href="extending.caching-systems.html">5.6. New caching systems</a></li></ul><dl class="location location-bottom"><dt>4.11. Caching<br/><a href="guide.html">4. Programmer's Guide</a></dt><dd class="prev"><a href="guide.components.html">&laquo; Previous</a><br/>4.10. Components and forms</dd><dd class="next"><a href="extending.html">Next &raquo;</a><br/>5. Extending OPT</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

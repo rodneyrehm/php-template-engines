@@ -1,0 +1,24 @@
+The variable set for the main view must not be visible in the included view.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Foo{$variable}
+<opt:include file="included.tpl" />
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Include a file -->
+<opt:root>
+Bar{$variable}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FooFooBar
+>>>>data.php
+$view->variable = 'Foo';

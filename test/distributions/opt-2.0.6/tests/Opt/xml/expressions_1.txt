@@ -1,0 +1,17 @@
+According to bug #86, the comments placed after an expression cause it not to
+be executed.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+{$foo is true}
+<!-- A comment -->
+
+<b opt:if="$foo === true">IT WORKS</b>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<b>IT WORKS</b>

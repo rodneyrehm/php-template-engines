@@ -1,0 +1,32 @@
+Bug #131 - section special variables should be negated without problems.
+
+>>>>templates/test.tpl
+<opt:section name="foo">
+{$foo.item}:
+<opt:if test="not $system.section.foo.last">not last</opt:if>
+{$foo.item}:
+<opt:if test="not $system.section.foo.first">not first</opt:if>
+</opt:section>
+
+>>>>data.php
+
+$view->foo = array(0 =>
+	array('item' => 'FOO'),
+	array('item' => 'BAR'),
+	array('item' => 'JOE'),
+	array('item' => 'GOO'),
+);
+$view->setFormat('foo', 'Array');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO:not last
+FOO:
+BAR:not last
+BAR:not first
+JOE:not last
+JOE:not first
+GOO:
+GOO:not first

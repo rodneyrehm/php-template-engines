@@ -1,0 +1,74 @@
+/*
+ *
+ *  OPEN POWER LIBS EXAMPLES <http://www.invenzzia.org>
+ *  ===================================================
+ *
+ * This file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE. It is also available through
+ * WWW at this URL: <http://www.invenzzia.org/license/new-bsd>
+ *
+ * Copyright (c) 2008 Invenzzia Group <http://www.invenzzia.org>
+ * and other contributors. See website for details.
+ *
+ */
+
+/* CSS RESET */
+body { color: black; background: white; }
+a {color: inherit; text-decoration: none;}
+body, div, dl, dt, dd, li, pre,
+form, fieldset, input, textarea, p, blockquote, th, td { margin: 0; padding: 0; }
+h1, h2, h3, h4, h5, h6, td { margin: 0; padding: 0; font-size: 100%; font-weight: normal; }
+address, caption, cite, code, dfn, var { font-style: normal; font-weight: normal; }
+ol, ul { list-style: none; margin: 0; padding: 0; }
+pre, code { font-size: 100%; font-family: inherit;}
+big, small { font-size: inherit;}
+table { border-collapse: collapse; border-spacing: 0; } 
+caption, th { text-align: left; font-weight: normal; font-style: normal; }
+acronym, abbr, fieldset, img { border: 0;}
+:focus { outline: 0; }
+
+/* styles */
+body {font-family: Arial, Tahoma, Verdana, sans-serif; font-size: 11pt; color: #222222; text-align: center;}
+
+div#header {text-align: left; width: 760px; margin: 20px auto 10px auto; padding: 10px; background: #f5f5f5; border-bottom: 3px solid #95cbeb}
+div#header h1 {letter-spacing: -1px; padding-left: 10px; font-weight: bold; font-size: 20pt;}
+div#header h3 {color: #444444;  padding-left: 10px;margin-top: 5px; font-size: 10pt;}
+
+div#footer {text-align: left;width: 760px;color: #444444;  margin: 10px auto 20px auto; padding: 5px 10px; background: #f5f5f5; border-top: 1px solid #444444}
+div#footer p { padding-left: 10px;margin: 5px 0; font-size: 9pt; }
+div#footer p a {font-weight: bold; color: #444444;}
+div#footer p a:hover {text-decoration: underline}
+
+div#content {text-align: left;margin: 0 auto; width: 760px; padding: 0 10px; background: #ffffff; min-height: 200px;}
+
+div#content ul.buttons {margin: 10px 0; height: 20px;}
+div#content ul.buttons li {float: left; height: 20px; margin-right: 5px;}
+div#content ul.buttons li a {display: -moz-inline-block; display: inline-block; line-height: 20px; padding: 0 10px; background: #95cbeb; font-weight: bold; font-size: 10pt; color: #ffffff; }
+
+div#content div.entry {margin: 10px 0; background: #eeeeee;}
+div#content div.entry p {padding: 10px;}
+div#content div.entry p.header {background: #dddddd; padding: 5px 10px; border-bottom: 1px solid #aaaaaa; font-size: 10pt; color: #666666}
+div#content div.entry p.header a {color: #2b536e; font-weight: bold;}
+div#content div.entry p.header a:hover {text-decoration: underline;}
+
+div#content div.entry p a { color: #2b536e; }
+div#content div.entry p a:hover { color: #2b536e; text-decoration: underline; }
+
+div#content h2 {font-size: 14pt; font-weight: bold; margin: 10px 0;}
+div#content p.message {margin: 10px 0;}
+
+div#content form {}
+div#content form fieldset {margin: 10px 0; padding-top: 10px}
+div#content form fieldset legend {font-size: 14pt; font-weight: bold; margin: 0; padding: 0; }
+div#content form fieldset div {margin: 10px 0; padding-left: 120px;}
+div#content form fieldset div label {width: 120px; float: left; margin-left: -120px; line-height: 16pt}
+div#content form fieldset div label strong {color: #ff0000;}
+div#content form fieldset div p.desc {font-size: 9pt; color: #888888}
+div#content form fieldset div p.error {font-size: 9pt; color: #ff0000}
+div#content form fieldset div input.inputText,
+div#content form fieldset div textarea  {background: #fffffff; display: block; font-family: Arial, Tahoma, Verdana, sans-serif; border: 1px solid #dddddd; font-size: 10pt; padding: 3pt}
+div#content form fieldset div input.inputText:focus,
+div#content form fieldset div textarea:focus {border-color: #aaaaaa} 
+div#content form fieldset div input.inputText {width: 200px;}
+div#content form fieldset div textarea {width: 400px; height: 100px;}
+div#content form fieldset div input.inputSubmit {font-family: Arial, Tahoma, Verdana, sans-serif; font-size: 10pt; background: #2b536e; border: none; color: #ffffff; font-weight: bold; padding: 3px 5px; }

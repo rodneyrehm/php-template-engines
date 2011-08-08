@@ -1,0 +1,54 @@
+Check the branches - case 3: the branch is set, but some templates do not have it defined.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="extended1.tpl" branch="branch1.tpl">
+<opt:snippet name="foo">
+FOO-VALUE1
+<opt:parent/>
+</opt:snippet>
+</opt:extend>
+
+>>>>templates/extended1.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="extended2.tpl">
+<opt:snippet name="foo">
+FOO-VALUE2
+</opt:snippet>
+<opt:snippet name="goo">
+GOO-VALUE2
+</opt:snippet>
+</opt:extend>
+
+>>>>templates/extended2.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+BEGIN
+<opt:insert snippet="foo" />
+<opt:insert snippet="goo" />
+END
+</opt:root>
+
+>>>>templates/branch1.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="extended2.tpl">
+<opt:snippet name="foo">
+FOO-VALUE2-BRANCH
+</opt:snippet>
+<opt:snippet name="goo">
+GOO-VALUE2-BRANCH
+</opt:snippet>
+</opt:extend>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BEGIN
+FOO-VALUE1
+FOO-VALUE2-BRANCH
+GOO-VALUE2-BRANCH
+END
+
+>>>>data.php
+$view->setBranch('branch');

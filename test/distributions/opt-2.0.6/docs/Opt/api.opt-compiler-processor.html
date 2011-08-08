@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Opt_Compiler_Processor class - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Opt_Compiler_Processor class</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-compiler-processor.html">Opt_Compiler_Processor</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.html">7. API Reference</a><br/>7.7. Opt_Compiler_Processor class</dt><dd class="prev">7.6.13. supports()<br/><a href="api.opt-compiler-format.supports.html">&laquo; Previous</a></dd><dd class="next">7.7.1. __construct()<br/><a href="api.opt-compiler-processor.__construct.html">Next &raquo;</a></dd></dl>	<h1>7.7. Opt_Compiler_Processor class</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="api.opt-compiler-processor.__construct.html">7.7.1. __construct()</a></li><li><a href="api.opt-compiler-processor._add-attributes.html">7.7.2. _addAttributes()</a></li><li><a href="api.opt-compiler-processor._add-instructions.html">7.7.3. _addInstructions()</a></li><li><a href="api.opt-compiler-processor._enqueue.html">7.7.4. _enqueue()</a></li><li><a href="api.opt-compiler-processor._extract-attributes.html">7.7.5. _extractAttributes()</a></li><li><a href="api.opt-compiler-processor._process.html">7.7.6. _process()</a></li><li><a href="api.opt-compiler-processor.configure.html">7.7.7. configure()</a></li><li><a href="api.opt-compiler-processor.get-name.html">7.7.8. getName()</a></li><li><a href="api.opt-compiler-processor.postprocess-attribute.html">7.7.9. postprocessAttribute()</a></li><li><a href="api.opt-compiler-processor.postprocess-node.html">7.7.10. postprocessNode()</a></li><li><a href="api.opt-compiler-processor.process-attribute.html">7.7.11. processAttribute()</a></li><li><a href="api.opt-compiler-processor.process-node.html">7.7.12. processNode()</a></li><li><a href="api.opt-compiler-processor.process-system-var.html">7.7.13. processSystemVar()</a></li><li><a href="api.opt-compiler-processor.reset.html">7.7.14. reset()</a></li></ul><div class="tf_reference"><table><tr><th>Construct</th><td>Class</td></tr><tr><th>Extended by</th><td><code>Opt_Instruction_Attribute</code>, <code>Opt_Instruction_BaseSection</code>, <code>Opt_Instruction_Block</code>, <code>Opt_Instruction_Capture</code>, <code>Opt_Instruction_Component</code>, <code>Opt_Instruction_Cycle</code>, <code>Opt_Instruction_Dtd</code>, <code>Opt_Instruction_Dynamic</code>, <code>Opt_Instruction_Extend</code>, <code>Opt_Instruction_For</code>, <code>Opt_Instruction_Foreach</code>, <code>Opt_Instruction_Grid</code>, <code>Opt_Instruction_If</code>, <code>Opt_Instruction_Include</code>, <code>Opt_Instruction_Literal</code>, <code>Opt_Instruction_Prolog</code>, <code>Opt_Instruction_Put</code>, <code>Opt_Instruction_Repeat</code>, <code>Opt_Instruction_Root</code>, <code>Opt_Instruction_Separator</code>, <code>Opt_Instruction_Snippet</code>, <code>Opt_Instruction_Tag</code></td></tr></table><hr/></div><p>The XML tags and attributes in the <em>opt</em> namespace are not parsed directly by the compiler, but by the instruction processors. They are special classes that extend the <code>Opt_Compiler_Processor</code> class and define, how to compile the XML tag into the valid PHP code. This class provides all the necessary prototypes and tools to write your own instruction processor.</p>
+
+<h2>Class fields</h2>
+
+<p>The available fields are:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>$_name</code></td>
+  <td>string</td>
+  <td align="left">The unique instruction identifier. The value must be set by the child class.</td>
+</tr>
+<tr>
+  <td><code>$_tpl</code></td>
+  <td>Opt_Class</td>
+  <td align="left">The <code>Opt_Class</code> object</td>
+</tr>
+<tr>
+  <td><code>$_compiler</code></td>
+  <td>Opt_Compiler_Class</td>
+  <td align="left">The compiler object</td>
+</tr>
+</tbody>
+</table>
+<dl class="location location-bottom"><dt>7.7. Opt_Compiler_Processor class<br/><a href="api.html">7. API Reference</a></dt><dd class="prev"><a href="api.opt-compiler-format.supports.html">&laquo; Previous</a><br/>7.6.13. supports()</dd><dd class="next"><a href="api.opt-compiler-processor.__construct.html">Next &raquo;</a><br/>7.7.1. __construct()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

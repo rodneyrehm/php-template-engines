@@ -1,0 +1,16 @@
+Check whether the XML prolog works.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<foo>
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = true;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo>
+</foo>

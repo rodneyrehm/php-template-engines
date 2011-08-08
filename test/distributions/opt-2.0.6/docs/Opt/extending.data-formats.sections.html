@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Sections - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Sections</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.data-formats.html">New data formats</a> &raquo; <a href="extending.data-formats.sections.html">Sections</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.data-formats.html">5.7. New data formats</a><br/>5.7.3. Sections</dt><dd class="prev">5.7.2. Container items<br/><a href="extending.data-formats.items.html">&laquo; Previous</a></dd><dd class="next">5.7.4. Format plugins<br/><a href="extending.data-formats.plugins.html">Next &raquo;</a></dd></dl>	<h1>5.7.3. Sections</h1><p>The data formats can be used to affect the section behavior. Sections are quite complex elements, when it comes to the implementation and there are many issues that you have to pay attention to.</p>
+
+<h2>Configuration</h2>
+
+<p>The snippets that affect section behavior are a part of <code>section</code> group that must be added to your <code>$_supports</code> list. The following properties are required to be set:</p>
+
+<ol>
+<li><code>section:useReference</code> - <strong>true</strong>, if the section variables can be obtained via reference (similarly to <code>variable:useReference</code> and <code>item:useReference</code>)</li>
+<li><code>section:anyRequests</code> - specify there any extra requests from the section manager that are required by the data format to create a relationship with the parent section. The request is saved to the <code>requestedData</code> format variable. The recognized values are:
+
+<ul>
+<li><code>ancestorNames</code> - returns the names of all the section ancestors.</li>
+<li><code>ancestorNumbers</code> - returns the numbers (nesting levels) of all the section ancestors.</li>
+</ul></li>
+<li><code>section:itemAssign</code> - <strong>true</strong>, if the assignment to the current list item (i.e. <code>$sectionName</code>) is allowed.</li>
+<li><code>section:variableAssign</code> - <strong>true</strong>, if the assignment to the current list item variable (i.e. <code>$sectionName.variable</code>) is allowed.</li>
+</ol>
+
+<p>The list of all the snippets used by sections is:</p>
+
+<ol>
+<li><code>section:init</code></li>
+<li><code>section:endLoop</code></li>
+<li><code>section:isNotEmpty</code></li>
+<li><code>section:started</code></li>
+<li><code>section:finished</code></li>
+<li><code>section:done</code></li>
+<li><code>section:loopBefore</code></li>
+<li><code>section:startAscLoop</code></li>
+<li><code>section:startDescLoop</code></li>
+<li><code>section:item</code></li>
+<li><code>section:variable</code></li>
+<li><code>section:reset</code></li>
+<li><code>section:next</code></li>
+<li><code>section:valid</code></li>
+<li><code>section:populate</code></li>
+<li><code>section:count</code></li>
+<li><code>section:size</code></li>
+<li><code>section:iterator</code></li>
+<li><code>section:isFirst</code></li>
+<li><code>section:isLast</code></li>
+<li><code>section:isExtreme</code></li>
+</ol>
+
+<h2>Conventions</h2>
+
+<p>The section instructions require the data format to use the following variable names in PHP code snippets:</p>
+
+<ol>
+<li><code>$_sectSECTIONNAME_vals</code> - the list of section items.</li>
+<li><code>$_sectSECTIONNAME_v</code> - the currently rendered item.</li>
+<li><code>$_sectSECTIONNAME_cnt</code> - the number of items in the list.</li>
+</ol>
+
+<blockquote class="error">
+  <p>The code snippets returned by your data formats are obliged to use the variable names mentioned above.</p>
+</blockquote>
+
+<p>Usually, the default data formats use also <code>$_sectSECTIONNAME_i</code> or <code>$_sectSECTIONNESTING_i</code> as an iterator variables, but this is not required.</p>
+
+<blockquote class="information">
+  <p>If the <code>$_sectSECTIONNAME_v</code> variable is required, OPT executes the <code>section:forceItemVariables</code> action to notify the data format about it.</p>
+</blockquote>
+
+<h2>Basic iteration</h2>
+
+<p>The most important snippets are <code>section:init</code>, <code>section:isNotEmpty</code>, <code>section:startAscLoop</code>, <code>section:startDescLoop</code> and <code>section:endLoop</code>.</p>
+
+<p>First, the section must obtain the list data that are going to be rendered. This is done in <code>section:init</code>. Basically, if the section has no parent, the data should be located somewhere in the <code>$this-&gt;_data</code> array that stores the local variables unless the <code>datasource</code> attribute is provided. However, in other case we must ask the parent section for the necessary data. Below, you can find the complete implementation from <code>SingleArray</code> data format:</p>
+
+<pre class="php"><span style="color: #666666; font-style: italic;">// Get the section data</span>
+<span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// If the section has a parent, we must obtain also the parent section data and ask</span>
+<span style="color: #666666; font-style: italic;">// its data format to generate the link to the data.</span>
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/is_null"><span style="color: #990000;">is_null</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'parent'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$parent</span> <span style="color: #339933;">=</span> Opt_Instruction_BaseSection<span style="color: #339933;">::</span><span style="color: #004000;">getSection</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'parent'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #000088;">$parent</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'format'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #339933;">,</span> <span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #666666; font-style: italic;">// Access via reference, if possible</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$parent</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'format'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">property</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section:useReference'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals = &amp;'</span><span style="color: #339933;">.</span><span style="color: #000088;">$parent</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'format'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section:variable'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'; '</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals = '</span><span style="color: #339933;">.</span><span style="color: #000088;">$parent</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'format'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section:variable'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'; '</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #666666; font-style: italic;">// The &quot;datasource&quot; attribute is set</span>
+<span style="color: #b1b100;">elseif</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/is_null"><span style="color: #990000;">is_null</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'datasource'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals = '</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'datasource'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'; '</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #666666; font-style: italic;">// Otherwise, we simply get the data from a template variable</span>
+<span style="color: #b1b100;">else</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #339933;">,</span> <span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals = &amp;'</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable:main'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'; '</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>Note that sections do not have to read their data from the parent section variable. For example, the default <code>Array</code> data format uses separate template variables for storing nested sections and uses the iteration variables to create relationships. It makes use of the <code>section:anyRequests</code> property, asking for the list of parent section nesting levels, so that it could generate the correct calls:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/is_null"><span style="color: #990000;">is_null</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'datasource'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals = '</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'datasource'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'; '</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #339933;">,</span> <span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$code</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals = &amp;'</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'variable:main'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$ancestors</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'requestedData'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$ancestors</span> <span style="color: #b1b100;">as</span> <span style="color: #000088;">$i</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000088;">$code</span> <span style="color: #339933;">.=</span> <span style="color: #0000ff;">'[$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$i</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i]'</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+&nbsp;
+<span style="color: #b1b100;">return</span> <span style="color: #000088;">$code</span><span style="color: #339933;">.</span><span style="color: #0000ff;">';'</span><span style="color: #339933;">;</span></pre>
+
+<p>Once we have obtained the data, we have to check whether the list actually contains any item. This is done with a conditional instruction and the data format must provide the condition in <code>section:isNotEmpty</code> snippet:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'is_array($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals) &amp;&amp; ($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_cnt = sizeof($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals)) &gt; 0'</span><span style="color: #339933;">;</span></pre>
+
+<blockquote class="warning">
+  <p>The condition must also save the total number of items to the <code>$_sectSECTIONNAME_cnt</code> variable, as it is shown in the code snippet above.</p>
+</blockquote>
+
+<p>Optionally, the data format may define some extra code in the following snippets:</p>
+
+<ol>
+<li><code>section:started</code> - executed just after the condition that checks if the section contains elements (<code>opt:show</code> tag)</li>
+<li><code>section:loopBefore</code> - executed just before entering the section loop.</li>
+<li><code>section:finished</code> - opposite of <code>section:started</code>. It is executed just before finishing the section condition block (<code>&lt;/opt:show&gt;</code>).</li>
+<li><code>section:done</code> - executed after the condition block.</li>
+</ol>
+
+<p>If the data format has nothing to add to these snippets, it should return empty strings then.</p>
+
+<blockquote class="information">
+  <p>Note that the condition block is always added to the section, even if it does not use <code>opt:show</code> tag.</p>
+</blockquote>
+
+<p>Finally, the data format provides a basic loop header that iterates through all the list elements. There are expected two versions of it: <code>section:startAscLoop</code> for the ascending order and <code>section:startDescLoop</code> for the descending order. It is up to you what loop to use. For example, both <code>Array</code> and <code>SingleArray</code> data formats use ordinary <strong>for</strong>, whereas <code>Objective</code> provides <strong>foreach</strong>. The snippet must contain an opening curly bracket:</p>
+
+<pre class="php"><span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'for($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'nesting'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i = 0; $_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'nesting'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i &lt; $_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_cnt; $_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'nesting'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i++){ '</span><span style="color: #339933;">;</span></pre>
+
+<p>This is the absolute minimum that must be implemented for section, however it is not the end.</p>
+
+<h2>Section record structure</h2>
+
+<p>The code snippets shown above make use of the <code>$section</code> array obtained from the <code>section</code> format variable. It contains all the information about the processed section:</p>
+
+<ol>
+<li><code>name</code> - the section name</li>
+<li><code>parent</code> - the name of the parent section or <strong>null</strong></li>
+<li><code>order</code> - <code>asc</code> for ascending order and <code>desc</code> for descending</li>
+<li><code>datasource</code> - the compiled expression provided in the <code>datasource</code> attribute or <strong>null</strong></li>
+<li><code>display</code> - the display conditional expression provided in the <code>display</code> attribute or <strong>null</strong></li>
+<li><code>separator</code> - the value of the <code>separator</code> attribute or <strong>null</strong></li>
+<li><code>show</code> - the <code>opt:show</code> node or <strong>null</strong></li>
+<li><code>node</code> - the main section node</li>
+<li><code>attr</code> - the attribute node, if it is an attributed section or <strong>null</strong></li>
+<li><code>format</code> - the data format that is responsible for implementing the specified section</li>
+</ol>
+
+<p>The array for the current section can be always obtained from the format variable list:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>If we know the name of a different section, we may obtain its array, too:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> Opt_Instruction_BaseSection<span style="color: #339933;">::</span><span style="color: #004000;">getSection</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'someOtherSection'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<h2>Accessing list elements</h2>
+
+<p>Another element that data formats are responsible for is reading the current list item variables:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;foo&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    This: {$foo}
+    And this: {$foo.bar}
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The <code>$foo</code> access is processed with <code>section:item</code> snippet and should return the whole item, for example:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v'</span><span style="color: #339933;">;</span></pre>
+
+<p>The <code>$foo.bar</code> access is processed with <code>section:variable</code> snippet. Here, the following strategy is recommended:</p>
+
+<ol>
+<li>The data format generates the code for <code>$foo</code> part and redirects <code>.bar</code> to the <code>item:item</code> snippet unless it has some specific needs.</li>
+<li>If the data format decorates another format, the <code>.bar</code> should be redirected to the decorator. </li>
+</ol>
+
+<p>The example code:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">isDecorating</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v'</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_decorated<span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item:item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v-&gt;'</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>The decorator pattern allows using different data formats for sections and for section item data (for example, the list itself is an object, but the list items are arrays).</p>
+
+<p>In the code snippets above, we assumed that the current section item is always stored in <code>$_sect'.$section['name'].'_v</code> variable. It it not always true. For example, in the data formats where sections are based on <strong>for</strong> loop, it would be nice to have a direct access: <code>$_sect'.$section['name'].'_vals[$_sect'.$section['nesting'].'_i]</code>. Here we face a significant problem. While <code>opt:section</code> does not care about it, some other section do. To avoid it, OPT notifies the data format, if it expects the section item to be stored in <code>$_sect'.$section['name'].'_v</code>. We can capture the notification using the <code>action()</code> method:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> action<span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span> <span style="color: #339933;">==</span> <span style="color: #0000ff;">'section:forceItemVariables'</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_sectionItemVariables <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end action();</span></pre>
+
+<p>Then, we may use this state variable to generate different PHP code:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_sectionItemVariables<span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">isDecorating</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v'</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_decorated<span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item:item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v[\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\']'</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">isDecorating</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals[$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'nesting'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i]'</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_decorated<span style="color: #339933;">-&gt;</span><span style="color: #004000;">get</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item:item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals[$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'nesting'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i][\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\']'</span><span style="color: #339933;">;</span></pre>
+
+<p>Similarly to <code>variable:assign</code> and <code>item:assign</code>, the sections may provide <code>section:itemAssign</code> and <code>section:variableAssign</code> to process assigning new values to the section variables.</p>
+
+<h2>Iteration snippets</h2>
+
+<p><code>opt:section</code>, the simplest section instruction uses the <code>section:startAscLoop</code> and <code>section:startDescLoop</code> to generate the iteration code. The other section types have more complex implementation and they require a lower-level iteration snippets to be available. The set of iteration snippets is quite similar to the methods provided by the PHP <code>Iterator</code> interface:</p>
+
+<ol>
+<li><code>section:reset</code> - PHP code that resets the iterator to the first element.</li>
+<li><code>section:next</code> - PHP code that moves to the next section item.</li>
+<li><code>section:valid</code> - PHP expression that tests if the current item actually exists.</li>
+</ol>
+
+<blockquote class="warning">
+  <p>For the descending section order, the snippets above should actually iterate from the last to the first list item!</p>
+</blockquote>
+
+<p>Usually, when using the iteration snippets, the section code must make use of the <code>$_sect'.$section['name'].'_v</code> mentioned earlier. OPT may request to populate this variable with the current item data, using the <code>section:populate</code> snippet. The code below comes from the <code>Objective</code> format implementation:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'order'</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">==</span> <span style="color: #0000ff;">'asc'</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v = $_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals-&gt;current(); $_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i = $_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals-&gt;key();'</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span>
+<span style="color: #b1b100;">else</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v = current($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals); $_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i = key($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals);'</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>The iterator variable should be returned by the <code>section:iterator</code> snippet, for example:</p>
+
+<pre class="php"><span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i'</span><span style="color: #339933;">;</span></pre>
+
+<h2>Special section variable</h2>
+
+<p>OPT sections provide some extra information through the <code>$system</code> special variable. The data format should generate the proper PHP codes for all the calls concerning sections. Firstly, we may request to count the number of list items and the variables in the item (implementations from the <code>Array</code> format):</p>
+
+<pre class="php"><span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'section:count'</span><span style="color: #339933;">:</span>
+    <span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_cnt'</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'section:size'</span><span style="color: #339933;">:</span>
+    <span style="color: #000088;">$section</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'section'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_sectionItemVariables<span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'sizeof($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_v)'</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'sizeof($_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'name'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_vals[$_sect'</span><span style="color: #339933;">.</span><span style="color: #000088;">$section</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'nesting'</span><span style="color: #009900;">&#93;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'_i])'</span><span style="color: #339933;">;</span></pre>
+
+<p>Then, we have three expressions that should test whether the current item is:</p>
+
+<ol>
+<li>The first item on the list (<code>section:isFirst</code>)</li>
+<li>The last item on the list (<code>section:isLast</code>)</li>
+<li>The first OR the last item on the list (<code>section:isExtreme</code>)</li>
+</ol>
+
+<h2>Conclusion</h2>
+
+<p>Although implementing a data format for sections seems to be quite complex contrary to the variables and container items, but gives you fantastic opportunities impossible to achieve with ordinary PHP interfaces. Individual users may not find it useful, but framework developers or the programmers who wish to create an advanced code base for their projects should be very interested in creating specialized sections that allow to provide the direct access to various data hidden behind abstract and simple sections.</p>
+<dl class="location location-bottom"><dt>5.7.3. Sections<br/><a href="extending.data-formats.html">5.7. New data formats</a></dt><dd class="prev"><a href="extending.data-formats.items.html">&laquo; Previous</a><br/>5.7.2. Container items</dd><dd class="next"><a href="extending.data-formats.plugins.html">Next &raquo;</a><br/>5.7.4. Format plugins</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

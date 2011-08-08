@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Template inclusion - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Template inclusion</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.topics.html">Topics</a> &raquo; <a href="syntax.topics.modularization.html">Template modularization</a> &raquo; <a href="syntax.topics.modularization.inclusion.html">Template inclusion</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.topics.modularization.html">3.9.4. Template modularization</a><br/>3.9.4.1. Template inclusion</dt><dd class="prev">3.9.4. Template modularization<br/><a href="syntax.topics.modularization.html">&laquo; Previous</a></dd><dd class="next">3.9.4.2. Template inheritance<br/><a href="syntax.topics.modularization.inheritance.html">Next &raquo;</a></dd></dl>	<h1>3.9.4.1. Template inclusion</h1><p>The template inclusion is a way to organize and modularize your templates in OPT. It uses <a href="syntax.instructions.include.html" title="3.7.12. opt:include">opt:include</a> instruction to include one template within another. What is important, the new template is loaded during the execution stage, so the file name may be loaded from a variable or even section, creating a powerful tool.</p>
+
+<p>Note that OPT uses the idea of views on the script side. A view is a template with the data associated to it and is implemented as an PHP object. <code>opt:include</code> follows this concept and also operates on views.</p>
+
+<h2>Basic use of opt:include</h2>
+
+<p>Using <code>opt:include</code> is very simple. To include a left menu content in the following example, we must only specify the file name.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;left_menu.tpl&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>However, this code is not fully completed. As we mentioned earlier, <code>opt:include</code> operates on views. In this particular case, OPT creates a new view for our template, but does not assign any data to it. In other words, your script has no way to assign the values to local variables in <code>left_menu.tpl</code> and they remain empty. There are two ways to solve this problem.</p>
+
+<ol>
+<li>Pass the variable values as extra parameters.</li>
+<li>Use the <code>import</code> attribute.</li>
+</ol>
+
+<pre class="xml"><span style="color: #808080; font-style: italic;">&lt;!-- pass the variables manually --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;left_menu.tpl&quot;</span> <span style="color: #000066;">variable1</span>=<span style="color: #ff0000;">&quot;$someValue&quot;</span> <span style="color: #000066;">variable2</span>=<span style="color: #ff0000;">&quot;calculateMe()&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #808080; font-style: italic;">&lt;!-- import all the variables from the current view --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;left_menu.tpl&quot;</span> <span style="color: #000066;">import</span>=<span style="color: #ff0000;">&quot;yes&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Loading the templates dynamically</h2>
+
+<p>In most cases, we would like to add more dynamics to our templates. We wish to choose the template to be included depending on our needs. The following code allows us to do this.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">parse:file</span>=<span style="color: #ff0000;">&quot;$leftMenuTemplate&quot;</span> <span style="color: #000066;">import</span>=<span style="color: #ff0000;">&quot;yes&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>We had to change the namespace of the <code>file</code> attribute to <code>parse</code> to notify OPT that the value we want to specify is not a string, but whole expression with variables etc. However, in this case we also create a new view from scratch and the rules for passing variable to it introduced in the previous part are still correct.</p>
+
+<h2>Loading views</h2>
+
+<p>So far, our views have been created on the template side in the background. However, sometimes we would like to prepare them on the script side and just execute them from another template. This is also possible with <code>opt:include</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">view</span>=<span style="color: #ff0000;">&quot;$leftMenuView&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Here, the script has a full control over the variables passed to the left menu view, as it created it. But if you need, you may still pass some extra variables with the attributes or using <code>import</code> (the imported variables are added to the view and do not overwrite them).</p>
+
+<p>OT offers you a fast way to load the views from the section:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;menuViewContainer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;menuViewContainer&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p><code>opt:include</code> assumes that the view object can be found at <code>$menuViewContainer.view</code> section variable.</p>
+
+<h2>Organizing your templates with opt:include</h2>
+
+<p>We are going to show you the ideas of a complete and ready-to-use solution for working with <code>opt:include</code>. We assume that the modules of our website create their own view objects. The script provides them a special API that allows them to assign the particular view to the specified placeholder. It is very easy to write - just a two-dimensional array and a function/method:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #000000; font-weight: bold;">class</span> placeholderManager
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_views</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> definePlaceholder<span style="color: #009900;">&#40;</span><span style="color: #000088;">$placeholder</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_views<span style="color: #009900;">&#91;</span><span style="color: #000088;">$placeholder</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_views<span style="color: #009900;">&#91;</span><span style="color: #000088;">$placeholder</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end definePlaceholder();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> addView<span style="color: #009900;">&#40;</span><span style="color: #000088;">$placeholder</span><span style="color: #339933;">,</span> Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_views<span style="color: #009900;">&#91;</span><span style="color: #000088;">$placeholder</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #666666; font-style: italic;">// error!</span>
+        <span style="color: #009900;">&#125;</span>
+        <span style="color: #666666; font-style: italic;">// The standard format of OPT sections.</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_views<span style="color: #009900;">&#91;</span><span style="color: #000088;">$placeholder</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#91;</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'view'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end addView();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> register<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$mainView</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">foreach</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_views <span style="color: #b1b100;">as</span> <span style="color: #000088;">$name</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000088;">$viewList</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #000088;">$mainView</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">assign</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'Views'</span><span style="color: #339933;">,</span> <span style="color: #000088;">$viewList</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end register();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end placeholderManager;</span></pre>
+
+<p>Now we are going to prepare the main template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #808080; font-style: italic;">&lt;!-- display all the menu views here --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;menuViews&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;menuViews&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #808080; font-style: italic;">&lt;!-- display all the content views here --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;contentViews&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;contentViews&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Of course we can define as many placeholders, as we like. Moreover, the placeholders defined in the template do not have to be defined in the script. In this case, the sections will simply show nothing and the placeholder - remain empty. If you like to provide the support for placeholders also in the module templates, consider registering the placeholder data as global variables.</p>
+
+<p>Now we have a complete solution. The modules create a view object, when executed, associate data and register it in our placeholder manager. The script passes them to the templates and OPT displays them in the right place.</p>
+<h4>See also:</h4><ul><li><a href="syntax.topics.modularization.html">3.9.4. Template modularization</a></li><li><a href="syntax.instructions.include.html">3.7.12. opt:include</a></li></ul><dl class="location location-bottom"><dt>3.9.4.1. Template inclusion<br/><a href="syntax.topics.modularization.html">3.9.4. Template modularization</a></dt><dd class="prev"><a href="syntax.topics.modularization.html">&laquo; Previous</a><br/>3.9.4. Template modularization</dd><dd class="next"><a href="syntax.topics.modularization.inheritance.html">Next &raquo;</a><br/>3.9.4.2. Template inheritance</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

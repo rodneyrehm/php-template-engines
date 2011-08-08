@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>API Reference - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>API Reference</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="index.html">Table of Contents</a><br/>7. API Reference</dt><dd class="prev">6.3. Smarty™<br/><a href="migration.smarty.html">&laquo; Previous</a></dd><dd class="next">7.1. Opt_Class class<br/><a href="api.opt-class.html">Next &raquo;</a></dd></dl>	<h1>7. API Reference</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="api.opt-class.html">7.1. Opt_Class class</a></li><li><a href="api.opt-view.html">7.2. Opt_View class</a></li><li><a href="api.opt-output-http.html">7.3. Opt_Output_Http class</a></li><li><a href="api.opt-output-return.html">7.4. Opt_Output_Return class</a></li><li><a href="api.opt-compiler-class.html">7.5. Opt_Compiler_Class class</a></li><li><a href="api.opt-compiler-format.html">7.6. Opt_Compiler_Format class</a></li><li><a href="api.opt-compiler-processor.html">7.7. Opt_Compiler_Processor class</a></li><li><a href="api.opt-xml-attribute.html">7.8. Opt_Xml_Attribute class</a></li><li><a href="api.opt-xml-buffer.html">7.9. Opt_Xml_Buffer class</a></li><li><a href="api.opt-xml-cdata.html">7.10. Opt_Xml_Cdata class</a></li><li><a href="api.opt-xml-comment.html">7.11. Opt_Xml_Comment class</a></li><li><a href="api.opt-xml-dtd.html">7.12. Opt_Xml_Dtd class</a></li><li><a href="api.opt-xml-element.html">7.13. Opt_Xml_Element class</a></li><li><a href="api.opt-xml-expression.html">7.14. Opt_Xml_Expression class</a></li><li><a href="api.opt-xml-node.html">7.15. Opt_Xml_Node class</a></li><li><a href="api.opt-xml-prolog.html">7.16. Opt_Xml_Prolog class</a></li><li><a href="api.opt-xml-root.html">7.17. Opt_Xml_Root class</a></li><li><a href="api.opt-xml-scannable.html">7.18. Opt_Xml_Scannable class</a></li><li><a href="api.opt-xml-text.html">7.19. Opt_Xml_Text class</a></li><li><a href="api.opt-block-interface.html">7.20. Opt_Block_Interface</a></li><li><a href="api.opt-caching-interface.html">7.21. Opt_Caching_Interface</a></li><li><a href="api.opt-component-interface.html">7.22. Opt_Component_Interface</a></li><li><a href="api.opt-generator-interface.html">7.23. Opt_Generator_Interface</a></li><li><a href="api.opt-output-interface.html">7.24. Opt_Output_Interface class</a></li></ul><p>In this chapter we would like to present the Open Power Template API reference. The methods available for the end-user can be found in the <code>Opt_Class</code>, <code>Opt_View</code>, <code>Opt_Output_Http</code> and <code>Opt_Output_Return</code> classes. The rest describes the compiler interface that allows to extend OPT with the new features.</p>
+
+<h2>How to use the code?</h2>
+
+<p>Open Power Template is a part of Open Power Libs and it requires the core OPL package in order to work. It is provided together with the library. Once you copied the library to the project directory structure, you will find OPT in <code>/path/to/libs/Opt</code> and OPL in <code>/path/to/libs/Opl</code>. Firstly, you have to load the <code>/Opl/Base.php</code> file manually and to initialize the autoloader. Then, you create the object of <code>Opt_Class</code> and configure it.</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #666666; font-style: italic;">// Load the basic code</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./lib/Opl/Base.php'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Set the OPL files path</span>
+Opl_Base<span style="color: #339933;">::</span><span style="color: #004000;">setDirectory</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./lib/'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Initialize the autoloader</span>
+<a href="http://www.php.net/spl_autoload_register"><span style="color: #990000;">spl_autoload_register</span></a><span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'Opl_Loader'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'autoload'</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">// Create the main OPT object</span>
+<span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000000; font-weight: bold;">?&gt;</span></pre>
+
+<p>Alternatively, you may use the PHAR archives that do some of the basic configuration on their own:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/opl.phar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #b1b100;">require</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'./libs/opt.phar'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #000088;">$tpl</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Class<span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">?&gt;</span></pre>
+
+<p>The detailed information can be found in the OPL core manual.</p>
+
+<h2>Conventions</h2>
+
+<p>In Open Power Template, there are some conventions concerning the code and naming style:</p>
+
+<ol>
+<li>All the protected and private class elements have names that begin with an underscore: <code>_name()</code>.</li>
+<li>The methods that should return a particular data, return <strong>NULL</strong>, if it has not been found or the task has not been completed. Note that this is a bit different, contrary to the PHP standard library where <strong>false</strong> values are preferred. However, note that sometimes <strong>false</strong> is a <em>valid</em> value, and in our case, it is always interpreted correctly.</li>
+<li>The exceptions are used to report errors.</li>
+</ol>
+
+<h2>Code reference issues</h2>
+
+<p>In the manual, we make use of several status and type names. Below, you can find their descriptions.</p>
+
+<h3>Status</h3>
+
+<dl>
+<dt>abstract</dt>
+<dd>An abstract method, you have to extend it in the child class.</dd>
+
+<dt>final</dt>
+<dd>The method cannot be extended.</dd>
+
+<dt>extendable</dt>
+<dd>The method <em>should</em> be extended, but it is not necessary.</dd>
+
+<dt>public</dt>
+<dd>Public element</dd>
+
+<dt>protected</dt>
+<dd>Protected element</dd>
+
+<dt>private</dt>
+<dd>Private element</dd>
+
+<dt>static</dt>
+<dd>Static element</dd>
+</dl>
+
+<h3>Types</h3>
+
+<dl>
+<dt>string</dt>
+<dd>Any valid string</dd>
+
+<dt>int</dt>
+<dd>An integer</dd>
+
+<dt>array</dt>
+<dd>A PHP array</dd>
+
+<dt>bool</dt>
+<dd>A logical value (<strong>true</strong> or <strong>false</strong>)</dd>
+
+<dt>mixed</dt>
+<dd>More than one valid type. The documentation specified the available types in the description.</dd>
+
+<dt>void</dt>
+<dd>This pseudo-type informs that the method does not return a value.</dd>
+</dl>
+
+<p>Moreover, the class/interface names are also used as types.</p>
+<dl class="location location-bottom"><dt>7. API Reference<br/><a href="index.html">Table of Contents</a></dt><dd class="prev"><a href="migration.smarty.html">&laquo; Previous</a><br/>6.3. Smarty™</dd><dd class="next"><a href="api.opt-class.html">Next &raquo;</a><br/>7.1. Opt_Class class</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

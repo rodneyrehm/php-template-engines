@@ -1,0 +1,78 @@
+    
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>PHP Template Engine Comparison</title>
+	<link rel="stylesheet" type="text/css" href="css/screen.css" />
+	<script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="js/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="js/highcharts/modules/exporting.js"></script>
+	<script type="text/javascript" src="js/charts.js"></script>
+</head>
+<body>
+
+
+
+            <div class="chart test-chart" 
+            data-series="{&quot;smarty-2.6&quot;:{&quot;10&quot;:0.00043939590454102,&quot;100&quot;:0.00062997341156006,&quot;1000&quot;:0.0024672222137451},&quot;smarty-3.0&quot;:{&quot;10&quot;:0.00077812194824219,&quot;100&quot;:0.0011103582382202,&quot;1000&quot;:0.0044229793548584},&quot;smarty-3.1&quot;:{&quot;10&quot;:0.0007766580581665,&quot;100&quot;:0.0011090183258057,&quot;1000&quot;:0.0043990325927734}}" 
+            data-title="Loop Test" 
+            data-subtitle="Duration"
+            data-axis-name="Duration"
+            data-axis-abbr="s"
+        ></div>
+        <div class="chart test-chart" 
+            data-series="{&quot;smarty-2.6&quot;:{&quot;10&quot;:0.092391967773438,&quot;100&quot;:0.1068115234375,&quot;1000&quot;:0.25099945068359},&quot;smarty-3.0&quot;:{&quot;10&quot;:0.17298889160156,&quot;100&quot;:0.18740081787109,&quot;1000&quot;:0.33160400390625},&quot;smarty-3.1&quot;:{&quot;10&quot;:0.24024200439453,&quot;100&quot;:0.25466156005859,&quot;1000&quot;:0.39884948730469}}" 
+            data-title="Loop Test" 
+            data-subtitle="Memory consumption"
+            data-axis-name="Memory"
+            data-axis-abbr="MB"
+        ></div>
+            <div class="chart test-chart" 
+            data-series="{&quot;smarty-2.6&quot;:{&quot;10&quot;:0.00047441482543945,&quot;100&quot;:0.0014572238922119,&quot;1000&quot;:0.012613711357117},&quot;smarty-3.0&quot;:{&quot;10&quot;:0.00085764408111572,&quot;100&quot;:0.0033510065078735,&quot;1000&quot;:0.024682774543762},&quot;smarty-3.1&quot;:{&quot;10&quot;:0.00083794593811035,&quot;100&quot;:0.0026330423355103,&quot;1000&quot;:0.018878674507141}}" 
+            data-title="Assign Test" 
+            data-subtitle="Duration"
+            data-axis-name="Duration"
+            data-axis-abbr="s"
+        ></div>
+        <div class="chart test-chart" 
+            data-series="{&quot;smarty-2.6&quot;:{&quot;10&quot;:0.091888427734375,&quot;100&quot;:0.10631561279297,&quot;1000&quot;:0.25650024414062},&quot;smarty-3.0&quot;:{&quot;10&quot;:0.17671203613281,&quot;100&quot;:0.24606323242188,&quot;1000&quot;:0.9454216003418},&quot;smarty-3.1&quot;:{&quot;10&quot;:0.24462127685547,&quot;100&quot;:0.42058563232422,&quot;1000&quot;:1.6092095947266}}" 
+            data-title="Assign Test" 
+            data-subtitle="Memory consumption"
+            data-axis-name="Memory"
+            data-axis-abbr="MB"
+        ></div>
+            <div class="chart test-chart" 
+            data-series="{&quot;smarty-2.6&quot;:{&quot;1&quot;:0.00073565483093262,&quot;10&quot;:0.00269446849823,&quot;100&quot;:0.021104459762573},&quot;smarty-3.0&quot;:{&quot;1&quot;:0.001235613822937,&quot;10&quot;:0.0052486705780029,&quot;100&quot;:0.038893895149231},&quot;smarty-3.1&quot;:{&quot;1&quot;:0.0012518358230591,&quot;10&quot;:0.0022786140441894,&quot;100&quot;:0.012076697349548}}" 
+            data-title="LoopInclude Test" 
+            data-subtitle="Duration"
+            data-axis-name="Duration"
+            data-axis-abbr="s"
+        ></div>
+        <div class="chart test-chart" 
+            data-series="{&quot;smarty-2.6&quot;:{&quot;1&quot;:0.09210205078125,&quot;10&quot;:0.093498229980469,&quot;100&quot;:0.10943252563477},&quot;smarty-3.0&quot;:{&quot;1&quot;:0.18421173095703,&quot;10&quot;:0.18560791015625,&quot;100&quot;:0.20192291259766},&quot;smarty-3.1&quot;:{&quot;1&quot;:0.2587890625,&quot;10&quot;:0.26018524169922,&quot;100&quot;:0.2627458190918}}" 
+            data-title="LoopInclude Test" 
+            data-subtitle="Memory consumption"
+            data-axis-name="Memory"
+            data-axis-abbr="MB"
+        ></div>
+            <div class="chart test-chart" 
+            data-series="{&quot;smarty-3.0&quot;:{&quot;1&quot;:0.00066650390625,&quot;2&quot;:0.0006833553314209,&quot;3&quot;:0.00071885585784912},&quot;smarty-3.1&quot;:{&quot;1&quot;:0.00084048271179199,&quot;2&quot;:0.00069786548614502,&quot;3&quot;:0.00072773456573486}}" 
+            data-title="TemplateInheritance Test" 
+            data-subtitle="Duration"
+            data-axis-name="Duration"
+            data-axis-abbr="s"
+        ></div>
+        <div class="chart test-chart" 
+            data-series="{&quot;smarty-3.0&quot;:{&quot;1&quot;:0.17079162597656,&quot;2&quot;:0.17164611816406,&quot;3&quot;:0.17251586914062},&quot;smarty-3.1&quot;:{&quot;1&quot;:0.22926330566406,&quot;2&quot;:0.23025512695312,&quot;3&quot;:0.23228454589844}}" 
+            data-title="TemplateInheritance Test" 
+            data-subtitle="Memory consumption"
+            data-axis-name="Memory"
+            data-axis-abbr="MB"
+        ></div>
+    
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+Testing the replace() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{replace('hello, world', 'world', 'universe')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+hello, universe

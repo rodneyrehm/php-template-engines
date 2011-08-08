@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Template modularization - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Template modularization</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.topics.html">Topics</a> &raquo; <a href="syntax.topics.modularization.html">Template modularization</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.topics.html">3.9. Topics</a><br/>3.9.4. Template modularization</dt><dd class="prev">3.9.3. Components<br/><a href="syntax.topics.components.html">&laquo; Previous</a></dd><dd class="next">3.9.4.1. Template inclusion<br/><a href="syntax.topics.modularization.inclusion.html">Next &raquo;</a></dd></dl>	<h1>3.9.4. Template modularization</h1><h4>Table of Contents</h4><ul class="toc"><li><a href="syntax.topics.modularization.inclusion.html">3.9.4.1. Template inclusion</a></li><li><a href="syntax.topics.modularization.inheritance.html">3.9.4.2. Template inheritance</a></li></ul><p>Every bigger website consists of dozens or even hundreds template files. It is obvious that they have to be managed somehow and the common elements must not be duplicated. Open Power Template provides several tools to make your templates more modular. In this chapter we are going to introduce and explain them.</p>
+
+<h2>Problem</h2>
+
+<p>Let's take a look a simple website with some news, articles and contact data. Each module has its own template, because the news look different than articles, whereas contact data are usually accompanied by a form that allows to send us an e-mail directly from the website. However, no matter what module we are looking at, they are always displayed within the same layout, with a header, menu, place for the main content and the footer. Moreover, as our database grows, we should think of a pagination mechanism - the page list should also look the same on whole website. The same issue concerns the forms - we need a generic form component design used every time we need to construct the form so that all the fors share the same layout and logics. If we need to make a change, it would be nice to make it only in one place and recompile the templates to propagate it rather than modifying about 50 files one by one.</p>
+
+<p>To sum up, we need the following things:</p>
+
+<ul>
+<li>Different templates for each module, depending on its needs.</li>
+<li>A template with the layout structure.</li>
+<li>Extra template with the form component and pagination styles.</li>
+<li>Error templates, messages, questions etc.</li>
+</ul>
+
+<h2>Solution 1 - template concatenation</h2>
+
+<p>Many template engines, as well as PHP, allow you to build the output document from smaller pieces of HTML code using the following algorithm:</p>
+
+<ol>
+<li>Display the page header and the beginning of the menus.</li>
+<li>Display all the menus.</li>
+<li>Display the end of the menus and the beginning of the content.</li>
+<li>Display the content.</li>
+<li>etc...</li>
+</ol>
+
+<p>This leads us to the following templates:</p>
+
+<h6>overall_header.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span></pre>
+
+<h6>menu.tpl:</h6>
+
+<pre class="xml">    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;li<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;a</span> <span style="color: #000066;">href</span>=<span style="color: #ff0000;">&quot;#&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Index<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/a<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/li<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        ....
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ul<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h6>content_begin.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span></pre>
+
+<h6>index.tpl:</h6>
+
+<pre class="xml">    Some index content here.</pre>
+
+<h6>overall_footer.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Of course, it is possible to build a valid HTML output from them, but note that they are hard to maintain. You have to define in the PHP code that <code>content_begin.tpl</code> must be executed after the menus are rendered and the menus are before the content. What if the webmaster is going to create a layout with a different structure? What if you are going to add new elements to the layout? Are you going to modify both the script and the templates, producing more and more files? This solution is not only ineffective, but does not provide any visible logic. In other words - it is very bad.</p>
+
+<h2>Solution 2 - template inclusion</h2>
+
+<p>This time, we are going to locate the main layout structure in one file. It will contain some places, where the script could plug-in module-dependent content, menus etc.</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    ....
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    [ LAUNCH ASSIGNED MENU TEMPLATES HERE ]
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    [ LAUNCH ASSIGNED CONTENT TEMPLATES HERE ]
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Now the HTML structure is kept in only one place. If you are going to add some extra common elements to it, you have to modify only one file - the template, whereas the script has nothing to do here. Its task is only to define, what templates must be launched in the first and the second placeholder and the template engine must provide some mechanisms to execute them.</p>
+
+<h2>Solution 3 - template inheritance</h2>
+
+<p>Template inheritance works much like inheritance in the object-oriented programming, but it applies to templates instead of classes. Here, the script does not even know about the common layout file - it only executes the module template which <em>extends</em> the layout template it wants and fills the empty placeholders with some HTML code. Take a look at sample templates:</p>
+
+<h6>layout.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    ....
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    [ CONTENT PLACEHOLDER ]
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h6>module.tpl:</h6>
+
+<pre class="xml">[ EXTEND layout.tpl ]
+&nbsp;
+[ CONTENT SNIPPET ]
+Some content here
+[ END OF CONTENT SNIPPET ]</pre>
+
+<p>The template engine notices that our module template wants to extend <code>layout.tpl</code>, so it takes the content defined by <code>module.tpl</code> and puts it in the specified place in the layout template, producing a valid output.</p>
+
+<h2>Open Power Template-related issues</h2>
+
+<p>So far, we have described the basic modularization techniques on the examples written in pseudocode that do not apply to any real template engine. It is time to explain, how they work in OPT and how to use them in this particular library.</p>
+
+<p>If you are going to make use of all the XML features offered by OPT, you have to forget about the solution 1 (<em>template concatenation</em>). In the XML mode, the standard HTTP output prevents you from rendering more than one template directly. For example, the following PHP code will cause an exception:</p>
+
+<pre class="php"><span style="color: #000088;">$output</span> <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Opt_Output_Http<span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template1.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+<span style="color: #000088;">$output</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">render</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'template2.tpl'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// exception! This output has already rendered a template!</span></pre>
+
+<p>The reason is very simple. In this mode, the templates must be valid XML files with the tags enclosed in the correct order. In other words, you must not open <code>&lt;body&gt;</code> in <code>template1.tpl</code> and close it in <code>template2.tpl</code>. Moreover, the output should also be a valid document, and valid XML documents have only one root tag. This leads us to simple conclusion. If the opened tags must be closed within the same template and the produced output must have exactly one root tag, there might be only one main template.</p>
+
+<blockquote class="error">
+  <p>It is not possible to execute more than one main template in the XML mode using the HTTP output.</p>
+</blockquote>
+
+<p>OPT provides a complex and built-in support for template inclusion and inheritance. To include one template within another, you use <code>opt:include</code> instruction. The inheritance is done with a set of the following instructions: <code>opt:extend</code>, <code>opt:root</code>, <code>opt:snippet</code> and <code>opt:insert</code>. Both of them can be used within the same project and it is a recommended way to work with OPT. Note that <code>opt:include</code> works during the execution time, so by connection it with sections, you might create a loop that is able to load any number of templates in the same place, depending on the script needs. On the other hand, the inheritance is processed during the compilation time. Although dynamic inheritance is still allowed (the script may choose the template to be extended), it is harder to display two module templates at the same time in the same placeholder.</p>
+
+<blockquote class="help">
+  <p><code>opt:include</code> works during the template execution, whereas the template inheritance is processed during the compilation.</p>
+</blockquote>
+
+<p>The details on the implementation of those two elements can be found in chapters about <a href="syntax.topics.modularization.inheritance.html" title="3.9.4.2. Template inheritance">the inheritance</a> and <a href="syntax.topics.modularization.inclusion.html" title="3.9.4.1. Template inclusion">the inclusion</a>.</p>
+
+<h2>Mixing the template inheritance and inclusion</h2>
+
+<p>As we mentioned before, OPT allows you to use both inheritance and inclusion at the same time. This is the recommended way to work with this library. <code>opt:include</code> instruction should be used to create the main layout template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    ....
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;header&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;menu&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #808080; font-style: italic;">&lt;!-- display all the menu views here --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;menuViews&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;menuViews&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;content&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #808080; font-style: italic;">&lt;!-- display all the content views here --&gt;</span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;contentViews&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;contentViews&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">id</span>=<span style="color: #ff0000;">&quot;footer&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/body<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>The inheritance can be used in at the module template level. It is especially useful when working with HTML forms. It is a common situation that the same form is used all around the website, but sometimes you need to add one or two extra components. Assuming this, we would like to use the same form component style for all our forms with the possibility to change it if needed.</p>
+
+<p>Let's get to work. First, we start with two sample templates that define the component layout:</p>
+
+<h6>standardComponentLayout.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;componentLayout&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;form element&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span> <span style="color: #808080; font-style: italic;">&lt;!-- a component element --&gt;</span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$opt.component.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h6>otherComponentLayout.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;componentLayout&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;other classes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;span<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$opt.component.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/span<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:display</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span> <span style="color: #808080; font-style: italic;">&lt;!-- a component element --&gt;</span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Now, we need the basic form template:</p>
+
+<h6>some_form.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root</span> <span style="color: #000066;">include</span>=<span style="color: #ff0000;">&quot;standardComponentLayout.tpl&quot;</span> <span style="color: #000066;">dynamic</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;form</span> <span style="color: #000066;">method</span>=<span style="color: #ff0000;">&quot;post&quot;</span> <span style="color: #000066;">parse:action</span>=<span style="color: #ff0000;">&quot;$form.action&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;form&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;initialExtraComponents&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:inputField</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;componentLayout&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;name&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;field1&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Some field&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:inputField<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:inputField</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;componentLayout&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;name&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;field2&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Some other field&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:inputField<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;finalExtraComponents&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:insert</span> <span style="color: #000066;">snippet</span>=<span style="color: #ff0000;">&quot;actionButtons&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;buttons&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;input</span> <span style="color: #000066;">type</span>=<span style="color: #ff0000;">&quot;submit&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;Send&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:insert<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/form<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Here we assume that the script contains the implementations of the <em>inputField</em> components that we are using. Note that this form defines three placeholders for snippets: <code>initialExtraComponents</code>, <code>finalExtraComponents</code> and <code>actionButtons</code>. If the module displays only the basic form, these placeholders will remain empty, and in case of the last one - the default content will be used. The result is that the user sees only the basic form.</p>
+
+<p>If we need to reuse the same form in other place, but with extra components, we just extend the basic template:</p>
+
+<h6>some_form_modified.tpl:</h6>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:extend</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;some_form.tpl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:snippet</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;finalExtraComponents&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+&nbsp;
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:inputField</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;componentLayout&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;name&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;field3&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:set</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;title&quot;</span> <span style="color: #000066;">str:value</span>=<span style="color: #ff0000;">&quot;Yet another field&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:inputField<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:snippet<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:extend<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>If the module decides to use this particular template, the user will see a form with three components:</p>
+
+<ol>
+<li>Some field</li>
+<li>Some other field</li>
+<li>Yet another field (added by the <code>some_form_modified.tpl</code> template)</li>
+</ol>
+
+<p>Note that using the <a href="api.opt-view.inherit.html" title="7.2.23. Opt_View::inherit()">Opt_View::inherit()</a> API method, the script may also set the different form component layout.</p>
+
+<h2>Conclusion</h2>
+
+<p>The template modularization is a very important issue and OPT provides several advanced tools that should satisfy all your needs. The details concerning their features, possibilities and limitations can be found in the next pages of this documentation.</p>
+<h4>See also:</h4><ul><li><a href="syntax.topics.modularization.inclusion.html">3.9.4.1. Template inclusion</a></li><li><a href="syntax.topics.modularization.inheritance.html">3.9.4.2. Template inheritance</a></li></ul><dl class="location location-bottom"><dt>3.9.4. Template modularization<br/><a href="syntax.topics.html">3.9. Topics</a></dt><dd class="prev"><a href="syntax.topics.components.html">&laquo; Previous</a><br/>3.9.3. Components</dd><dd class="next"><a href="syntax.topics.modularization.inclusion.html">Next &raquo;</a><br/>3.9.4.1. Template inclusion</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

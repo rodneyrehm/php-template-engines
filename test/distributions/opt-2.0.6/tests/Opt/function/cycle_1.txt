@@ -1,0 +1,23 @@
+Testing the cycle() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{cycle('a', 'b', 'c')}
+{cycle('a', 'b', 'c')}
+{cycle('a', 'b', 'c')}
+{cycle('a', 'b', 'c')}
+{cycle('a', 'b', 'c')}
+{cycle('a', 'b', 'c')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+a
+b
+c
+a
+b
+c

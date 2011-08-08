@@ -1,0 +1,18 @@
+Testing the "opt:root" instruction.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<p>foo</p>
+<p>foo</p>
+</opt:root>
+
+>>>>data.php
+$this->tpl->singleRootNode = true;
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<p>foo</p>
+<p>foo</p>

@@ -1,0 +1,12 @@
+Check the correctness of attribute parsing: duplicated attributes not allowed.
+
+>>>>templates/test.tpl
+<foo>
+<tag attribute="foo" attribute="bar" />
+</foo>
+
+>>>>data.php
+$this->tpl->prologRequired = false;
+
+>>>>expected.txt
+Opt_XmlDuplicatedAttribute_Exception

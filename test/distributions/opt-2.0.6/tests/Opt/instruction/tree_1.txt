@@ -1,0 +1,42 @@
+The test checks the basic opt:tree features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:tree name="tree">
+<opt:list>
+LIST START:
+<opt:content />
+LIST END:
+</opt:list>
+<opt:node>
+NODE {$tree.title} START:
+<opt:content />
+NODE {$tree.title} END
+</opt:node>
+</opt:tree>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+LIST START:
+NODE 1 START:
+LIST START:
+NODE 1.1 START:
+LIST START:
+NODE 1.1.1 START:
+NODE 1.1.1 END
+LIST END:
+NODE 1.1 END
+LIST END:
+NODE 1 END
+LIST END:
+
+>>>>data.php
+$view->tree = array(0 =>
+	array('title' => '1', 'depth' => 0),
+	array('title' => '1.1', 'depth' => 1),
+	array('title' => '1.1.1', 'depth' => 2),
+);

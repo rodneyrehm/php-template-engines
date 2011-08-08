@@ -1,0 +1,25 @@
+Check the basic inheritance features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="extended1.tpl">
+<opt:snippet name="foo">
+SNIPPET-VALUE
+</opt:snippet>
+</opt:extend>
+
+>>>>templates/extended1.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+BEGIN
+<opt:insert snippet="foo" />
+END
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BEGIN
+SNIPPET-VALUE
+END

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Container items - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Container items</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.data-formats.html">New data formats</a> &raquo; <a href="extending.data-formats.items.html">Container items</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.data-formats.html">5.7. New data formats</a><br/>5.7.2. Container items</dt><dd class="prev">5.7.1. Variables<br/><a href="extending.data-formats.variables.html">&laquo; Previous</a></dd><dd class="next">5.7.3. Sections<br/><a href="extending.data-formats.sections.html">Next &raquo;</a></dd></dl>	<h1>5.7.2. Container items</h1><p>The data formats allow you to control the access to the container subitems, for example <code>$container.subitem</code>. They are programmed similarly to ordinary variables.</p>
+
+<blockquote class="information">
+  <p>The snippets described above are also used in sections: <code>$sectionName.sectionItem</code>.</p>
+</blockquote>
+
+<h2>Configuration</h2>
+
+<p>The variable access snippets are located in the <code>item</code> group, so you must add it to <code>$_supports</code> field in your data format. Furthermore, you need to set up the property <code>variable:assign</code>. It is a boolean value that controls whether your data format supports assignments of a new value to the variables. Another property is <code>item:useReference</code> that should be set to <strong>true</strong> if the item value can be accessed via reference, similarly to <code>variable:useReference</code>.</p>
+
+<h2>Reading the values</h2>
+
+<p>Similarly to variables, reading the value is performed with the <code>item:main</code> snippet. It should return a <em>piece of expression</em> that reads the value. The item name is provided in the <code>item</code> format variable. OPT concatenates the pieces coming from all the items creating a container call, so the snippet must form a valid PHP even then:</p>
+
+<pre class="php">    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'item:main'</span><span style="color: #339933;">:</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'-&gt;readItem(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\')'</span><span style="color: #339933;">;</span></pre>
+
+<p>Note that the snippet begins with an object call <code>-&gt;</code>. Let's take a look at a sample container call: <code>$container.item</code>. The first part, <code>$container</code> is processed with <code>variable:main</code> snippet, giving us something like that <code>$this-&gt;_data['container']</code> in the default data format. Then, <code>.item</code> is processed with our data format and <code>item:main</code> snippet that gives <code>-&gt;readItem('item')</code>. The final code is <code>$this-&gt;_data['container']-&gt;readItem('item')</code>.</p>
+
+<blockquote class="information">
+  <p>It is up to programmer to validate the variable before choosing the data format.</p>
+</blockquote>
+
+<h2>Modifying the variable values</h2>
+
+<p>It is performed with <code>item:assign</code> snippet similarly to <code>variable:item</code>:</p>
+
+<pre class="php">    <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'item:assign'</span><span style="color: #339933;">:</span>
+        <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">'-&gt;saveItem(\''</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'item'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'\', '</span><span style="color: #339933;">.</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_getVar<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'value'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">')'</span><span style="color: #339933;">;</span></pre>
+<dl class="location location-bottom"><dt>5.7.2. Container items<br/><a href="extending.data-formats.html">5.7. New data formats</a></dt><dd class="prev"><a href="extending.data-formats.variables.html">&laquo; Previous</a><br/>5.7.1. Variables</dd><dd class="next"><a href="extending.data-formats.sections.html">Next &raquo;</a><br/>5.7.3. Sections</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

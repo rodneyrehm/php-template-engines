@@ -1,0 +1,10 @@
+Check the entity() function features.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{u:entity('bogus value')}
+</opt:root>
+
+>>>>expected.txt
+Opt_InvalidEntityName_Exception

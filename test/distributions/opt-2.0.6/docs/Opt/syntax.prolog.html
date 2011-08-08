@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>XML Prolog and DTD - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>XML Prolog and DTD</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.prolog.html">XML Prolog and DTD</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.html">3. Template syntax</a><br/>3.3. XML Prolog and DTD</dt><dd class="prev">3.2. CDATA sections<br/><a href="syntax.cdata.html">&laquo; Previous</a></dd><dd class="next">3.4. Entities<br/><a href="syntax.entities.html">Next &raquo;</a></dd></dl>	<h1>3.3. XML Prolog and DTD</h1><p>To keep the compatibility with the XML standard, the OPT compiler must provide support for XML prolog and DTD. The exact behavior is controlled with <code>prologRequired</code> directive. The available values are <strong>true</strong> or <strong>false</strong>.</p>
+
+<p>If <code>prologRequired</code> is set to <strong>true</strong>, the XML prolog must be set in every template, but it is not sent to the output system. In order to create a prolog or DTD for the browser, we need <code>opt:prolog</code> and <code>opt:dtd</code> instructions:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000066;">standalone</span>=<span style="color: #ff0000;">&quot;yes&quot;</span> <span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:prolog</span> <span style="color: #000066;">standalone</span>=<span style="color: #ff0000;">&quot;no&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:dtd</span> <span style="color: #000066;">template</span>=<span style="color: #ff0000;">&quot;xhtml-strict&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/head<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+<span style="color: #808080; font-style: italic;">&lt;!-- the template --&gt;</span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/html<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:root<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> </pre>
+
+<p>If we need some special DTD, we can write it inside <code>opt:dtd</code> tag and enclose in CDATA sections:</p>
+
+<pre class="xml"><span style="color: #339933;">&lt;![CDATA[&lt;!DOCTYPE hi [</span>
+<span style="color: #339933;">    &lt;!ELEMENT hi (#PCDATA)&gt;</span>
+<span style="color: #339933;">]&gt;]]&gt;</span></pre>
+
+<p>OPT sets XML version to "1.0", and the default encoding is taken from the configuration.</p>
+
+<p>If <code>prologRequired</code> is set to <strong>false</strong>, OPT does not require prologs in every template. Moreover, when it finds one, it checks its syntax, but also sends it to the output system. In the quirks mode the prolog is treated as an ordinary text.</p>
+<dl class="location location-bottom"><dt>3.3. XML Prolog and DTD<br/><a href="syntax.html">3. Template syntax</a></dt><dd class="prev"><a href="syntax.cdata.html">&laquo; Previous</a><br/>3.2. CDATA sections</dd><dd class="next"><a href="syntax.entities.html">Next &raquo;</a><br/>3.4. Entities</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

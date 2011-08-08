@@ -1,0 +1,39 @@
+Objective format: grids, descending order and ArrayObject
+
+>>>>templates/test.tpl
+<opt:root>
+<opt:grid name="items" order="desc" cols="3">
+:ROW START
+<opt:item>
+{$items.item}
+</opt:item>
+<opt:emptyItem>
+Empty
+</opt:emptyItem>
+:ROW END
+</opt:grid>
+</opt:root>
+
+>>>>data.php
+
+$obj1 = new stdClass;
+$obj1->item = 'item 1';
+$obj2 = new stdClass;
+$obj2->item = 'item 2';
+$obj3 = new stdClass;
+$obj3->item = 'item 3';
+
+$view->items = new ArrayObject(array(0 =>
+	$obj1, $obj2, $obj3
+));
+$view->setFormat('items', 'Objective');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+:ROW START
+item 3
+item 2
+item 1
+:ROW END

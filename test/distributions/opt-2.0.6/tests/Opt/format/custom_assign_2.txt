@@ -1,0 +1,15 @@
+Testing the custom assignments that are possible with data formats.
+
+>>>>templates/test.tpl
+{$smallObj.foo is 'goo'}
+{$smallObj.foo}
+
+>>>>data.php
+Opl_Registry::register('data', array('smallObj' => new smallClass));
+$view->setFormat('smallObj', 'Test');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+goo

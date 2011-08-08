@@ -1,0 +1,22 @@
+The test checks the empty "ns" attribute.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<foo>
+<opt:attribute ns="$ns" name="$name" str:value="def" />
+bar
+</foo>
+</opt:root>
+
+>>>>data.php
+$view->ns = null;
+$view->name = 'abc';
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<foo abc="def">
+bar
+</foo>

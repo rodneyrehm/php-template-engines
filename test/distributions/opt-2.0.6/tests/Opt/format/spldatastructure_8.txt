@@ -1,0 +1,34 @@
+SplDatastructure format and queues
+
+>>>>templates/test.tpl
+<opt:root>
+<opt:section name="foo">
+{$foo.item}
+</opt:section>
+NEXT:
+<opt:section name="foo" order="desc">
+{$foo.item}
+</opt:section>
+</opt:root>
+
+>>>>data.php
+
+$spl1 = new SplQueue;
+$spl1->push(array('item' => 'FOO'));
+$spl1->push(array('item' => 'BAR'));
+$spl1->push(array('item' => 'JOE'));
+
+$view->foo = $spl1;
+$view->setFormat('foo', 'SplDatastructure');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO
+BAR
+JOE
+NEXT:
+JOE
+BAR
+FOO

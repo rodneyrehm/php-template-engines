@@ -1,0 +1,18 @@
+This test checks the datasource attribute.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:component from="$component" datasource="$datasource">
+</opt:component>
+
+>>>>data.php
+
+$view->component = new myComponent;
+$view->datasource = array('foo' => 'bar');
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+VIEW PASSED
+DATASOURCE PASSED

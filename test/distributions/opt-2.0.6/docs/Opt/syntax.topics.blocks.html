@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>Blocks - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>Blocks</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.topics.html">Topics</a> &raquo; <a href="syntax.topics.blocks.html">Blocks</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.topics.html">3.9. Topics</a><br/>3.9.2. Blocks</dt><dd class="prev">3.9.1. Sections<br/><a href="syntax.topics.sections.html">&laquo; Previous</a></dd><dd class="next">3.9.3. Components<br/><a href="syntax.topics.components.html">Next &raquo;</a></dd></dl>	<h1>3.9.2. Blocks</h1><p>Writing the ordinary instructions is a bit complicated task in OPT, especially if you have to implement a simple task. Here, the blocks come into action. They consist of two parts:</p>
+
+<ol>
+<li>PHP objects that implement <code>Opt_Block_Interface</code> - here the programmer may simply define all the logic he needs.</li>
+<li>A template port (<code>opt:block</code> instruction) which uses the specified interface to render the block.</li>
+</ol>
+
+<p>To show, how they work, let's create a simple block class in PHP:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">&lt;?php</span>
+<span style="color: #000000; font-weight: bold;">class</span> columnBlock implements Opt_Block_Interface
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_view</span><span style="color: #339933;">;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_order</span><span style="color: #339933;">;</span>
+    <span style="color: #000000; font-weight: bold;">private</span> <span style="color: #000088;">$_active</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> __construct<span style="color: #009900;">&#40;</span><span style="color: #000088;">$colId</span> <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #339933;">,</span> <span style="color: #000088;">$order</span> <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #339933;">,</span> <span style="color: #000088;">$active</span> <span style="color: #339933;">=</span> <span style="color: #009900; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_colId <span style="color: #339933;">=</span> <span style="color: #000088;">$colId</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_order <span style="color: #339933;">=</span> <span style="color: #000088;">$order</span><span style="color: #339933;">;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_active <span style="color: #339933;">=</span> <span style="color: #000088;">$active</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end __construct();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> setView<span style="color: #009900;">&#40;</span>Opt_View <span style="color: #000088;">$view</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_view <span style="color: #339933;">=</span> <span style="color: #000088;">$view</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end setOptInstance();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> onOpen<span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">Array</span></a> <span style="color: #000088;">$attributes</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #000088;">$colId</span> <span style="color: #339933;">=</span> <span style="color: #009900;">&#40;</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$attributes</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'column'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span> ? <span style="color: #000088;">$attributes</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'column'</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">:</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_colId<span style="color: #339933;">;</span>
+        <span style="color: #000088;">$order</span> <span style="color: #339933;">=</span> <span style="color: #009900;">&#40;</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$attributes</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'order'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span> ? <span style="color: #000088;">$attributes</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'order'</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">:</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_order<span style="color: #339933;">;</span>
+        <span style="color: #000088;">$active</span> <span style="color: #339933;">=</span> <span style="color: #009900;">&#40;</span><a href="http://www.php.net/isset"><span style="color: #990000;">isset</span></a><span style="color: #009900;">&#40;</span><span style="color: #000088;">$attributes</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'active'</span><span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span> ? <span style="color: #000088;">$attributes</span><span style="color: #009900;">&#91;</span><span style="color: #0000ff;">'active'</span><span style="color: #009900;">&#93;</span> <span style="color: #339933;">:</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span>_active<span style="color: #339933;">;</span>
+&nbsp;
+        <span style="color: #b1b100;">echo</span> <span style="color: #0000ff;">'&lt;a href=&quot;?column='</span><span style="color: #339933;">.</span><span style="color: #000088;">$colId</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'&amp;order='</span><span style="color: #339933;">.</span><span style="color: #000088;">$order</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'&quot;'</span><span style="color: #339933;">.</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$active</span> ? <span style="color: #0000ff;">' class=&quot;active&quot;'</span> <span style="color: #339933;">:</span> <span style="color: #0000ff;">''</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">.</span><span style="color: #0000ff;">'&gt;'</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end onOpen();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> onClose<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">echo</span> <span style="color: #0000ff;">'&lt;/a&gt;'</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end onClose();</span>
+&nbsp;
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> onSingle<span style="color: #009900;">&#40;</span><a href="http://www.php.net/array"><span style="color: #990000;">Array</span></a> <span style="color: #000088;">$attributes</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #666666; font-style: italic;">/* null */</span>
+    <span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end onSingle();</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end columnBlock;</span></pre>
+
+<p>Such block class can be used to create clickable column headers in a table to choose the sort order etc.:</p>
+
+<pre class="php"><span style="color: #000088;">$view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">columns</span> <span style="color: #339933;">=</span> <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span>0 <span style="color: #339933;">=&gt;</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'title'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Column 1'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'click'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">new</span> columnBlock<span style="color: #009900;">&#40;</span>1<span style="color: #339933;">,</span> 0<span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'title'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Column 2'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'click'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">new</span> columnBlock<span style="color: #009900;">&#40;</span>2<span style="color: #339933;">,</span> 0<span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+    <a href="http://www.php.net/array"><span style="color: #990000;">array</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">'title'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #0000ff;">'Column 3'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'click'</span> <span style="color: #339933;">=&gt;</span> <span style="color: #000000; font-weight: bold;">new</span> columnBlock<span style="color: #009900;">&#40;</span>3<span style="color: #339933;">,</span> 0<span style="color: #339933;">,</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span>
+<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Now we can create a dynamic table header which also very clean:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;table<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;thead<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;columns&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;th<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:block</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$columns.block&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>{$columns.title}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:block<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/th<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> 
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/thead<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tbody<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        ....
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tbody<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/table<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>With the instruction <code>opt:block</code>, we have created a port where we can deploy any block object. Of course the example above is very simplified. In real world applications, it would be good to add more complicated logic to determine the columns automatically or to integrate with other script interfaces.</p>
+
+<h2>Statically deployed blocks</h2>
+
+<p>In the previous example, we were using both PHP and templates to create a fully functionable block. However, you do not have to create every block object manually in the script. OPT allows you to register block classes as XML tags:</p>
+
+<pre class="php"><span style="color: #000088;">$tpl</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">register</span><span style="color: #009900;">&#40;</span>Opt_Class<span style="color: #339933;">::</span><span style="color: #004000;">OPT_BLOCK</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'opt:column'</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">'columnBlock'</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span></pre>
+
+<p>Now we can use them much like instructions:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;table<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;thead<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;th<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:column</span> <span style="color: #000066;">column</span>=<span style="color: #ff0000;">&quot;1&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Column 1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:column<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/th<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;th<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:column</span> <span style="color: #000066;">column</span>=<span style="color: #ff0000;">&quot;2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Column 2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:column<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/th<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;th<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;opt:column</span> <span style="color: #000066;">column</span>=<span style="color: #ff0000;">&quot;3&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>Column 3<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:column<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/th<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/thead<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tbody<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tbody<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/table<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>In this case, OPT creates a block object automatically and destroys it after the job is finished.</p>
+
+<h2>Block functionality</h2>
+
+<p>The advantage over the instructions is that the blocks are processed at runtime, so your script may dynamically choose the blocks that need to be displayed. However, they have many limitations. The blocks are not able to manipulate the XML tree, they cannot be also used to create loops. However, they may display their content conditionally. The <code>onOpen()</code> method must return <strong>true</strong> or <strong>false</strong> then.</p>
+
+<p>OPT provides also more compound objects: <strong>components</strong>. The basic idea behind them is the same, but they offer much more options that are useful when working with HTML forms.</p>
+<h4>See also:</h4><ul><li><a href="syntax.instructions.block.html">3.7.2. opt:block</a></li></ul><dl class="location location-bottom"><dt>3.9.2. Blocks<br/><a href="syntax.topics.html">3.9. Topics</a></dt><dd class="prev"><a href="syntax.topics.sections.html">&laquo; Previous</a><br/>3.9.1. Sections</dd><dd class="next"><a href="syntax.topics.components.html">Next &raquo;</a><br/>3.9.3. Components</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

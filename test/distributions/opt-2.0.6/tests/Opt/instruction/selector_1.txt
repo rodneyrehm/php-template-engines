@@ -1,0 +1,27 @@
+The test checks the opt:selector instruction.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:selector name="sect">
+<opt:foo>FOO: {$sect.val1},{$sect.val2}</opt:foo>
+<opt:bar>BAR: {$sect.val1},{$sect.val2}</opt:bar>
+</opt:selector>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+FOO: A,B
+BAR: C,D
+FOO: E,F
+BAR: G,H
+
+>>>>data.php
+$view->sect = array(
+	array('val1' => 'A', 'val2' => 'B', 'item' => 'foo'),
+	array('val1' => 'C', 'val2' => 'D', 'item' => 'bar'),
+	array('val1' => 'E', 'val2' => 'F', 'item' => 'foo'),
+	array('val1' => 'G', 'val2' => 'H', 'item' => 'bar'),
+);

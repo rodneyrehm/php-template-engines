@@ -1,0 +1,22 @@
+Testing the containsKey() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+<opt:if test="containsKey($vars, 'v1')">CONTAINS<opt:else>DOES NOT CONTAIN</opt:else></opt:if>
+<opt:if test="containsKey($vars, 'v4')">CONTAINS<opt:else>DOES NOT CONTAIN</opt:else></opt:if>
+</opt:root>
+
+>>>>data.php
+$view->vars = array(
+	'v1' => 1,
+	'v2' => 3,
+	'v3' => 5
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+CONTAINS
+DOES NOT CONTAIN

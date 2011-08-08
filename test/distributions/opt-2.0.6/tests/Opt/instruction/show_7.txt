@@ -1,0 +1,19 @@
+The test checks, what happens, if there is no section instruction in opt:show.
+Situation B: no section, no data, no effect.
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:show name="sect">
+Foo:
+Eof
+</opt:show>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+
+>>>>data.php
+$view->sect = array();

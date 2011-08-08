@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>get() - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>get()</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-compiler-format.html">Opt_Compiler_Format</a> &raquo; <a href="api.opt-compiler-format.get.html">Opt_Compiler_Format::get()</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.opt-compiler-format.html">7.6. Opt_Compiler_Format class</a><br/>7.6.8. get()</dt><dd class="prev">7.6.7. defined()<br/><a href="api.opt-compiler-format.defined.html">&laquo; Previous</a></dd><dd class="next">7.6.9. getName()<br/><a href="api.opt-compiler-format.get-name.html">Next &raquo;</a></dd></dl>	<h1>7.6.8. get()</h1><div class="tf_reference"><table><tr><th>Status</th><td>final</td></tr><tr><th>Reference</th><td><code>string get(string $name)</code></td></tr></table><hr/></div><p>Returns the PHP code hook with the specified name <code>$name</code> in both the specified format and the formats decorated by it. If the code hook cannot be found, it throws <code>Opt_APIHookNotDefined_Exception</code>.</p>
+
+<blockquote class="error">
+  <p>This method is affected by PHP bug #40479 related to the Zend Engine memory management. It causes the segmentation fault of the interpreter when it attempts to throw an exception. In order not to crash the script, OPT displays the exception using simple <code>die()</code> command rather than throwing it.</p>
+</blockquote>
+
+<h2>Available code hooks</h2>
+
+<p>The code hooks below are used by OPT and are grouped into three feature sets (see <a href="api.opt-compiler-format.supports.html" title="7.6.13. Opt_Compiler_Format::supports()">Opt_Compiler_Format::supports()</a>).</p>
+
+<h2><code>variable</code> feature set</h2>
+
+<dl>
+<dt><code>variable:main</code></dt>
+<dd>The PHP code for the template variable call, for example <code>$templateVariable</code>. The variable name can be read from the format variable <code>item</code>.</dd>
+
+<dt><code>variable:assign</code></dt>
+<dd>The PHP code that assigns a new value to the variable. The value marker is provided in the format variable <code>value</code>.</dd>
+
+<dd>Required, if the <code>item:assign</code> property is set to <strong>true</strong>.</dd>
+</dl>
+
+<h2><code>item</code> feature set</h2>
+
+<dl>
+<dt><code>item:main</code></dt>
+<dd>The PHP code for the container call, for example <code>$container.item.subitem</code>. The code hook is called for each of the container elements separately, because they may be processed by different data formats. The item name can be read from the format variable <code>item</code>.</dd>
+
+<dt><code>item:assign</code></dt>
+<dd>The PHP code that assigns a new value to the item. The value marker is provided in the format variable <code>value</code>.</dd>
+
+<dd>Required, if the <code>item:assign</code> property is set to <strong>true</strong>.</dd>
+</dl>
+
+<h2><code>section</code> feature set</h2>
+
+<p>All the hooks in this feature set have the access to the format variable <code>section</code> that contains all the information on the current section.</p>
+
+<dl>
+<dt><code>section:init</code></dt>
+<dd>The section initialization code hook. It should obtain the list data from the <code>datasource</code> attribute, the parent section, one of the template variables or some other place. The section data <strong>should</strong> be saved into the variable <code>$_sectSECTIONNAME_vals</code>.</dd>
+
+<dt><code>section:isNotEmpty</code></dt>
+<dd>The condition that checks whether the element list is not empty and whether it contains the valid data.</dd>
+
+<dt><code>section:started</code></dt>
+<dd>The PHP code hook executed after checking the condition.</dd>
+
+<dt><code>section:finished</code></dt>
+<dd>The PHP code hook executed before finishing the conditional block.</dd>
+
+<dt><code>section:done</code></dt>
+<dd>The PHP code hook executed after exiting the condition block.</dd>
+
+<dt><code>section:loopBefore</code></dt>
+<dd>The PHP code hook executed before entering the section loop.</dd>
+
+<dt><code>section:startAscLoop</code></dt>
+<dd>The section loop that iterates through the elements in the ascending order.</dd>
+
+<dt><code>section:startDescLoop</code></dt>
+<dd>The section loop that iterates through the elements in the descending order.</dd>
+
+<dt><code>section:endLoop</code></dt>
+<dd>The end of the section loop.</dd>
+
+<dt><code>section:variable</code></dt>
+<dd>The PHP code that retrieves the section item variable, for example <code>$sectionName.variable</code>. If the data format decorates another format, you should order that format to return the code hook <code>item:item</code> for the <code>.variable</code>.</dd>
+
+<dt><code>section:variableAssign</code></dt>
+<dd>The PHP code that assigns a new value to the section variable. The value marker is provided in the format variable <code>value</code>.</dd>
+
+<dd>Required, if the <code>section:variableAssign</code> property is set to <strong>true</strong>.</dd>
+
+<dt><code>section:item</code></dt>
+<dd>The PHP code that returns the whole current section item.</dd>
+
+<dt><code>section:itemAssign</code></dt>
+<dd>The PHP code that assigns a new value to the item. The value marker is provided in the format variable <code>value</code>.</dd>
+
+<dd>Required, if the <code>section:itemAssign</code> property is set to <strong>true</strong>.</dd>
+
+<dt><code>section:reset</code></dt>
+<dd>Resets the section back to the first item.</dd>
+
+<dt><code>section:next</code></dt>
+<dd>Moves to the next section item.</dd>
+
+<dt><code>section:valid</code></dt>
+<dd>Checks if the section item we have moved to, is valid (if it exists etc.)</dd>
+
+<dt><code>section:populate</code></dt>
+<dd>The code hook that moves the section item data from <code>$_sectSECTIONNAME[$_sectNESTING_i]</code> to <code>$_sectSECTIONNAME_v</code>.</dd>
+
+<dt><code>section:count</code></dt>
+<dd>The expression that returns the number of items in the section.</dd>
+
+<dt><code>section:size</code></dt>
+<dd>The expression that returns the number of the variables in the current section item.</dd>
+
+<dt><code>section:iterator</code></dt>
+<dd>The expression that returns the section iterator. The iterator <strong>should</strong> be a variable constructed with this pattern: <code>$_sectNESTING_i</code>. The section nesting level can be read from the <code>section</code> format variable.</dd>
+
+<dt><code>section:isFirst</code></dt>
+<dd>The expression that checks, if the current section item is the first on the list, according to the section order.</dd>
+
+<dt><code>section:isLast</code></dt>
+<dd>The expression that checks, if the current section item is the first on the list, according to the section order.</dd>
+
+<dt><code>section:isExtreme</code></dt>
+<dd>The expression that checks, if the current section item is the first or the last on the list.</dd>
+</dl>
+<dl class="location location-bottom"><dt>7.6.8. get()<br/><a href="api.opt-compiler-format.html">7.6. Opt_Compiler_Format class</a></dt><dd class="prev"><a href="api.opt-compiler-format.defined.html">&laquo; Previous</a><br/>7.6.7. defined()</dd><dd class="next"><a href="api.opt-compiler-format.get-name.html">Next &raquo;</a><br/>7.6.9. getName()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

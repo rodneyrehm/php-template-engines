@@ -1,0 +1,18 @@
+Test checks the prolog generation
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Display the prolog -->
+<opt:root>
+foo
+<opt:prolog />
+foo
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+<?xml version="1.0" standalone="yes" ?>
+foo
+foo

@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>processEvent() - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>processEvent()</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="api.html">API Reference</a> &raquo; <a href="api.opt-component-interface.html">Opt_Component_Interface</a> &raquo; <a href="api.opt-component-interface.process-event.html">Opt_Component_Interface::processEvent()</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="api.opt-component-interface.html">7.22. Opt_Component_Interface</a><br/>7.22.6. processEvent()</dt><dd class="prev">7.22.5. manageAttributes()<br/><a href="api.opt-component-interface.manage-attributes.html">&laquo; Previous</a></dd><dd class="next">7.22.7. set()<br/><a href="api.opt-component-interface.set.html">Next &raquo;</a></dd></dl>	<h1>7.22.6. processEvent()</h1><div class="tf_reference"><table><tr><th>Construct</th><td>Abstract method</td></tr><tr><th>Visibility</th><td>public</td></tr><tr><th>Reference</th><td><code>boolean processEvent($event)</code></td></tr><tr><th>Argument list</th><td><dl><dt><code>$event</code> <small>- $string</small></dt><dd>The event name</dd></dl></td></tr><tr><th>Returned value</th><td>The boolean value indicating if the specified event occured or not.</td></tr></table><hr/></div><p><code>processEvent()</code> is called to ask the component if the specified <code>$event</code> is going to happen. The method must return <strong>true</strong> in order to display the content associated to the specified event, or <strong>false</strong> otherwise. Optionally, it can do some extra stuff. In the example below, we are handling the <strong>error</strong> event. If it happens, the component creates an extra template variable with the error message:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processEvent<span style="color: #009900;">&#40;</span><span style="color: #000088;">$event</span><span style="color: #009900;">&#41;</span> 
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$event</span> <span style="color: #339933;">==</span> <span style="color: #0000ff;">'error'</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">&#40;</span><span style="color: #339933;">!</span><span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">valid</span><span style="color: #009900;">&#41;</span>
+        <span style="color: #009900;">&#123;</span>
+            <span style="color: #666666; font-style: italic;">// An error occurred</span>
+            <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">view</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">errorMessage</span> <span style="color: #339933;">=</span> <span style="color: #000088;">$this</span><span style="color: #339933;">-&gt;</span><span style="color: #004000;">errorMessage</span><span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">return</span> <span style="color: #009900; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #009900; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end processEvent();</span></pre>
+
+<p>Now we can use it in the template:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:component</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;$component&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:onEvent</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;error&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>An error occurred: {$errorMessage}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:onEvent<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:component<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<blockquote class="important">
+  <p>For the unsupported events, <code>processEvent()</code> should return <strong>false</strong>.</p>
+</blockquote>
+<dl class="location location-bottom"><dt>7.22.6. processEvent()<br/><a href="api.opt-component-interface.html">7.22. Opt_Component_Interface</a></dt><dd class="prev"><a href="api.opt-component-interface.manage-attributes.html">&laquo; Previous</a><br/>7.22.5. manageAttributes()</dd><dd class="next"><a href="api.opt-component-interface.set.html">Next &raquo;</a><br/>7.22.7. set()</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

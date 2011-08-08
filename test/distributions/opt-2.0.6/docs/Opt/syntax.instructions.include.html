@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>opt:include - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>opt:include</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="syntax.html">Template syntax</a> &raquo; <a href="syntax.instructions.html">Instructions</a> &raquo; <a href="syntax.instructions.include.html">opt:include</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="syntax.instructions.html">3.7. Instructions</a><br/>3.7.12. opt:include</dt><dd class="prev">3.7.11. opt:if<br/><a href="syntax.instructions.if.html">&laquo; Previous</a></dd><dd class="next">3.7.13. opt:insert<br/><a href="syntax.instructions.insert.html">Next &raquo;</a></dd></dl>	<h1>3.7.12. opt:include</h1><p><code>opt:include</code> executes an external view and displays it in the specified place of the current template. It has three different cases of use.</p>
+
+<h2>Including the statically constructed view</h2>
+
+<p>In this case, the currently executed template constructs a new OPT view, using the specified attributes:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>file</td>
+  <td>string</td>
+  <td>Yes</td>
+  <td align="left">The template to be included</td>
+</tr>
+<tr>
+  <td>default</td>
+  <td>string</td>
+  <td>No</td>
+  <td align="left">The default template, if the template defined in <code>file</code> does not exist.</td>
+</tr>
+<tr>
+  <td>branch</td>
+  <td>string</td>
+  <td>No</td>
+  <td align="left">The inheritance branch used for the included template.</td>
+</tr>
+<tr>
+  <td>import</td>
+  <td>option</td>
+  <td>No</td>
+  <td align="left">If set to <em>yes</em>, the new view imports all the template variables from the current view.</td>
+</tr>
+<tr>
+  <td>*</td>
+  <td>expression</td>
+  <td>No</td>
+  <td align="left">The view arguments that will be visible as variables there.</td>
+</tr>
+</tbody>
+</table>
+
+<p>This case is useful, if we need to include the specified file:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">file</span>=<span style="color: #ff0000;">&quot;left_menu.tpl&quot;</span> <span style="color: #000066;">import</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>As the most important attributes are normal strings, we may change their namespace to <code>parse</code> in order to load their values from a variable:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">parse:file</span>=<span style="color: #ff0000;">&quot;$leftMenuTemplate&quot;</span> <span style="color: #000066;">import</span>=<span style="color: #ff0000;">&quot;yes&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<h2>Including a script-defined view</h2>
+
+<p>Here, the view is already created by the script and all we want to do is to execute it:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>view</td>
+  <td>expression</td>
+  <td>Yes</td>
+  <td align="left">The view to be displayed</td>
+</tr>
+<tr>
+  <td>default</td>
+  <td>string</td>
+  <td>No</td>
+  <td align="left">The default template, if the view template does not exist.</td>
+</tr>
+<tr>
+  <td>branch</td>
+  <td>string</td>
+  <td>No</td>
+  <td align="left">The inheritance branch used for the included template.</td>
+</tr>
+<tr>
+  <td>import</td>
+  <td>option</td>
+  <td>No</td>
+  <td align="left">If set to <em>yes</em>, the new view imports all the template variables from the current view.</td>
+</tr>
+<tr>
+  <td>*</td>
+  <td>expression</td>
+  <td>No</td>
+  <td align="left">The view arguments that will be visible as variables there.</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">view</span>=<span style="color: #ff0000;">&quot;$leftMenuView&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>Here, we do not have to worry about the data for the <code>$leftMenuView</code>. As this view is created by the script, we may assume that the script has already provided the necessary data for it.</p>
+
+<h2>Integrating with sections</h2>
+
+<p><code>opt:include</code> can also integrate with the sections. In this case, the following set of attributes is used:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Name</th>
+  <th>Type</th>
+  <th>Required?</th>
+  <th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>from</td>
+  <td>hard string</td>
+  <td>Yes</td>
+  <td align="left">The existing and currently active section name</td>
+</tr>
+<tr>
+  <td>default</td>
+  <td>string</td>
+  <td>No</td>
+  <td align="left">The default template, if the view template does not exist.</td>
+</tr>
+<tr>
+  <td>branch</td>
+  <td>string</td>
+  <td>No</td>
+  <td align="left">The inheritance branch used for the included template.</td>
+</tr>
+<tr>
+  <td>import</td>
+  <td>option</td>
+  <td>No</td>
+  <td align="left">If set to <em>yes</em>, the new view imports all the template variables from the current view.</td>
+</tr>
+<tr>
+  <td>*</td>
+  <td>expression</td>
+  <td>No</td>
+  <td align="left">The view arguments that will be visible as variables there.</td>
+</tr>
+</tbody>
+</table>
+
+<p>An example:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:section</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;modules&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;div</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;module&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>{$modules.name}<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/h1<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">from</span>=<span style="color: #ff0000;">&quot;modules&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/div<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:section<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>This template allows to load the views from the section and execute them automatically. We assume that the view object is stored under <code>$modules.view</code> variable. The optional attributes give us the possibility to do extra configuration of the loaded views.</p>
+
+<h2>The default content</h2>
+
+<p>If the template we try to execute does not exist, we might deal with it in two ways. The first one is to select an alternative template with <code>default</code> attribute:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">parse:file</span>=<span style="color: #ff0000;">&quot;$template&quot;</span> <span style="color: #000066;">default</span>=<span style="color: #ff0000;">&quot;default_template.tpl&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+<p>Alternatively, we may define the default content directly in <code>opt:include</code>:</p>
+
+<pre class="xml"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;opt:include</span> <span style="color: #000066;">parse:file</span>=<span style="color: #ff0000;">&quot;$template&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>We are sorry, but the template {$template} does not exist.<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/p<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/opt:include<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+<dl class="location location-bottom"><dt>3.7.12. opt:include<br/><a href="syntax.instructions.html">3.7. Instructions</a></dt><dd class="prev"><a href="syntax.instructions.if.html">&laquo; Previous</a><br/>3.7.11. opt:if</dd><dd class="next"><a href="syntax.instructions.insert.html">Next &raquo;</a><br/>3.7.13. opt:insert</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

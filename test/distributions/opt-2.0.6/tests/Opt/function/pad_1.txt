@@ -1,0 +1,23 @@
+Testing the pad() function.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{pad('foo', 6, '=', 'right')}
+{pad('foo', 6, '=', 'left')}
+{pad('foo', 6, '=', 'both')}
+{pad('foobarjoe', 6, '=', 'right')}
+{pad('foobarjoe', 6, '=', 'left')}
+{pad('foobarjoe', 6, '=', 'both')}
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+foo===
+===foo
+=foo==
+foobarjoe
+foobarjoe
+foobarjoe

@@ -1,0 +1,11 @@
+Check invalid closing tag order.
+
+>>>>templates/test.tpl
+<?xml version="1.0"?>
+<table>
+<tr>
+<td>Show something</td>
+</table>
+
+>>>>expected.txt
+Opt_XmlInvalidOrder_Exception

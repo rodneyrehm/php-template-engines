@@ -1,0 +1,22 @@
+Testing the strip() function in the aggregate version.
+
+>>>>templates/test.tpl
+<?xml version="1.0" ?>
+<opt:root>
+{@vars is strip($vars)}
+<opt:if test="@vars.v1 eq 'this is a test'">OK<opt:else>FAIL</opt:else></opt:if>
+<opt:if test="@vars.v2 eq 'this is a test'">OK<opt:else>FAIL</opt:else></opt:if>
+</opt:root>
+
+>>>>data.php
+$view->vars = array(
+	'v1' => '    this	   is  a test ',
+	'v2' => ' this		is   a        test'
+);
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+OK
+OK

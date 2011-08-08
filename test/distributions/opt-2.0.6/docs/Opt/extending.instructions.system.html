@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="all" />
+
+	<title>$system special variable - Open Power Template</title>
+	
+	<link rel="stylesheet" type="text/css" href="design/generic.css" media="all"  />
+	<link rel="stylesheet" type="text/css" href="design/print.css" media="print" />
+	<!--[if lte IE 6]><link rel="stylesheet" href="design/ie.css" type="text/css" /><![endif]-->	
+	<!--[if IE 7]><link rel="stylesheet" href="design/ie7.css" type="text/css" /><![endif]-->
+</head>
+<body>
+
+<div id="wrap">
+	<div id="header">
+		<h1>Open Power Template 2.0</h1>
+		<h2>$system special variable</h2>
+		<p class="generated">@ 02.09.2010</p>
+		<p class="location"><a href="index.html"><strong>User manual</strong></a> &raquo; <a href="extending.html">Extending OPT</a> &raquo; <a href="extending.instructions.html">New instructions</a> &raquo; <a href="extending.instructions.system.html">$system special variable</a></p>
+	</div>
+	
+	<div id="content"><dl class="location"><dt><a href="extending.instructions.html">5.8. New instructions</a><br/>5.8.5. $system special variable</dt><dd class="prev">5.8.4. XML manipulations<br/><a href="extending.instructions.xml-manipulations.html">&laquo; Previous</a></dd><dd class="next">5.8.6. Using the data formats<br/><a href="extending.instructions.data-formats.html">Next &raquo;</a></dd></dl>	<h1>5.8.5. $system special variable</h1><p>The instruction processors are allowed to extend the <code>$system</code> special variable. OPT redirects the <code>$system.PROCESSORNAME</code> calls to the specified processor. The processor name can be found in the <code>$_name</code> protected class field:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">class</span> Opt_Instruction_MyInstruction <span style="color: #000000; font-weight: bold;">extends</span> Opt_Compiler_Processor
+<span style="color: #009900;">&#123;</span>
+    protected <span style="color: #000088;">$_name</span> <span style="color: #339933;">=</span> <span style="color: #0000ff;">'PROCESSORNAME'</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #666666; font-style: italic;">// ...</span>
+&nbsp;
+<span style="color: #009900;">&#125;</span> <span style="color: #666666; font-style: italic;">// end Opt_Instruction_MyInstruction;</span></pre>
+
+<p>The method that handles the special variable is called <code>processSystemVar()</code> and takes an array as the only argument. The array is simply the special variable call (i.e. <code>$system.PROCESSORNAME.something</code>) exploded with a dot:</p>
+
+<pre class="php"><span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">function</span> processSystemVar<span style="color: #009900;">&#40;</span><span style="color: #000088;">$system</span><span style="color: #009900;">&#41;</span>
+<span style="color: #009900;">&#123;</span>
+    <span style="color: #666666; font-style: italic;">// Determine the action using the third element of the call.</span>
+    <span style="color: #b1b100;">switch</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$system</span><span style="color: #009900;">&#91;</span>2<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span>
+    <span style="color: #009900;">&#123;</span>
+        <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'foo'</span><span style="color: #339933;">:</span>
+            <span style="color: #b1b100;">return</span> doSomething<span style="color: #009900;">&#40;</span><span style="color: #000088;">$system</span><span style="color: #009900;">&#91;</span>3<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">case</span> <span style="color: #0000ff;">'bar'</span><span style="color: #339933;">:</span>
+            <span style="color: #b1b100;">return</span> doSomethingElse<span style="color: #009900;">&#40;</span><span style="color: #000088;">$system</span><span style="color: #009900;">&#91;</span>3<span style="color: #009900;">&#93;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #0000ff;">''</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">&#125;</span></pre>
+
+<p>The method must return a valid PHP expression code that the special variable will be replaced with.</p>
+
+<blockquote class="information">
+  <p>The expression does not have to provide the write-access, as saving the values to the <code>$system</code> special variable is disabled.</p>
+</blockquote>
+<dl class="location location-bottom"><dt>5.8.5. $system special variable<br/><a href="extending.instructions.html">5.8. New instructions</a></dt><dd class="prev"><a href="extending.instructions.xml-manipulations.html">&laquo; Previous</a><br/>5.8.4. XML manipulations</dd><dd class="next"><a href="extending.instructions.data-formats.html">Next &raquo;</a><br/>5.8.6. Using the data formats</dd></dl>		</div>
+	
+	<div id="footer">
+		<p>Copyright &copy; <a href="http://www.invenzzia.org/">Invenzzia Group 2008-2009</a></p>
+		<p>Available under the terms of license: <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation License 1.2</a></p>
+		<p>Generated by <strong>TypeFriendly 0.1.4</strong> by <a href="http://www.invenzzia.org/">Invenzzia</a></p>
+	</div>
+</div>
+
+</body>
+</html>

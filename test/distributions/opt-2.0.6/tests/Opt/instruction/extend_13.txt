@@ -1,0 +1,35 @@
+Does the inheritance interferes with some compiler systems used with opt:root include?
+
+>>>>templates/test.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:extend file="extended1.tpl">
+<opt:snippet name="extending">
+EXTENDING SNIPPET
+</opt:snippet>
+</opt:extend>
+
+>>>>templates/extended1.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root include="included.tpl">
+BEGIN
+<opt:insert snippet="included" />
+<opt:insert snippet="extending" />
+END
+</opt:root>
+
+>>>>templates/included.tpl
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<opt:root>
+<opt:snippet name="included">
+INCLUDED SNIPPET
+</opt:snippet>
+</opt:root>
+
+>>>>expected.txt
+OUTPUT
+
+>>>>result.txt
+BEGIN
+INCLUDED SNIPPET
+EXTENDING SNIPPET
+END
