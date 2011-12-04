@@ -1,0 +1,18 @@
+Smarty 3.2 Notes
+================
+
+Enhancements
+------------
+
+    $cache_modified_check
+Befor 3.2 the brower cache was not used with cached subtemplates which did have individual cache_lifetime.
+Smarty 3.2 does now also check the update time of each cached subtemplate. 
+
+
+Default settings
+----------------
+
+    $merge_compiled_include
+For maximum redering speed this option is enabled now by default.
+Because of this you will no longer see compiled template files in $compile_dir as the compiled code
+is merged into the compiled main templates.

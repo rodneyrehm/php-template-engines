@@ -1,0 +1,1 @@
+<li> {{ loop.index }} : {{ item }} </li>

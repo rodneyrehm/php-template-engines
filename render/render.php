@@ -62,3 +62,7 @@ foreach ($__distributions as $distribution => $data) {
 $smarty->assign('tests', $__tests);
 $t = $smarty->fetch('test.tpl');
 file_put_contents($base . 'htdocs/tests.html', $t);
+
+$smarty->assign('distributions', $distributions);
+$t = $smarty->fetch('index.tpl');
+file_put_contents($base . 'htdocs/index.html', $t);

@@ -1,0 +1,1 @@
+<li>{$key}: {$value}</li>

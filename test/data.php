@@ -12,7 +12,10 @@ $distributions = array(
     'smarty-2.6' => true,
     'smarty-3.0' => true,
     'smarty-3.1' => true,
+    'smarty-3.1.6' => true,
+    'smarty-3.2' => true,
     // 'twig-1.1.1' => true,
+    // 'twig-1.2.0' => true,
 );
 
 /*
@@ -28,7 +31,7 @@ $tests = array(
     'Loop' => array(10, 100, 1000),
     'Assign' => array(10, 100, 1000),
     'LoopInclude' => array(1, 10, 100),
-    'TemplateInheritance' => array(1,2,3),
+    //'TemplateInheritance' => array(1,2,3),
 );
 
 /*
