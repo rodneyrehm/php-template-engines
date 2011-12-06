@@ -2,6 +2,9 @@
 
 define('INIT_MEMORY', memory_get_usage());
 
+set_time_limit(0);
+// need to up the memory limit…
+
 require_once dirname(__FILE__) . '/data.php';
 $methods = array("prepare" => true, "evaluate" => true, "teardown" => true);
 

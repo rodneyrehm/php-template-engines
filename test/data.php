@@ -28,9 +28,9 @@ $distributions = array(
  * but do extremely miserable for higher factors (say handle 1000 variables)
  */
 $tests = array(
-    'Loop' => array(10, 100, 1000, 10000, 100000),
-    'Assign' => array(10, 100, 1000, 10000, 100000),
-    'LoopInclude' => array(1, 10, 100, 10000, 100000),
+    'Loop' => array(10, 100, 1000, 10000),
+    'Assign' => array(10, 100, 1000, 10000),
+    'LoopInclude' => array(1, 10, 100, 10000),
     //'TemplateInheritance' => array(1,2,3),
 );
 
