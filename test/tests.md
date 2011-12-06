@@ -41,3 +41,10 @@ I hope Federico is not taking this too personally, but phpcomparison.net is wron
 Aside from that, phpcomparison.net is only showing some very primitive scenarios. Assigning and looping some data may be the fundamental thing we do with templates engines, but heck, if it were only that, I didn't need an engine for the job.
 
 I'm still trying to avoid any sorts of pissing contests. Authors of other engines may take these results into consideration for improvement. They also may contact me if their respective test cases could be improved by design. I'm not firm in all engines, so the tests are pretty much copypasted examples from their sites.
+
+
+## Test helpers ##
+
+```
+php -r 'for($i=1; $i <= 10000; $i++) printf("<li>{\$value_$i}</li>\n");' | pbcopy
+```
