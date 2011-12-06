@@ -249,9 +249,9 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         }
         if ($parent_scope == Smarty::SCOPE_LOCAL) {
             $tpl->tpl_vars = clone $this->tpl_vars;
-            $tpl->tpl_vars->__smarty__data = $tpl;
+            $tpl->tpl_vars->___smarty__data = $tpl;
             $tpl->config_vars =  clone $this->config_vars;
-            $tpl->config_vars->__smarty__data = $tpl;
+            $tpl->config_vars->___smarty__data = $tpl;
         } elseif ($parent_scope == Smarty::SCOPE_PARENT) {
             $tpl->tpl_vars = $this->tpl_vars;
             $tpl->config_vars = $this->config_vars;
@@ -262,16 +262,14 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                 $tpl->tpl_vars = $scope_ptr->tpl_vars;
                 $tpl->config_vars = $scope_ptr->config_vars;
             } else {
-                $tpl->tpl_vars = new Smarty_Variable_Container();
-                $tpl->tpl_vars->__smarty__data = $tpl;
-                $tpl->config_vars = new Smarty_Config_Variable_Container();
-                $tpl->config_vars->__smarty__data = $tpl;
+                $tpl->tpl_vars = new Smarty_Variable_Container($tpl);
+                $tpl->config_vars = new Smarty_Config_Variable_Container($pl);
             }
         }
         if (!empty($data)) {
             // set up variable values
             foreach ($data as $_key => $_val) {
-                $tpl->tpl_vars->$_key = new Smarty_variable($_val);
+                $tpl->tpl_vars->$_key = $_val;
             }
         }
         $result = $tpl->fetch(null, null, null, null, false, true, false);
@@ -301,9 +299,9 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
         // get variables from calling scope
         if ($parent_scope == Smarty::SCOPE_LOCAL) {
             $tpl->tpl_vars = clone $this->tpl_vars;
-            $tpl->tpl_vars->__smarty__data = $tpl;
+            $tpl->tpl_vars->___smarty__data = $tpl;
             $tpl->config_vars =  clone $this->config_vars;
-            $tpl->config_vars->__smarty__data = $tpl;
+            $tpl->config_vars->___smarty__data = $tpl;
         } elseif ($parent_scope == Smarty::SCOPE_PARENT) {
             $tpl->tpl_vars = $this->tpl_vars;
             $tpl->config_vars = $this->config_vars;
@@ -314,16 +312,14 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
                 $tpl->tpl_vars = $scope_ptr->tpl_vars;
                 $tpl->config_vars = $scope_ptr->config_vars;
             } else {
-                $tpl->tpl_vars = new Smarty_Variable_Container();
-                $tpl->tpl_vars->__smarty__data = $tpl;
-                $tpl->config_vars = new Smarty_Config_Variable_Container();
-                $tpl->config_vars->__smarty__data = $tpl;
+                $tpl->tpl_vars = new Smarty_Variable_Container($tpl);
+                $tpl->config_vars = new Smarty_Config_Variable_Container($pl);
             }
         }
         if (!empty($data)) {
             // set up variable values
             foreach ($data as $_key => $_val) {
-                $tpl->tpl_vars->$_key = new Smarty_variable($_val);
+                $tpl->tpl_vars->$_key = $_val;
             }
         }
         return $tpl;
@@ -504,14 +500,11 @@ class Smarty_Internal_Template extends Smarty_Internal_TemplateBase {
      */
     public function createLocalArrayVariable($tpl_var, $nocache = false)
     {
-        $this->tpl_vars->$tpl_var = $this->getVariable($tpl_var, null, true, false);
-        if ($this->tpl_vars->$tpl_var instanceof Undefined_Smarty_Variable) {
-            $this->tpl_vars->$tpl_var = new Smarty_variable(array(), $nocache);
-        } else {
-            $this->tpl_vars->$tpl_var = clone $this->tpl_vars->$tpl_var;
-        }
-        if (!(is_array($this->tpl_vars->$tpl_var->value) || $this->tpl_vars->$tpl_var->value instanceof ArrayAccess)) {
-            settype($this->tpl_vars->$tpl_var->value, 'array');
+            $this->tpl_vars->$tpl_var = $this->getVariable($tpl_var, null, true, false);
+                    $key = '___nocache_'.$tpl_var;
+                    $this->tpl_vars->$key = $nocache;
+        if (!(is_array($this->tpl_vars->$tpl_var) || $this->tpl_vars->$tpl_var instanceof ArrayAccess)) {
+            settype($this->tpl_vars->$tpl_var, 'array');
         }
     }
 

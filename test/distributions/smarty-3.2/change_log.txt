@@ -1,4 +1,8 @@
 ﻿===== Smarty 3.2-DEV  =====
+5.12.2011
+- major change: template variable and its properties are no longer stored in Smarty_Variable objects but as
+  as property of the variable container
+
 1.12.2011
 - add template namespace support for constant and function
 - enable $merge_compiled_includes by default for maximum rendering speed

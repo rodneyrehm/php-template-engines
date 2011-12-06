@@ -53,27 +53,27 @@ class Smarty_Internal_Compile_For extends Smarty_Internal_CompileBase {
             $var2 = trim($_attr['var'],'\'"');
             foreach ($_attr['start'] as $_statement) {
                 $var = trim($_statement['var'],'\'"');
-                $output .= " \$_smarty_tpl->tpl_vars->{$var} = new Smarty_Variable($_statement[value]);\n";
+                $output .= " \$_smarty_tpl->tpl_vars->{$var} = {$_statement['value']};\n";
             }
-            $output .= "  if ($_attr[ifexp]){ for (\$_foo=true;$_attr[ifexp]; \$_smarty_tpl->tpl_vars->{$var2}->value$_attr[step]){\n";
+            $output .= "  if ({$_attr['ifexp']}){ for (\$_foo=true;{$_attr['ifexp']}; \$_smarty_tpl->tpl_vars->{$var2}{$_attr['step']}){\n";
         } else {
             $_statement = $_attr['start'];
             $var = trim($_statement['var'],'\'"');
-            $output .= "\$_smarty_tpl->tpl_vars->{$var} = new Smarty_Variable;";
+            $output .= "\$_smarty_tpl->tpl_vars->{$var} = null;";
             if (isset($_attr['step'])) {
-                $output .= "\$_smarty_tpl->tpl_vars->{$var}->step = $_attr[step];";
+                $output .= "\$_smarty_tpl->tpl_vars->___step_{$var} = {$_attr['step']};";
             } else {
-                $output .= "\$_smarty_tpl->tpl_vars->{$var}->step = 1;";
+                $output .= "\$_smarty_tpl->tpl_vars->___step_{$var} = 1;";
             }
             if (isset($_attr['max'])) {
-                $output .= "\$_smarty_tpl->tpl_vars->{$var}->total = (int)min(ceil((\$_smarty_tpl->tpl_vars->{$var}->step > 0 ? $_attr[to]+1 - ($_statement[value]) : $_statement[value]-($_attr[to])+1)/abs(\$_smarty_tpl->tpl_vars->{$var}->step)),$_attr[max]);\n";
+                $output .= "\$_smarty_tpl->tpl_vars->___total_{$var} = (int)min(ceil((\$_smarty_tpl->tpl_vars->___step_{$var} > 0 ? {$_attr['to']}+1 - ({$_statement['value']}) : {$_statement['value']}-({$_attr['to']})+1)/abs(\$_smarty_tpl->tpl_vars->___step_{$var})),{$_attr['max']});\n";
             } else {
-                $output .= "\$_smarty_tpl->tpl_vars->{$var}->total = (int)ceil((\$_smarty_tpl->tpl_vars->{$var}->step > 0 ? $_attr[to]+1 - ($_statement[value]) : $_statement[value]-($_attr[to])+1)/abs(\$_smarty_tpl->tpl_vars->{$var}->step));\n";
+                $output .= "\$_smarty_tpl->tpl_vars->___total_{$var} = (int)ceil((\$_smarty_tpl->tpl_vars->___step_{$var} > 0 ? {$_attr['to']}+1 - ({$_statement['value']}) : {$_statement['value']}-({$_attr['to']})+1)/abs(\$_smarty_tpl->tpl_vars->___step_{$var}));\n";
             }
-            $output .= "if (\$_smarty_tpl->tpl_vars->{$var}->total > 0){\n";
-            $output .= "for (\$_smarty_tpl->tpl_vars->{$var}->value = $_statement[value], \$_smarty_tpl->tpl_vars->{$var}->iteration = 1;\$_smarty_tpl->tpl_vars->{$var}->iteration <= \$_smarty_tpl->tpl_vars->{$var}->total;\$_smarty_tpl->tpl_vars->{$var}->value += \$_smarty_tpl->tpl_vars->{$var}->step, \$_smarty_tpl->tpl_vars->{$var}->iteration++){\n";
-            $output .= "\$_smarty_tpl->tpl_vars->{$var}->first = \$_smarty_tpl->tpl_vars->{$var}->iteration == 1;";
-            $output .= "\$_smarty_tpl->tpl_vars->{$var}->last = \$_smarty_tpl->tpl_vars->{$var}->iteration == \$_smarty_tpl->tpl_vars->{$var}->total;";
+            $output .= "if (\$_smarty_tpl->tpl_vars->___total_{$var} > 0){\n";
+            $output .= "for (\$_smarty_tpl->tpl_vars->{$var} = {$_statement['value']}, \$_smarty_tpl->tpl_vars->___iteration_{$var} = 1;\$_smarty_tpl->tpl_vars->___iteration_{$var} <= \$_smarty_tpl->tpl_vars->___total_{$var};\$_smarty_tpl->tpl_vars->{$var} += \$_smarty_tpl->tpl_vars->___step_{$var}, \$_smarty_tpl->tpl_vars->___iteration_{$var}++){\n";
+            $output .= "\$_smarty_tpl->tpl_vars->___first_{$var} = \$_smarty_tpl->tpl_vars->___iteration_{$var} == 1;";
+            $output .= "\$_smarty_tpl->tpl_vars->___last_{$var} = \$_smarty_tpl->tpl_vars->___iteration_{$var} == \$_smarty_tpl->tpl_vars->___total_{$var};";
         }
         $output .= "?>";
 

@@ -200,7 +200,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
             $_output .= $compiler->smarty->merged_templates_func[$tpl_name]['func']. "(\$_smarty_tpl);\n";
             $_output .= "unset(\$_smarty_tpl->tpl_vars, \$_smarty_tpl->config_vars, \$_smarty_tpl);\$_smarty_tpl = array_pop(\$_tpl_stack); ";
             if (isset($_assign)) {
-                $_output .= " \$_smarty_tpl->tpl_vars->{$_assign} = new Smarty_variable(ob_get_clean());";
+                $_output .= " \$_smarty_tpl->tpl_vars->{$_assign} = ob_get_clean();";
             }
             $_output .= "\n/*  End of included template \"" . $tpl_name . "\" */\n?>";
             return $_output;
@@ -208,7 +208,7 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
 
         // was there an assign attribute
         if (isset($_assign)) {
-            $_output = "<?php \$_smarty_tpl->tpl_vars->{$_assign} = new Smarty_variable(\$_smarty_tpl->getSubTemplate ($include_file, $_cache_id, $_compile_id, $_caching, $_cache_lifetime, $_vars, $_parent_scope));?>\n";;
+            $_output = "<?php \$_smarty_tpl->tpl_vars->{$_assign} = \$_smarty_tpl->getSubTemplate ($include_file, $_cache_id, $_compile_id, $_caching, $_cache_lifetime, $_vars, $_parent_scope);?>\n";;
         } else {
             $_output = "<?php echo \$_smarty_tpl->getSubTemplate ($include_file, $_cache_id, $_compile_id, $_caching, $_cache_lifetime, $_vars, $_parent_scope);?>\n";
         }

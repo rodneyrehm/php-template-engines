@@ -35,8 +35,8 @@ class Smarty_Internal_Function_Call_Handler {
         if (!is_callable($_function)) {
             $_code = "function {$_function}(\$_smarty_tpl,\$params) {
     \$saved_tpl_vars = clone \$_smarty_tpl->tpl_vars;
-    foreach (\$_smarty_tpl->smarty->template_functions['{$_name}']['parameter'] as \$key => \$value) {\$_smarty_tpl->tpl_vars->\$key = new Smarty_variable(\$value);};
-    foreach (\$params as \$key => \$value) {\$_smarty_tpl->tpl_vars->\$key = new Smarty_variable(\$value);}?>";
+    foreach (\$_smarty_tpl->smarty->template_functions['{$_name}']['parameter'] as \$key => \$value) {\$_smarty_tpl->tpl_vars->\$key = \$value;};
+    foreach (\$params as \$key => \$value) {\$_smarty_tpl->tpl_vars->\$key = \$value;}?>";
             if ($_nocache) {
                 $echo = "echo \\'/\*%%SmartyNocache:{$_template->smarty->template_functions[$_name]['nocache_hash']}%%\*/";
                 $end = "/\*/%%SmartyNocache:{$_template->smarty->template_functions[$_name]['nocache_hash']}%%\*/\\';";

@@ -47,10 +47,8 @@ class Smarty_Internal_Data {
     */
     function __construct ()
     {
-        $this->tpl_vars = new Smarty_Variable_Container();
-        $this->tpl_vars->__smarty__data = $this;
-        $this->config_vars = new Smarty_Config_Variable_Container();
-        $this->config_vars->__smarty__data = $this;
+        $this->tpl_vars = new Smarty_Variable_Container($this);
+        $this->config_vars = new Smarty_Config_Variable_Container($this);
     }
 
     /**
@@ -67,12 +65,14 @@ class Smarty_Internal_Data {
         if (is_array($tpl_var)) {
             foreach ($tpl_var as $_key => $_val) {
                 if ($_key != '') {
-                    $this->tpl_vars->$_key = new Smarty_variable($_val, $nocache);
+                    $this->tpl_vars->$_key = $_val;
+                    $this->tpl_vars->{'___nocache_'.$_key} = $nocache;
                 }
             }
         } else {
             if ($tpl_var != '') {
-                $this->tpl_vars->$tpl_var = new Smarty_variable($value, $nocache);
+                $this->tpl_vars->$tpl_var = $value;
+                $this->tpl_vars->{'___nocache_'.$tpl_var} = $nocache;
             }
         }
 
@@ -90,7 +90,8 @@ class Smarty_Internal_Data {
     public function assignGlobal($varname, $value = null, $nocache = false)
     {
         if ($varname != '') {
-            Smarty::$global_tpl_vars->$varname = new Smarty_variable($value, $nocache);
+            Smarty::$global_tpl_vars->$varname = $value;
+            Smarty::$global_tpl_vars->{'___nocache_'.$varname} = $nocache;
         }
 
         return $this;
@@ -106,8 +107,9 @@ class Smarty_Internal_Data {
     public function assignByRef($tpl_var, &$value, $nocache = false)
     {
         if ($tpl_var != '') {
-            $this->tpl_vars->$tpl_var = new Smarty_variable(null, $nocache);
-            $this->tpl_vars->$tpl_var->value = &$value;
+            $this->tpl_vars->$tpl_var = null;
+            $this->tpl_vars->$tpl_var = &$value;
+            $this->tpl_vars->{'___nocache_'.$tpl_var} = $nocache;
         }
 
         return $this;
@@ -129,44 +131,40 @@ class Smarty_Internal_Data {
             foreach ($tpl_var as $_key => $_val) {
                 if ($_key != '') {
                     if (!isset($this->tpl_vars->$_key)) {
-                        $tpl_var_inst = $this->getVariable($_key, null, true, false);
-                        if ($tpl_var_inst instanceof Undefined_Smarty_Variable) {
-                            $this->tpl_vars->$_key = new Smarty_variable(null, $nocache);
-                        } else {
-                            $this->tpl_vars->$_key = clone $tpl_var_inst;
+                        $this->tpl_vars->$_key = $this->getVariable($_key, null, true, false);
+                        if ($this->tpl_vars->$_key === null) {
+                            $this->tpl_vars->{'___nocache_'.$_key} = $nocache;
                         }
                     }
-                    if (!(is_array($this->tpl_vars->$_key->value) || $this->tpl_vars->$_key->value instanceof ArrayAccess)) {
-                        settype($this->tpl_vars->$_key->value, 'array');
+                    if (!(is_array($this->tpl_vars->$_key) || $this->tpl_vars->$_key instanceof ArrayAccess)) {
+                        settype($this->tpl_vars->$_key, 'array');
                     }
                     if ($merge && is_array($_val)) {
                         foreach($_val as $_mkey => $_mval) {
-                            $this->tpl_vars->$_key->value[$_mkey] = $_mval;
+                            $this->tpl_vars->{$_key}[$_mkey] = $_mval;
                         }
                     } else {
-                        $this->tpl_vars->$_key->value[] = $_val;
+                        $this->tpl_vars->{$_key}[] = $_val;
                     }
                 }
             }
         } else {
             if ($tpl_var != '' && isset($value)) {
                 if (!isset($this->tpl_vars->$tpl_var)) {
-                    $tpl_var_inst = $this->getVariable($tpl_var, null, true, false);
-                    if ($tpl_var_inst instanceof Undefined_Smarty_Variable) {
-                        $this->tpl_vars->$tpl_var = new Smarty_variable(null, $nocache);
-                    } else {
-                        $this->tpl_vars->$tpl_var = clone $tpl_var_inst;
+                    $this->tpl_vars->$tpl_var = $this->getVariable($tpl_var, null, true, false);
+                    if ($this->tpl_vars->$tpl_var === null) {
+                        $this->tpl_vars->{'___nocache_'.$tpl_var} = $nocache;
                     }
                 }
-                if (!(is_array($this->tpl_vars->$tpl_var->value) || $this->tpl_vars->$tpl_var->value instanceof ArrayAccess)) {
-                    settype($this->tpl_vars->$tpl_var->value, 'array');
+                if (!(is_array($this->tpl_vars->$tpl_var) || $this->tpl_vars->$tpl_var instanceof ArrayAccess)) {
+                    settype($this->tpl_vars->$tpl_var, 'array');
                 }
                 if ($merge && is_array($value)) {
                     foreach($value as $_mkey => $_mval) {
-                        $this->tpl_vars->$tpl_var->value[$_mkey] = $_mval;
+                        $this->tpl_vars->{$tpl_var}[$_mkey] = $_mval;
                     }
                 } else {
-                    $this->tpl_vars->$tpl_var->value[] = $value;
+                    $this->tpl_vars->{$tpl_var}[] = $value;
                 }
             }
         }
@@ -186,17 +184,21 @@ class Smarty_Internal_Data {
     {
         if ($tpl_var != '' && isset($value)) {
             if (!isset($this->tpl_vars->$tpl_var)) {
-                $this->tpl_vars->$tpl_var = new Smarty_variable();
+                $this->tpl_vars->$tpl_var = array();
+                $this->tpl_vars->{'___nocache_'.$tpl_var} = false;
             }
-            if (!@is_array($this->tpl_vars->$tpl_var->value)) {
-                settype($this->tpl_vars->$tpl_var->value, 'array');
+            if (!@is_array($this->tpl_vars->$tpl_var)) {
+                settype($this->tpl_vars->$tpl_var, 'array');
             }
             if ($merge && is_array($value)) {
                 foreach($value as $_key => $_val) {
-                    $this->tpl_vars->$tpl_var->value[$_key] = &$value[$_key];
+                    $this->tpl_vars->{$tpl_var}[$_key] = null;
+                    $this->tpl_vars->{$tpl_var}[$_key] = &$value[$_key];
                 }
             } else {
-                $this->tpl_vars->$tpl_var->value[] = &$value;
+                $c = count($this->tpl_vars->$tpl_var);
+                $this->tpl_vars->{$tpl_var}[$c] = null;
+                $this->tpl_vars->{$tpl_var}[$c] = &$value;
             }
         }
 
@@ -228,9 +230,8 @@ class Smarty_Internal_Data {
     */
     public function clearAllAssign()
     {
-        $this->tpl_vars = new Smarty_Variable_Container();
-        $this->tpl_vars->__smarty__data = $this;
-        return $this;
+        $this->tpl_vars = new Smarty_Variable_Container($this);
+       return $this;
     }
 
     /**
@@ -244,20 +245,15 @@ class Smarty_Internal_Data {
     public function getTemplateVars($varname = null, $_ptr = null, $search_parents = true)
     {
         if (isset($varname)) {
-            $_var = $this->getVariable($varname, $_ptr, $search_parents, false);
-            if (is_object($_var)) {
-                return $_var->value;
-            } else {
-                return null;
-            }
+            return $this->getVariable($varname, $_ptr, $search_parents, false);
         } else {
             $_result = array();
             if ($_ptr === null) {
                 $_ptr = $this;
             } while ($_ptr !== null) {
                 foreach ($_ptr->tpl_vars AS $key => $var) {
-                    if ($key != '__smarty__data' && !array_key_exists($key, $_result)) {
-                        $_result[$key] = $var->value;
+                    if (strpos($key, '___') !== 0 && !array_key_exists($key, $_result)) {
+                        $_result[$key] = $var;
                     }
                 }
                 // not found, try at parent
@@ -269,8 +265,8 @@ class Smarty_Internal_Data {
             }
             if ($search_parents && isset(Smarty::$global_tpl_vars)) {
                 foreach (Smarty::$global_tpl_vars AS $key => $var) {
-                    if ($key != '__smarty__data' && !array_key_exists($key, $_result)) {
-                        $_result[$key] = $var->value;
+                    if (strpos($key, '___') !== 0 && !array_key_exists($key, $_result)) {
+                        $_result[$key] = $var;
                     }
                 }
             }
@@ -307,10 +303,14 @@ class Smarty_Internal_Data {
             // found it, return it
             return Smarty::$global_tpl_vars->$_variable;
         }
+        // no unassigned handling for properties
+        if (strpos($_variable,'___') === 0) {
+            return null;
+        }
         if (isset($this->smarty->default_variable_handler_func)) {
             $value = null;
             if (call_user_func_array($this->smarty->default_variable_handler_func,array($_variable, &$value, $this))) {
-                return new Smarty_Variable($value);
+                return $value;
             }
         }
         if ($this->smarty->error_unassigned != Smarty::UNASSIGNED_IGNORE && $error_enable) {
@@ -322,7 +322,7 @@ class Smarty_Internal_Data {
                 throw new SmartyRunTimeException($err_msg, $this);
             }
         }
-        return new Undefined_Smarty_Variable;
+        return null;
     }
     /**
     * Returns a single or all config variables
@@ -339,7 +339,7 @@ class Smarty_Internal_Data {
             $_ptr = $this;
             while ($_ptr !== null) {
                 foreach ($_ptr->config_vars AS $key => $value) {
-                    if ($key != '__smarty__data' && !array_key_exists($key, $_result)) {
+                    if ($key != '___smarty__data' && !array_key_exists($key, $_result)) {
                         $_result[$key] = $value;
                     }
                 }
@@ -410,7 +410,7 @@ class Smarty_Internal_Data {
             unset($this->config_vars->$varname);
         } else {
             foreach($this->config_vars as $key => $var) {
-                if ($key != '__smarty__data') {
+                if ($key != '___smarty__data') {
                     unset($this->config_vars->$key);
                 }
             }
@@ -492,7 +492,8 @@ class Smarty_Data extends Smarty_Internal_Data {
         } elseif (is_array($_parent)) {
             // set up variable values
             foreach ($_parent as $_key => $_val) {
-                $this->tpl_vars->$_key = new Smarty_variable($_val);
+                $this->tpl_vars->$_key = $_val;
+                $this->tpl_vars->{'___nocache_'.$_key} = false;
             }
         } elseif ($_parent != null) {
             throw new SmartyException("Wrong type for template variables");
@@ -507,16 +508,22 @@ class Smarty_Data extends Smarty_Internal_Data {
 * This class holds all assigned variables
 */
 class Smarty_Variable_Container {
-    // pointer to parent object
-    public $__smarty__data = null;
+    /**
+    * constructor to create backlink to Smarty|Smarty_Internal_Template|Smarty_Data
+    *
+    */
+    public function __construct ($object = null)
+    {
+        $this->___smarty__data = $object;
+    }
 
     /**
-    *
     * magic __get function to get variable not know in current scope
+    *
     */
     public function __get($_variable)
     {
-        return $this->$_variable = $this->__smarty__data->getVariable($_variable, $this->__smarty__data->parent);
+        return $this->$_variable = $this->___smarty__data->getVariable($_variable, $this->___smarty__data->parent);
     }
 }
 
@@ -526,77 +533,23 @@ class Smarty_Variable_Container {
 * This class holds all loaded config variables
 */
 class Smarty_Config_Variable_Container {
-    // pointer to parent object
-    public $__smarty__data = null;
 
     /**
+    * constructor to create backlink to Smarty|Smarty_Internal_Template|Smarty_Data
     *
+    */
+    public function __construct ($object = null)
+    {
+        $this->___smarty__data = $object;
+    }
+
+    /**
     * magic __get function to get variable not know in current scope
+    *
     */
     public function __get($_variable)
     {
-        return $this->$_variable = $this->__smarty__data->getConfigVariable($_variable, $this->__smarty__data->parent);
+        return $this->$_variable = $this->___smarty__data->getConfigVariable($_variable, $this->___smarty__data->parent);
     }
 }
-
-/**
-* class for the Smarty variable object
-*
-* This class defines the Smarty variable object
-*
-* @package Smarty
-* @subpackage Template
-*/
-class Smarty_Variable {
-
-    /**
-    * template variable
-    *
-    * @var mixed
-    */
-    public $value = null;
-    /**
-    * if true any output of this variable will be not cached
-    *
-    * @var boolean
-    */
-    public $nocache = false;
-
-    /**
-    * create Smarty variable object
-    *
-    * @param mixed   $value   the value to assign
-    * @param boolean $nocache if true any output of this variable will be not cached
-    */
-    public function __construct($value = null, $nocache = false)
-    {
-        $this->value = $value;
-        $this->nocache = $nocache;
-    }
-
-    /**
-    * <<magic>> String conversion
-    *
-    * @return string
-    */
-    public function __toString()
-    {
-        return (string) $this->value;
-    }
-
-}
-
-/**
-* class for undefined variable object
-*
-* This class defines an object for undefined variable handling
-*
-* @package Smarty
-* @subpackage Template
-*/
-class Undefined_Smarty_Variable {
-    public $value = null;
-    public $nocache = false;
-}
-
 ?>

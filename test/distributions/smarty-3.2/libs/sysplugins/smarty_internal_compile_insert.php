@@ -65,7 +65,8 @@ class Smarty_Internal_Compile_Insert extends Smarty_Internal_CompileBase {
             // output will be stored in a smarty variable instead of being displayed
             $_assign = $_attr['assign'];
             // create variable to make shure that the compiler knows about its nocache status
-            $compiler->template->tpl_vars->{trim($_attr['assign'], "'")} = new Smarty_Variable(null, true);
+            $compiler->template->tpl_vars->{trim($_attr['assign'], "'")} = null;
+            $compiler->template->tpl_vars->{'___nocache_'.trim($_attr['assign'], "'")} = true;
         }
         if (isset($_attr['script'])) {
             // script which must be included

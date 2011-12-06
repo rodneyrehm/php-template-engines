@@ -67,7 +67,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
 
         // dummy local smarty variable
         if (!isset($_template->tpl_vars->smarty)) {
-            $_template->tpl_vars->smarty = new Smarty_Variable;
+            $_template->tpl_vars->smarty = null;
         }
         if (isset($this->smarty->error_reporting)) {
             $_smarty_old_error_level = error_reporting($this->smarty->error_reporting);

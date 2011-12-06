@@ -147,15 +147,25 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
     {
         $config_vars = array();
         $tpl_vars = array();
-        foreach ($obj->tpl_vars as $key => $var) {
-            if ($key != '__smarty__data' && is_object($var)) {
-                $tpl_vars[$key] = clone $var;
-                if ($obj instanceof Smarty_Internal_Template) {
-                    $tpl_vars[$key]->source = $obj->source->type . ':' . $obj->source->name;
-                } elseif ($obj instanceof Smarty_Data) {
-                    $tpl_vars[$key]->source = 'Data object';
+        foreach ($obj->tpl_vars as $key => $value) {
+            if ($key != '___smarty__data') {
+                if (strpos($key,'___') !== 0) {
+                    $tpl_vars[$key]['value'] =  $value;
+                    if ($obj instanceof Smarty_Internal_Template) {
+                        $tpl_vars[$key]['source'] = $obj->source->type . ':' . $obj->source->name;
+                    } elseif ($obj instanceof Smarty_Data) {
+                        $tpl_vars[$key]['source'] = 'Data object';
+                    } else {
+                        $tpl_vars[$key]['source'] = 'Smarty object';
+                    }
                 } else {
-                    $tpl_vars[$key]->source = 'Smarty object';
+                    $_var_pos = strpos($key,'_',3);
+                    $_property = substr($key,3,$_var_pos-3);
+                    $_var = substr($key,$_var_pos);
+                    if (!isset($tpl_vars[$_var])) {
+                        $tpl_vars[$_var] = null;
+                    }
+                    $tpl_vars[$_var][$_property] = $value;
                 }
             }
         }
@@ -165,12 +175,21 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
             $tpl_vars = array_merge($parent->tpl_vars, $tpl_vars);
             $config_vars = array_merge($parent->config_vars, $config_vars);
         } else {
-            foreach (Smarty::$global_tpl_vars as $name => $var) {
+            foreach (Smarty::$global_tpl_vars as $key => $var) {
                 if ($key != '__smarty__data' && is_object($var)) {
-                    if (!array_key_exists($name, $tpl_vars)) {
-                        $clone = clone $var;
-                        $clone->source = 'Global';
-                        $tpl_vars[$name] = $clone;
+                    if (!isset($tpl_vars[$key])) {
+                        if (strpos($key,'___') !== 0) {
+                            $tpl_vars[$key]['value'] =  $value;
+                            $tpl_vars[$key]['source'] = 'Global';
+                        } else {
+                            $_var_pos = strpos($key,'_',3);
+                            $_property = substr($key,3,$_var_pos-3);
+                            $_var = substr($key,$_var_pos);
+                            if (!isset($tpl_vars[$_var])) {
+                                $tpl_vars[$_var] = null;
+                            }
+                            $tpl_vars[$_var][$_property] = value;
+                        }
                     }
                 }
             }

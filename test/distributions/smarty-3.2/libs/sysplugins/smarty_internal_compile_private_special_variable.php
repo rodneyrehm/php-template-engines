@@ -31,9 +31,9 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
         $variable = trim($_index[0], "'");
         switch ($variable) {
             case 'foreach':
-                return "\$_smarty_tpl->tpl_vars->smarty->value$parameter";
+                return "\$_smarty_tpl->tpl_vars->smarty$parameter";
             case 'section':
-                return "\$_smarty_tpl->tpl_vars->smarty->value$parameter";
+                return "\$_smarty_tpl->tpl_vars->smarty$parameter";
             case 'capture':
                 return "Smarty::\$_smarty_vars$parameter";
             case 'now':
@@ -43,7 +43,7 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
                     $compiler->trigger_template_error("(secure mode) super globals not permitted");
                     break;
                 }
-                $compiled_ref = '$_COOKIE';
+                $compiled_ref = '@$_COOKIE';
                 break;
 
             case 'get':
@@ -56,7 +56,7 @@ class Smarty_Internal_Compile_Private_Special_Variable extends Smarty_Internal_C
                     $compiler->trigger_template_error("(secure mode) super globals not permitted");
                     break;
                 }
-                $compiled_ref = '$_'.strtoupper($variable);
+                $compiled_ref = '@$_'.strtoupper($variable);
                 break;
 
             case 'template':
