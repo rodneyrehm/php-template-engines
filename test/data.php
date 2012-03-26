@@ -30,7 +30,7 @@ $distributions = array(
 $tests = array(
     'Loop' => array(10, 100, 1000, 10000),
     'Assign' => array(10, 100, 1000, 10000),
-    'LoopInclude' => array(1, 10, 100, 10000),
+    'LoopInclude' => array(1, 10, 100),
     //'TemplateInheritance' => array(1,2,3),
 );
 
