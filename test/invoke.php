@@ -8,9 +8,19 @@ set_time_limit(0);
 require_once dirname(__FILE__) . '/data.php';
 $methods = array("prepare" => true, "evaluate" => true, "teardown" => true);
 
-if (empty($_GET['distribution']) || empty($distributions[$_GET['distribution']])) {
+if (empty($_GET['distribution'])) {
     echo 'error: unknown distribution';
     return;
+}
+
+$t = explode('-', $_GET['distribution'], 2);
+if (empty($t[1]) || empty($distributions[$t[0]][$t[1]])) {
+    echo 'error: unknown version';
+    return;
+} else {
+    $distribution = $t[0];
+    $version = $t[1];
+    $case = $distributions[$distribution][$version];
 }
 
 if (empty($_GET['test']) || empty($tests[$_GET['test']])) {
@@ -30,8 +40,8 @@ if (!empty($ignore[$_GET['test']][$_GET['distribution']])) {
 
 // define environment
 define('BASE_DIR', dirname(__FILE__) . '/');
-define('TEST_DIR', BASE_DIR . 'tests/' . $_GET['distribution'] . '/');
-define('DISTRIBUTION_DIR', BASE_DIR . 'distributions/' . $_GET['distribution'] . '/');
+define('TEST_DIR', BASE_DIR . 'tests/' . $case . '/');
+define('DISTRIBUTION_DIR', BASE_DIR . 'distributions/' . $distribution . '/' . $version . '/');
 define('TMP_DIR', BASE_DIR . 'tmp/');
 
 // load Benchmarker

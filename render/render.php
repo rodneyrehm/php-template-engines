@@ -1,6 +1,6 @@
 <?php
 $base = dirname(__FILE__) . '/../';
-require_once $base . 'test/distributions/smarty-3.1/libs/Smarty.class.php';
+require_once $base . 'test/distributions/smarty/3.1.8/libs/Smarty.class.php';
 
 $smarty = new Smarty();
 $smarty
@@ -21,35 +21,37 @@ foreach ($tests as $test => $t) {
             'duration' => array(),
         ),
     );
-    foreach ($totals[$test] as $distribution => $factors) {
-        $_distribution = array(
-            'memory' => array(),
-            'duration' => array(),
-        );
-        $data = array();
-        foreach ($factors as $factor => $data) {
-            if (empty($_tests['data']['memory'][$distribution])) {
-                $_tests['data']['memory'][$distribution] = array();
-                $_tests['data']['duration'][$distribution] = array();
-            }
-            $_tests['data']['memory'][$distribution][$factor] = $data['memory'];
-            $_tests['data']['duration'][$distribution][$factor] = $data['duration'];
+    foreach ($totals[$test] as $distribution => $versions) {
+        foreach ($versions as $version => $factors) {
+            $dv = $distribution . '-'. $version;
+            $_distribution = array(
+                'memory' => array(),
+                'duration' => array(),
+            );
+            $data = array();
+            foreach ($factors as $factor => $data) {
+                if (empty($_tests['data']['memory'][$dv])) {
+                    $_tests['data']['memory'][$dv] = array();
+                    $_tests['data']['duration'][$dv] = array();
+                }
+                $_tests['data']['memory'][$dv][$factor] = $data['memory'];
+                $_tests['data']['duration'][$dv][$factor] = $data['duration'];
             
-            $_distribution['memory'][$factor] = $data['memory'];
-            $_distribution['duration'][$factor] = $data['duration'];
-        }
+                $_distribution['memory'][$dv] = $data['memory'];
+                $_distribution['duration'][$dv] = $data['duration'];
+            }
         
-        if (empty($__distributions[$distribution])) {
-            $__distributions[$distribution] = array();
-        }
+            if (empty($__distributions[$dv])) {
+                $__distributions[$dv] = array();
+            }
         
-        $__distributions[$distribution][] = array(
-            'test' => $test,
-            'distribution' => $distribution,
-            'data' => $_distribution,
-        );
+            $__distributions[$dv][] = array(
+                'test' => $test,
+                'distribution' => $dv,
+                'data' => $_distribution,
+            );
+        }
     }
-
     $__tests[] = $_tests;
 }
 

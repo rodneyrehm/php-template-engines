@@ -16,6 +16,7 @@ function invoke($distribution, $test, $factor, $method)
         . '&test=' . $test 
         . '&factor=' . $factor 
         . '&method=' . $method;
+
     $t = file_get_contents($url);
     
     if (!$t || !strncmp($t, 'error:', 6)) {
@@ -35,51 +36,58 @@ function invoke($distribution, $test, $factor, $method)
 
 $totals = array();
 
-foreach ($distributions as $distribution => $t) {
-    foreach ($tests as $test => $factors) {
-        if (!empty($ignore[$test][$distribution])) {
-            continue;
-        }
+foreach ($distributions as $distribution => $versions) {
+    foreach ($versions as $version => $case) {
+        $dv = $distribution . '-' . $version;
+        foreach ($tests as $test => $factors) {
+            if (!empty($ignore[$test][$distribution])) {
+                continue;
+            }
         
-        foreach ((array)$factors as $factor) {
-            if (!$factor) {
-                $factor = 1;
+            foreach ((array)$factors as $factor) {
+                if (!$factor) {
+                    $factor = 1;
+                }
+            
+                $results = array(
+                    'memory' => array(),
+                    'duration' => array(),
+                );
+            
+                invoke($dv, $test, $factor, 'prepare');
+            
+                for ($i=0; $i < ITERATIONS; $i++) {
+                    $t = invoke($dv, $test, $factor, 'evaluate');
+                    $results['memory'][] = $t['memory'];
+                    $results['duration'][] = $t['duration'];
+                }
+            
+                invoke($dv, $test, $factor, 'teardown');
+            
+                // ignore first and last quantile to reduce impact of performance spikes in testing
+                $averages = array();
+                foreach (array('memory', 'duration') as $k) {
+                    sort($results[$k]);
+                    $results[$k] = array_slice($results[$k], QUANTILE, ELEMENTS);
+                    $averages[$k] = array_sum($results[$k]) / ELEMENTS;
+                }
+            
+                printf("%-20s %-15s %0.4fs   %0.4fMB\n", $test . '['. $factor .']', $dv, $averages['duration'], $averages['memory']);
+            
+                if (empty($totals[$test])) {
+                    $totals[$test] = array();
+                }
+            
+                if (empty($totals[$test][$distribution])) {
+                    $totals[$test][$distribution] = array();
+                }
+                
+                if (empty($totals[$test][$distribution][$version])) {
+                    $totals[$test][$distribution][$version] = array();
+                }
+            
+                $totals[$test][$distribution][$version][$factor] = $averages;
             }
-            
-            $results = array(
-                'memory' => array(),
-                'duration' => array(),
-            );
-            
-            invoke($distribution, $test, $factor, 'prepare');
-            
-            for ($i=0; $i < ITERATIONS; $i++) {
-                $t = invoke($distribution, $test, $factor, 'evaluate');
-                $results['memory'][] = $t['memory'];
-                $results['duration'][] = $t['duration'];
-            }
-            
-            invoke($distribution, $test, $factor, 'teardown');
-            
-            // ignore first and last quantile to reduce impact of performance spikes in testing
-            $averages = array();
-            foreach (array('memory', 'duration') as $k) {
-                sort($results[$k]);
-                $results[$k] = array_slice($results[$k], QUANTILE, ELEMENTS);
-                $averages[$k] = array_sum($results[$k]) / ELEMENTS;
-            }
-            
-            printf("%-15s %-15s %0.4fs   %0.4fMB\n", $test . '['. $factor .']', $distribution, $averages['duration'], $averages['memory']);
-            
-            if (empty($totals[$test])) {
-                $totals[$test] = array();
-            }
-            
-            if (empty($totals[$test][$distribution])) {
-                $totals[$test][$distribution] = array();
-            }
-            
-            $totals[$test][$distribution][$factor] = $averages;
         }
     }
 }

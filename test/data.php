@@ -4,18 +4,35 @@
  * List of distributions to benchmark
  */
 $distributions = array(
-    // 'dwoo-1.1.1' => true,
-    // 'opt-2.0.6' => true,
-    // 'phptal-1.2.2' => true,
-    // 'raintpl-2.6.4' => true,
-    // 'savant-3.0.1' => true,
-    'smarty-2.6' => true,
-    'smarty-3.0' => true,
-    'smarty-3.1' => true,
-    'smarty-3.1.6' => true,
-    'smarty-3.2' => true,
-    // 'twig-1.1.1' => true,
-    // 'twig-1.2.0' => true,
+    'dwoo' => array(
+        '1.1.1' => 'dwoo',
+    ),
+    'opt' => array(
+        '2.0.6' => 'opt',
+    ),
+    'phptal' => array(
+        '1.2.2' => 'phptal',
+    ),
+    'raintpl' => array(
+        '2.6.4' => 'raintpl',
+    ),
+    'savant' => array(
+        '3.0.1' => 'savant',
+    ),
+    'smarty' => array(
+        // '2.6' => 'smarty2', 
+        // '3.0' => 'smarty3', 
+        '3.1.8' => 'smarty3', 
+        // '3.2dev' => 'smarty3',
+    ),
+    'twig' => array(
+        // '1.1.1' => 'twig', 
+        // '1.2.0' => 'twig', 
+        // '1.3.0' => 'twig', 
+        // '1.4.0' => 'twig', 
+        // '1.5.1' => 'twig', 
+        '1.6.3' => 'twig',
+    ),
 );
 
 /*
@@ -28,10 +45,12 @@ $distributions = array(
  * but do extremely miserable for higher factors (say handle 1000 variables)
  */
 $tests = array(
-    'Loop' => array(10, 100, 1000, 10000),
-    'Assign' => array(10, 100, 1000, 10000),
-    'LoopInclude' => array(1, 10, 100),
-    //'TemplateInheritance' => array(1,2,3),
+    'Loop' => array(10, 100, 1000),
+    'Assign' => array(10, 100, 1000),
+    // 'Loop' => array(10, 100, 1000, 10000),
+    // 'Assign' => array(10, 100, 1000, 10000),
+    // 'LoopInclude' => array(1, 10, 100),
+    // 'TemplateInheritance' => array(1,2,3),
 );
 
 /*
