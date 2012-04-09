@@ -22,6 +22,9 @@ $(function(){
             chart: {
                 renderTo: this
             },
+            credits: {
+                enabled: false
+            },
             title: {
                 text: $this.data('title')
             },
@@ -134,6 +137,9 @@ $(function(){
             chart: {
                 renderTo: this
             },
+            credits: {
+                enabled: false
+            },
             title: {
                 text: $this.data('title')
             },
@@ -168,6 +174,10 @@ $(function(){
                 }
             },
             legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'center',
+                y: 30
                 
             },
             series: series
