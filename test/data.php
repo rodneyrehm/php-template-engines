@@ -21,7 +21,7 @@ $distributions = array(
     ),
     'smarty' => array(
         // '2.6' => 'smarty2', 
-        // '3.0' => 'smarty3', 
+        '3.0' => 'smarty3', 
         '3.1.8' => 'smarty3', 
         // '3.2dev' => 'smarty3',
     ),

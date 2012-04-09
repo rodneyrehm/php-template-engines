@@ -6,6 +6,7 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<title>{$title|escape}</title>
+	<base href="/php-template-engines/htdocs/">
 	<link rel="stylesheet" type="text/css" href="css/screen.css" />
 	<script type="text/javascript" src="js/jquery-1.6.1.min.js"></script>
 	<script type="text/javascript" src="js/highcharts/highcharts.js"></script>

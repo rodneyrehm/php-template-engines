@@ -1,6 +1,6 @@
 <?php
 
-define('HTTP_BASE_PATH', 'test.dev/template-engines/');
+define('HTTP_BASE_PATH', 'test.dev/php-template-engines/');
 define('ITERATIONS', 100);
 define('QUANTILE', (int) ITERATIONS / 4);
 define('ELEMENTS', QUANTILE * 2);
