@@ -1181,7 +1181,7 @@
 		 * @param Boolean $exception Do we inform about unexisting template with exceptions?
 		 * @return Array
 		 */
-		protected function _preprocess($exception = true)
+		public function _preprocess($exception = true)
 		{
 			$item = $this->_tpl->_stream($this->_template);
 			$compiled = $this->_convert($this->_template);

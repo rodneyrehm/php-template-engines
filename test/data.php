@@ -20,13 +20,13 @@ $distributions = array(
         '3.0.1' => 'savant',
     ),
     'smarty' => array(
-        // '2.6' => 'smarty2', 
+        '2.6' => 'smarty2', 
         '3.0' => 'smarty3', 
         '3.1.8' => 'smarty3', 
         // '3.2dev' => 'smarty3',
     ),
     'twig' => array(
-        // '1.1.1' => 'twig', 
+        '1.1.1' => 'twig', 
         // '1.2.0' => 'twig', 
         // '1.3.0' => 'twig', 
         // '1.4.0' => 'twig', 
@@ -45,8 +45,10 @@ $distributions = array(
  * but do extremely miserable for higher factors (say handle 1000 variables)
  */
 $tests = array(
-    'Loop' => array(10, 100, 1000),
-    'Assign' => array(10, 100, 1000),
+    // 'Loop' => array(10, 100, 1000),
+    //'Assign' => array(10, 100, 1000),
+    //'Compile' => array(10, 100, 1000),
+    'Compile' => array(10, 100),
     // 'Loop' => array(10, 100, 1000, 10000),
     // 'Assign' => array(10, 100, 1000, 10000),
     // 'LoopInclude' => array(1, 10, 100),
@@ -61,4 +63,8 @@ $ignore = array(
     'TemplateInheritance' => array(
         'smarty-2.6' => true,
     ),
+    'Compile' => array(
+        'raintpl-2.6.4' => true,
+        'savant-3.0.1' => true,
+    )
 );

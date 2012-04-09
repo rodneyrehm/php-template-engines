@@ -40,7 +40,20 @@ foreach ($distributions as $distribution => $versions) {
     foreach ($versions as $version => $case) {
         $dv = $distribution . '-' . $version;
         foreach ($tests as $test => $factors) {
-            if (!empty($ignore[$test][$distribution])) {
+            if (!empty($ignore[$test][$dv])) {
+                printf("%-20s %-15s skipped\n", $test, $dv);
+                
+                foreach ((array)$factors as $factor) {
+                    if (!$factor) {
+                        $factor = 1;
+                    }
+                    
+                    $totals[$test][$distribution][$version][$factor] = array(
+                        'memory' => null,
+                        'duration' => null,
+                    );
+                }
+                
                 continue;
             }
         
@@ -73,19 +86,6 @@ foreach ($distributions as $distribution => $versions) {
                 }
             
                 printf("%-20s %-15s %0.4fs   %0.4fMB\n", $test . '['. $factor .']', $dv, $averages['duration'], $averages['memory']);
-            
-                if (empty($totals[$test])) {
-                    $totals[$test] = array();
-                }
-            
-                if (empty($totals[$test][$distribution])) {
-                    $totals[$test][$distribution] = array();
-                }
-                
-                if (empty($totals[$test][$distribution][$version])) {
-                    $totals[$test][$distribution][$version] = array();
-                }
-            
                 $totals[$test][$distribution][$version][$factor] = $averages;
             }
         }
