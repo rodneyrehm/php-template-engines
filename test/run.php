@@ -40,7 +40,7 @@ foreach ($distributions as $distribution => $versions) {
     foreach ($versions as $version => $case) {
         $dv = $distribution . '-' . $version;
         foreach ($tests as $test => $factors) {
-            if (!empty($ignore[$test][$dv])) {
+            if (!empty($ignore[$test][$distribution]) || !empty($ignore[$test][$dv])) {
                 printf("%-20s %-15s skipped\n", $test, $dv);
                 
                 foreach ((array)$factors as $factor) {

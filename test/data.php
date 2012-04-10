@@ -45,9 +45,9 @@ $distributions = array(
  * but do extremely miserable for higher factors (say handle 1000 variables)
  */
 $tests = array(
-    // 'Loop' => array(10, 100, 1000), // 10000
-    // 'Assign' => array(10, 100, 1000), // 10000
-    // 'Compile' => array(10, 100, 1000), // 10000
+    'Assign' => array(10, 100, 1000), // 10000
+    'Loop' => array(10, 100, 1000), // 10000
+    'Compile' => array(10, 100, 1000), // 10000
     'Page' => array(1),
 
     // 'LoopInclude' => array(1, 10, 100),
@@ -72,7 +72,7 @@ $ignore = array(
         'smarty-2.6' => true,
     ),
     'Compile' => array(
-        'raintpl-2.6.4' => true,
-        'savant-3.0.1' => true,
+        'raintpl' => true,
+        'savant' => true,
     )
 );

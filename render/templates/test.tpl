@@ -23,5 +23,6 @@
             data-axis-abbr="MB"
             data-type="{$charttypes.{$test.test}}"
         ></div>
+        <hr>
     {/foreach}
 {/block}
