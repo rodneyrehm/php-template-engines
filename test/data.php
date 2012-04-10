@@ -45,12 +45,11 @@ $distributions = array(
  * but do extremely miserable for higher factors (say handle 1000 variables)
  */
 $tests = array(
-    // 'Loop' => array(10, 100, 1000),
-    //'Assign' => array(10, 100, 1000),
-    //'Compile' => array(10, 100, 1000),
-    'Compile' => array(10, 100),
-    // 'Loop' => array(10, 100, 1000, 10000),
-    // 'Assign' => array(10, 100, 1000, 10000),
+    // 'Loop' => array(10, 100, 1000), // 10000
+    // 'Assign' => array(10, 100, 1000), // 10000
+    // 'Compile' => array(10, 100, 1000), // 10000
+    'Page' => array(1),
+
     // 'LoopInclude' => array(1, 10, 100),
     // 'TemplateInheritance' => array(1,2,3),
 );

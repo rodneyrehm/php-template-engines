@@ -18,8 +18,8 @@ function invoke($distribution, $test, $factor, $method)
         . '&method=' . $method;
 
     $t = file_get_contents($url);
-    
-    if (!$t || !strncmp($t, 'error:', 6)) {
+
+    if (!$t || !strncmp($t, 'error:', 6) || preg_match('#[^\d\.\s]#s', $t)) {
         throw new Exception("Failed " . $url);
     }
     
@@ -56,7 +56,6 @@ foreach ($distributions as $distribution => $versions) {
                 
                 continue;
             }
-        
             foreach ((array)$factors as $factor) {
                 if (!$factor) {
                     $factor = 1;
@@ -66,16 +65,32 @@ foreach ($distributions as $distribution => $versions) {
                     'memory' => array(),
                     'duration' => array(),
                 );
+                try {
+                    invoke($dv, $test, $factor, 'prepare');
             
-                invoke($dv, $test, $factor, 'prepare');
+                    for ($i=0; $i < ITERATIONS; $i++) {
+                        $t = invoke($dv, $test, $factor, 'evaluate');
+                        $results['memory'][] = $t['memory'];
+                        $results['duration'][] = $t['duration'];
+                    }
             
-                for ($i=0; $i < ITERATIONS; $i++) {
-                    $t = invoke($dv, $test, $factor, 'evaluate');
-                    $results['memory'][] = $t['memory'];
-                    $results['duration'][] = $t['duration'];
+                    invoke($dv, $test, $factor, 'teardown');
+                } catch (Exception $e) {
+                    printf("%-20s %-15s FAILED\n", $test, $dv);
+                    
+                    foreach ((array)$factors as $factor) {
+                        if (!$factor) {
+                            $factor = 1;
+                        }
+
+                        $totals[$test][$distribution][$version][$factor] = array(
+                            'memory' => null,
+                            'duration' => null,
+                        );
+                    }
+                    
+                    break;
                 }
-            
-                invoke($dv, $test, $factor, 'teardown');
             
                 // ignore first and last quantile to reduce impact of performance spikes in testing
                 $averages = array();

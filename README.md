@@ -15,3 +15,7 @@ Results are written to the htdocs directory
 
 
 http://coding.smashingmagazine.com/2011/10/17/getting-started-with-php-templating/
+
+## TODO ##
+
+add ab tests `/usr/sbin/ab -n 5000 -c 100 'http://test.dev/php-template-engines/test/invoke.php?distribution=smarty-3.1.8&test=Page&factor=1&method=evaluate&output=1'`
