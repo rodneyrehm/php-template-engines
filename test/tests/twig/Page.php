@@ -9,6 +9,10 @@ class Benchmark extends BenchmarkBase
     
     protected function run($factor)
     {
+        // wow… even need to write a plugin for is_array() - wtf?
+        require_once TEST_DIR . 'page/Twig_Extension_PHP.php';
+        $this->twig->addExtension(new Twig_Extension_PHP());
+        
         include BASE_DIR .'tests/smarty3/Page/data.php';
         
         $keys = array(
@@ -20,18 +24,13 @@ class Benchmark extends BenchmarkBase
             'footer_resources',
         );
         
+        $data = array();
         foreach ($keys as $key) {
-            $this->smarty->assign($key, $$key);
+            $data[$key] = $$key;
         }
+        
+        $template = $this->twig->loadTemplate('/page/page.tpl');
+        return $template->render($data);
+    }
 
-        return $this->smarty->fetch('page/page.tpl');
-    }
-    
-    /*
-    public function teardown($factor)
-    {
-        // cleanup after test
-        $this->smarty->clearCompiledTemplate('loop.tpl');
-    }
-    */
 }

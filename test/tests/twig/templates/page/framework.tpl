@@ -93,22 +93,22 @@
 							<div class="mini">
 								<select name="sections" id="subsection-select">
 									<option value="" selected>Smashing Categories</option>
-									    {foreach $navigation as $name => $nav}
-									        <option value="{$nav.url}">{$name|escape}</option>
-									    {/foreach}
+									    {% for name, nav in navigation %}
+									        <option value="{{ nav.url }}">{{ name }}</option>
+									    {% endfor %}
 								</select>
 							</div>
 							<ul class="clearfix">
-							    {foreach $navigation as $name => $nav}
-							        <li class="{$nav.type|escape}">
-    									<a href="{$nav.url|escape}">{$name|escape}</a>
+                                {% for name, nav in navigation %}
+							        <li class="{{ nav.type }}">
+    									<a href="{{ nav.url }}">{{ name }}</a>
     									<ul>
-    									    {foreach $nav.links as $_name => $_url}
-    									        <li><a href="{$_url|escape}">{$_name|escape}</a></li>
-    									    {/foreach}
+    									    {% for _name, _url in nav.links %}
+    									        <li><a href="{{ _url }}">{{ _name }}</a></li>
+    									    {% endfor %}
     									</ul>
     								</li>
-							    {/foreach}
+							    {% endfor %}
 							</ul>
 							<br class="nasty" />
 						</nav>
@@ -116,7 +116,7 @@
 
 					<div class="col main home">
                         
-                        {block name="main"}No Content{/block}
+                        {% block main %}No Content{% endblock %}
                
                         <!-- <span class="current-pages">Page 1 of 159 ... redundante information...</span> -->					
                     </div><!-- .col.main -->								
@@ -127,7 +127,7 @@
         </div><!-- #container -->
         
         <div id="wpsidebar">
-            {include file="page/components/sidebar.tpl"}
+            {% include "page/components/sidebar.tpl" %}
     	</div>
 	
 	    <div id="footer">
@@ -135,24 +135,24 @@
 				<a href="http://www.smashingmagazine.com/about/"><img title="The Smashing Cat" alt="The Smashing Cat" src="http://media.smashingmagazine.com/themes/smashingv4/images/smashing-cat.png"></a>
 			</div> 
 
-			{foreach $footer_resources as $resource}
+			{% for resource in footer_resources %}
 		        <div class="contribute {if $resource.is_our_content}our-content{/if}">
-	                <h4>{$resource.title|escape}</h4>
+	                <h4>{{ resource.title }}</h4>
 				    <ul>
-				        {foreach $resource.links as $name => $url}
-				            {if is_array($url)}
+				        {% for name, url in resource.links %}
+				            {% if url|is_array %}
 				                <li>
-				                {foreach $url as $_name => $_url}
-    					            <a href="{$_url|escape}">{$_name|escape}</a>{if !$_url@last},{/if}
-    					        {/foreach}
+				                {% for _name, _url in url %}
+    					            <a href="{{ _url }}">{{ _name }}</a>{% if not loop.last %},{% endif %}
+    					        {% endfor %}
     					        </li>
-    					    {else}
-    					        <li><a href="{$url|escape}">{$name|escape}</a></li>
-    					    {/if}
-    					{/foreach}
+    					    {% else %}
+    					        <li><a href="{{ url }}">{{ name }}</a></li>
+    					    {% endif %}
+    					{% endfor %}
     				</ul>
 	            </div>
-		    {/foreach}
+		    {% endfor %}
 
 		    <p class="statement"><em>With a commitment to quality content for the design community.</em><br /><a href="http://www.smashingmagazine.com/about/">Smashing Media GmbH</a>. Made in Germany. 2006-2012.</p>
 		</div>

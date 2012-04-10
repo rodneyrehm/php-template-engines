@@ -11,4 +11,6 @@
     {/if}
     {include file="page/components/article-teaser.tpl" post=$article id=$_id}
 {/foreach}
+
+{include file="page/components/paging.tpl"}
 {include file="page/footer.tpl"}

@@ -39,15 +39,6 @@
 
 	<div id="sidebarspecialtarget"></div><!-- /#sidebarspecialtarget -->
     
-    {*include 
-        file="components/sidebar-smash-box.tpl" 
-        type="smashingbook-printed"
-        style="border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-width: initial; border-color: initial; border-image: initial;"
-        url="http://www.smashingmagazine.com/2012/02/15/smashing-book-3-preorder/?utm_source=sm&amp;utm_medium=sidebarlink&amp;utm_campaign=preorderSMB3"
-        img="http://media.smashingmagazine.com/wp-content/uploads/2012/03/small_cover.png"
-        title="Smashing Printed Books"
-        content="<strong>Pre-Order Smashing Book #3!</strong><br>This book is the best printed book we've produced so far: it is a valuable, cutting-edge, high-quality printed book that any Web designer should have on their bookshelf. <strong><a href="http://www.smashingmagazine.com/2012/02/15/smashing-book-3-preorder/?utm_source=sm&amp;utm_medium=sidebarlink&amp;utm_campaign=preorderSMB3">Save 15%: Pre-order the book now!</a></strong>"
-    *}
 	<div class="sidebar-smash-box smashingbook-printed">
 	    <a href="http://www.smashingmagazine.com/2012/02/15/smashing-book-3-preorder/?utm_source=sm&amp;utm_medium=sidebarlink&amp;utm_campaign=preorderSMB3" ><img src=" http://media.smashingmagazine.com/wp-content/uploads/2012/03/small_cover.png" alt="Smashing Printed Books"></a>
         <p><strong>Pre-Order Smashing Book #3!</strong><br>This book is the best printed book we've produced so far: it is a valuable, cutting-edge, high-quality printed book that any Web designer should have on their bookshelf. <strong><a href="http://www.smashingmagazine.com/2012/02/15/smashing-book-3-preorder/?utm_source=sm&amp;utm_medium=sidebarlink&amp;utm_campaign=preorderSMB3">Save 15%: Pre-order the book now!</a></strong></p>
@@ -71,12 +62,6 @@
 		</div><!-- /#network_widget -->
 	</div><!-- /.sidebartabs -->
     
-    {*include 
-        file="components/sidebar-smash-box.tpl" 
-        type="smashingmag-conference"
-        style="border: medium none;"
-        content="<strong>Fleaty Is Back!</strong><br>After months of silence, our comic strip on Web design  is now back. Illustrated by Ricardo Gimenes, we'll be publishing a new cartoon every Friday. <strong><a href="http://www.smashingmagazine.com/the-smashing-cartoons/">Check out the new cartoon</a></strong>."
-    *}
 	<div class="sidebar-smash-box smashingmag-conference">
 	    <a style="border: medium none;" href="http://www.smashingmagazine.com/the-smashing-cartoons/"><img src="http://media.smashingmagazine.com/wp-content/uploads/2012/03/fleaty-is-back.jpg" alt="Fleaty is back" title="Fleaty is back"></a>
         <p><strong>Fleaty Is Back!</strong><br>After months of silence, our comic strip on Web design  is now back. Illustrated by Ricardo Gimenes, we'll be publishing a new cartoon every Friday. <strong><a href="http://www.smashingmagazine.com/the-smashing-cartoons/">Check out the new cartoon</a></strong>.</p>
@@ -100,10 +85,6 @@
 		</div><!-- /#jobs -->
 	</div><!-- /.sidebartabs -->
     
-    {*include 
-        file="components/sidebar-smash-box.tpl" 
-        type="smashingmag-meetup"
-    *}
 	<div class="sidebar-smash-box smashingmag-meetup">
 	    <a href="http://lanyrd.com/profile/smashingmag/"><img src="http://media.smashingmagazine.com/uploads/sidebar/front-trends-sidebar.jpg" width="100" height="100" alt="Conference" title="Conference"></a>
         <p><strong>Let's Grab A Beer!</strong><br>Smashing Magazine's editor-in-chief Vitaly Friedman will be speaking at the <strong>Front-Trends</strong> Conference in Warsaw, Poland. Are you coming, too? <strong><a href="http://lanyrd.com/profile/smashingmag/">Details</a></strong>.</p>
@@ -128,11 +109,6 @@
 	</div><!-- /.sidebartabs -->
 </div><!-- /.inner -->
 
-{*include 
-    file="components/sidebar-smash-box.tpl" 
-    type="smashingmag-promo-field"
-    style="border: medium none;"
-*}
 <div class="sidebar-smash-box smashingmag-promo-field">
     <a style="border: medium none;" href="http://www.smashingmagazine.com/ebooks/"><img src="http://media.smashingmagazine.com/wp-content/uploads/2012/04/smashing-ebooks-193px.jpg" alt="Smashing eBooks"></a>
     <p>
@@ -159,25 +135,24 @@
 	</div><!-- /#network_widget -->
 </div><!-- /.sidebartabs -->
 
-{* --- converted up to here ---*}
 
 <div class="two clearfix">
     <div class="left">
 		<div class="inner popular-posts-area">
             <h2 class="popular">Tags</h2>
             <ul class="popular-list sidelist">
-                {foreach $tags as $name => $url}
-                    {if is_array($url)}
+                {% for name, url in tags %}
+                    {% if url|is_array %}
                         <li>
-                        {foreach $url as $_name => $_url}
-                            {if !$_url@first}&amp;{/if}
-                            <a href="{$_url|escape}">{$_name|escape}</a>
-                        {/foreach}
+                        {% for _name, _url in url %}
+                            {% if not loop.first %}&amp;{% endif %}
+                            <a href="{{ _url }}">{{ _name }}</a>
+                        {% endfor %}
                         </li>
-                    {else}
-                        <li><a href="{$url|escape}">{$name|escape}</a></li>
-                    {/if}
-                {/foreach}
+                    {% else %}
+                        <li><a href="{{ url }}">{{ name }}</a></li>
+                    {% endif %}
+                {% endfor %}
             </ul>
         </div>
     </div><!-- /.left -->
@@ -186,16 +161,16 @@
 			<div class="inner">
 				<h2 class="icon twitter">Twitter</h2>
 				<a href="http://twitter.com/smashingmag" class="follow-us">Follow Us</a></div>
-				<ul id="tweetlist">{strip}
+				<ul id="tweetlist">{% spaceless %}
 					<li style="display:none;"></li>
-					{foreach $tweets as $tweet}
+					{% for tweet in tweets %}
 						<li class="twitter-item"> 
-						    {$tweet.message}{* contains html *}
-						    <a href="{$tweet.url|escape}" class="tweet-status" title="{$tweet.time|escape}"></a>
+						    {{ tweet.message|raw }}
+						    <a href="{{ tweet.url }}" class="tweet-status" title="{{ tweet.time }}"></a>
 						</li>
-					{/foreach}
-				</ul>
-			{/strip}</div><!-- /#twitter -->
+					{% endfor %}
+				{% endspaceless %}</ul>
+			</div><!-- /#twitter -->
 			<div class="ed sidebared">
 				<div id="sidebaredtarget"></div>
 			</div><!-- /.ed.sidebared -->
@@ -205,13 +180,13 @@
 			<div class="inner interact-area">
 				<h2 class="icon interact">Connect</h2>
 				<ul class="interact-list sidelist">
-				    {foreach $connect_links as $name => $url}
-				        {if is_array($url)}
-				            <li class="{$url.type}"><a href="{$url.url|escape}">{$name|escape}</a></li>
-				        {else}
-				            <li><a href="{$url|escape}">{$name|escape}</a></li>
-				        {/if}
-				    {/foreach}
+				    {% for name, url in connect_links %}
+				        {% if url|is_array %}
+				            <li class="{{ url.type }}"><a href="{{ url.url }}">{{ name }}</a></li>
+				        {% else %}
+				            <li><a href="{{ url }}">{{ name }}</a></li>
+				        {% endif %}
+				    {% endfor %}
 				</ul>
 			</div>
 		</div><!-- /.right -->

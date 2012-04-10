@@ -73,18 +73,18 @@ $articles = array(
         'tags' => array(
             'calendar' => array(
                 'name' => 'Calendar',
-                'url' => 'calendar',
-                'key' => 'http://wp.smashingmagazine.com/tag/calendar/',
+                'url' => 'http://wp.smashingmagazine.com/tag/calendar/',
+                'key' => 'calendar',
             ), 
             'events' => array(
                 'name' => 'Events',
-                'url' => 'events',
-                'key' => 'http://wp.smashingmagazine.com/tag/events/',
+                'url' => 'http://wp.smashingmagazine.com/tag/events/',
+                'key' => 'events',
             ),
             'management' => array(
                 'name' => 'Management',
-                'url' => 'management',
-                'key' => 'http://wp.smashingmagazine.com/tag/management/',
+                'url' => 'http://wp.smashingmagazine.com/tag/management/',
+                'key' => 'management',
             ),
         ),
         'url' => 'http://wp.smashingmagazine.com/2012/04/05/manage-events-like-pro-with-wordpress/',

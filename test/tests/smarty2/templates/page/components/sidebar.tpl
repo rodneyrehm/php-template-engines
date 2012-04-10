@@ -207,7 +207,7 @@
 				<ul class="interact-list sidelist">
 				    {foreach from=$connect_links key="name" item="url"}
 				        {if is_array($url)}
-				            <li class="$url.type"><a href="{$url.url|escape}">{$name|escape}</a></li>
+				            <li class="{$url.type}"><a href="{$url.url|escape}">{$name|escape}</a></li>
 				        {else}
 				            <li><a href="{$url|escape}">{$name|escape}</a></li>
 				        {/if}

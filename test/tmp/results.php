@@ -1,5 +1,5 @@
 <?php
-$time = 1334054170;
+$time = 1334064453;
 $totals = array (
   'Page' => 
   array (
@@ -64,24 +64,24 @@ $totals = array (
       array (
         1 => 
         array (
-          'memory' => 0.27549743652344,
-          'duration' => 0.0044026041030884,
+          'memory' => 0.27580261230469,
+          'duration' => 0.0045493030548096,
         ),
       ),
       '3.0' => 
       array (
         1 => 
         array (
-          'memory' => 0.37677001953125,
-          'duration' => 0.0033056020736694,
+          'memory' => 0.37700653076172,
+          'duration' => 0.0031515073776245,
         ),
       ),
       '3.1.8' => 
       array (
         1 => 
         array (
-          'memory' => 0.676025390625,
-          'duration' => 0.0025767517089844,
+          'memory' => 0.68061065673828,
+          'duration' => 0.0025253200531006,
         ),
       ),
     ),
@@ -91,16 +91,16 @@ $totals = array (
       array (
         1 => 
         array (
-          'memory' => NULL,
-          'duration' => NULL,
+          'memory' => 0.57517242431641,
+          'duration' => 0.0047259855270386,
         ),
       ),
       '1.6.3' => 
       array (
         1 => 
         array (
-          'memory' => NULL,
-          'duration' => NULL,
+          'memory' => 0.63311004638672,
+          'duration' => 0.0051647806167603,
         ),
       ),
     ),
