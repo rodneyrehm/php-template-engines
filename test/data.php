@@ -54,6 +54,15 @@ $tests = array(
     // 'TemplateInheritance' => array(1,2,3),
 );
 
+$charttypes = array(
+    'Loop' => 'spline',
+    'Assign' => 'spline',
+    'Compile' => 'spline',
+    'Page' => 'column',
+    'LoopInclude' => 'spline',
+    'TemplateInheritance' => 'spline',
+);
+
 /*
  * Exclude tests from distributions, 
  * if distribution is incapable of handling the test

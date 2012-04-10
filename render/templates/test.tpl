@@ -13,6 +13,7 @@
             data-subtitle="Duration"
             data-axis-name="Duration"
             data-axis-abbr="s"
+            data-type="{$charttypes.{$test.test}}"
         ></div>
         <div class="chart test-chart" 
             data-series="{$test.data.memory|json_encode|escape}" 
@@ -20,6 +21,7 @@
             data-subtitle="Memory consumption"
             data-axis-name="Memory"
             data-axis-abbr="MB"
+            data-type="{$charttypes.{$test.test}}"
         ></div>
     {/foreach}
 {/block}

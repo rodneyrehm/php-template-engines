@@ -10,6 +10,8 @@ $smarty
 require_once $base .'test/data.php';
 require_once $base .'test/tmp/results.php';
 
+$smarty->assign('charttypes', $charttypes);
+
 // clean output directory
 exec('rm -rf ' . $base . 'htdocs/distribution/*');
 exec('rm -rf ' . $base . 'htdocs/*.html');

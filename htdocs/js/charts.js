@@ -108,12 +108,13 @@ $(function(){
     $('.test-chart').each(function() {
         var $this = $(this),
             categories = [],
+            _type = $this.data('type') || "spline",
             yaxis = {
                 name: $this.data('axisName'),
                 abbr: $this.data('axisAbbr')
             },
             series = [];
-        
+
         var first = true;
         $.each($this.data('series') || {}, function(k, v) {
             var data = [];
@@ -126,7 +127,7 @@ $(function(){
 
             series.push({
                 name: k,
-                type: 'spline',
+                type: _type,
                 data: data
             });
 
@@ -186,6 +187,5 @@ $(function(){
     });
 
 });
-
 
 })(jQuery);
