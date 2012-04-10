@@ -88,7 +88,7 @@ $articles = array(
             ),
         ),
         'url' => 'http://wp.smashingmagazine.com/2012/04/05/manage-events-like-pro-with-wordpress/',
-        'title' => '',
+        'title' => 'Manage Events Like A Pro With WordPress',
         'author' => array(
             'url' => 'http://www.smashingmagazine.com/author/admin/?rel=author',
             'name' => 'Smashing Editorial'
