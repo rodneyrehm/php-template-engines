@@ -33,6 +33,7 @@ $distributions = array(
         // '1.4.0' => 'twig', 
         // '1.5.1' => 'twig', 
         '1.6.3' => 'twig',
+        '1.6.5' => 'twig',
     ),
 );
 
