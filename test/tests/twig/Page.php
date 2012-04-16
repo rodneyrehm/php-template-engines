@@ -13,7 +13,7 @@ class Benchmark extends BenchmarkBase
         require_once TEST_DIR . 'page/Twig_Extension_PHP.php';
         $this->twig->addExtension(new Twig_Extension_PHP());
         
-        include BASE_DIR .'tests/smarty3/Page/data.php';
+        include BASE_DIR .'tests/_data/Page/data.php';
         
         $keys = array(
             'navigation',

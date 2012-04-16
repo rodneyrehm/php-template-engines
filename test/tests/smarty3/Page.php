@@ -9,7 +9,7 @@ class Benchmark extends BenchmarkBase
     
     protected function run($factor)
     {
-        include BASE_DIR .'tests/smarty3/Page/data.php';
+        include BASE_DIR .'tests/_data/Page/data.php';
         
         $keys = array(
             'navigation',

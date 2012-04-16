@@ -11,7 +11,7 @@ class Benchmark extends BenchmarkBase
     {
         $this->tal->setTemplate('page/page.tpl');
 
-        include BASE_DIR .'tests/smarty3/Page/data.php';
+        include BASE_DIR .'tests/_data/Page/data.php';
         
         // compensate for inability to loop in an attribute-value
         foreach ($articles as &$article) {
