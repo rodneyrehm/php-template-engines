@@ -116,7 +116,7 @@ class RainTPL{
 		 */
 		public $var = array();
 
-		protected $tpl = array(),		// variables to keep the template directories and info
+		public $tpl = array(),		// variables to keep the template directories and info
 				  $cache = false,		// static cache enabled / disabled
                   $cache_id = null;       // identify only one cache
 
@@ -251,7 +251,7 @@ class RainTPL{
 
 	// check if has to compile the template
 	// return true if the template has changed
-	protected function check_template( $tpl_name ){
+	public function check_template( $tpl_name ){
 
 		if( !isset($this->tpl['checked']) ){
 

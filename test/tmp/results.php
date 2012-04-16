@@ -1,106 +1,66 @@
 <?php
-$time = 1334075930;
+$time = 1334581687;
 $totals = array (
+  'Compile' => 
+  array (
+    'raintpl' => 
+    array (
+      '2.6.4' => 
+      array (
+        10 => 
+        array (
+          'memory' => 0.040420532226562,
+          'duration' => 0.0055110120773315,
+        ),
+        100 => 
+        array (
+          'memory' => 0.042396545410156,
+          'duration' => 0.0087192153930664,
+        ),
+        1000 => 
+        array (
+          'memory' => 0.063003540039062,
+          'duration' => 0.10143715381622,
+        ),
+      ),
+      '2.7.2' => 
+      array (
+        10 => 
+        array (
+          'memory' => 0.067779541015625,
+          'duration' => 0.0056212091445923,
+        ),
+        100 => 
+        array (
+          'memory' => 0.069755554199219,
+          'duration' => 0.010056352615356,
+        ),
+        1000 => 
+        array (
+          'memory' => 0.090362548828125,
+          'duration' => 0.1136646938324,
+        ),
+      ),
+    ),
+  ),
   'Page' => 
   array (
-    'dwoo' => 
-    array (
-      '1.1.1' => 
-      array (
-        1 => 
-        array (
-          'memory' => 0.37384033203125,
-          'duration' => 0.0053839683532715,
-        ),
-      ),
-    ),
-    'opt' => 
-    array (
-      '2.0.6' => 
-      array (
-        1 => 
-        array (
-          'memory' => NULL,
-          'duration' => NULL,
-        ),
-      ),
-    ),
-    'phptal' => 
-    array (
-      '1.2.2' => 
-      array (
-        1 => 
-        array (
-          'memory' => NULL,
-          'duration' => NULL,
-        ),
-      ),
-    ),
     'raintpl' => 
     array (
       '2.6.4' => 
       array (
         1 => 
         array (
-          'memory' => NULL,
-          'duration' => NULL,
+          'memory' => 0.18006896972656,
+          'duration' => 0.01076141834259,
         ),
       ),
-    ),
-    'savant' => 
-    array (
-      '3.0.1' => 
+      '2.7.2' => 
       array (
         1 => 
         array (
-          'memory' => NULL,
-          'duration' => NULL,
-        ),
-      ),
-    ),
-    'smarty' => 
-    array (
-      '2.6' => 
-      array (
-        1 => 
-        array (
-          'memory' => 0.27725982666016,
-          'duration' => 0.0046626663208008,
-        ),
-      ),
-      '3.0' => 
-      array (
-        1 => 
-        array (
-          'memory' => 0.37850952148438,
-          'duration' => 0.0032076835632324,
-        ),
-      ),
-      '3.1.8' => 
-      array (
-        1 => 
-        array (
-          'memory' => 0.68202972412109,
-          'duration' => 0.0025244331359863,
-        ),
-      ),
-    ),
-    'twig' => 
-    array (
-      '1.1.1' => 
-      array (
-        1 => 
-        array (
-          'memory' => 0.57659149169922,
-          'duration' => 0.0046281480789185,
-        ),
-      ),
-      '1.6.3' => 
-      array (
-        1 => 
-        array (
-          'memory' => 0.63449096679688,
-          'duration' => 0.0052498531341553,
+          'memory' => 0.23724365234375,
+          'duration' => 0.0027570962905884,
         ),
       ),
     ),

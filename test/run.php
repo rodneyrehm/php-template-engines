@@ -19,7 +19,7 @@ function invoke($distribution, $test, $factor, $method)
 
     $t = file_get_contents($url);
 
-    if (!$t || !strncmp($t, 'error:', 6) || preg_match('#[^\d\.\s]#s', $t)) {
+    if (!$t || !strncmp($t, 'error:', 6) || preg_match('#[^\d\.\sE-]#s', $t)) {
         throw new Exception("Failed " . $url);
     }
     
