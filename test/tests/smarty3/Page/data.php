@@ -69,7 +69,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'wordpress')),
+        'categories' => array(
+            'wordpress' => array('key' => 'wordpress')
+        ),
         'tags' => array(
             'calendar' => array(
                 'name' => 'Calendar',
@@ -104,7 +106,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'ux-design')),
+        'categories' => array(
+            'ux-design' => array('key' => 'ux-design')
+        ),
         'tags' => array(
             'case-study' => array(
                 'name' => 'Case study',
@@ -134,7 +138,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'design')),
+        'categories' => array(
+            'design' => array('key' => 'design')
+        ),
         'tags' => array(
             'typography' => array(
                 'name' => 'Typography',
@@ -159,7 +165,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'workflow')),
+        'categories' => array(
+            'workflow' => array('key' => 'workflow')
+        ),
         'tags' => array(
             'google' => array(
                 'name' => 'Google',
@@ -195,7 +203,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'graphics')),
+        'categories' => array(
+            'graphics' => array('key' => 'graphics')
+        ),
         'tags' => array(
             'wallpapers' => array(
                 'name' => 'Wallpapers',
@@ -225,7 +235,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'opinion-column-category')),
+        'categories' => array(
+            'opinion-column-category' => array('key' => 'opinion-column-category')
+        ),
         'tags' => array(
             'community' => array(
                 'name' => 'Community',
@@ -255,7 +267,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'workflow')),
+        'categories' => array(
+            'workflow' => array('key' => 'workflow')
+        ),
         'tags' => array(
             'e-commerce' => array(
                 'name' => 'E-Commerce',
@@ -280,7 +294,9 @@ $articles = array(
         'status' => 'publish',
         'format' => 'standard',
         'hentry' => true,
-        'categories' => array(array('key' => 'ux-design')),
+        'categories' => array(
+            'ux-design' => array('key' => 'ux-design')
+        ),
         'tags' => array(
             'emotional-design' => array(
                 'name' => 'Emotional Design',

@@ -11,6 +11,7 @@
 * no security
 * reads TPLs only from file system
 
+
 ---
 
 ## RainTPL ##
@@ -25,6 +26,7 @@ Parse error: syntax error, unexpected '}' in /path/foo.72140ddaa86134d7ec0ad5ad0
 
 * no auto escaping, [mentioned](http://www.raintpl.com/Forum/Development-Forum/Rain-TPL-3/?t=151#p_517) as of v3
 * modifiers `{$foo|modifier}` may take only a single argument `{$foo|modifier:1}` is ok, `{$foo|modifier:1:2}` is not
+* no default modifiers (other than what php-core-functions can be used directly) supplied
 
 ### Iterating Arrays ###
 

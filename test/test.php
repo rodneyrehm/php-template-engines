@@ -34,6 +34,8 @@ function invoke($distribution, $test, $factor, $method)
     );
 }
 
+$_start = microtime(true);
+
 $totals = array();
 
 foreach ($distributions as $distribution => $versions) {
@@ -108,3 +110,5 @@ foreach ($distributions as $distribution => $versions) {
 }
 
 file_put_contents(dirname(__FILE__) .'/tmp/results.php', "<?php\n\$time = " . time() . ";\n\$totals = " . var_export($totals, true) .';');
+
+printf("\nRunning Benchmark took %0.4f seconds\n", microtime(true) - $_start);
