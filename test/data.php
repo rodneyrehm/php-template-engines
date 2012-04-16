@@ -4,37 +4,37 @@
  * List of distributions to benchmark
  */
 $distributions = array(
-    // 'dwoo' => array(
-    //       '1.1.1' => 'dwoo',
-    //   ),
-    //   'opt' => array(
-    //       '2.0.6' => 'opt',
-    //   ),
+    'dwoo' => array(
+        '1.1.1' => 'dwoo',
+    ),
+    // 'opt' => array(
+    //     '2.0.6' => 'opt',
+    // ),
     'phptal' => array(
         '1.2.2' => 'phptal',
     ),
-    // 'raintpl' => array(
-    //         //'2.6.4' => 'raintpl', // Page will break here
-    //         '2.7.2' => 'raintpl',
-    //     ),
-    // 'savant' => array(
-    //     '3.0.1' => 'savant',
-    // ),
-    // 'smarty' => array(
-    //     '2.6' => 'smarty2', 
-    //     '3.0' => 'smarty3', 
-    //     '3.1.8' => 'smarty3', 
-    //     // '3.2dev' => 'smarty3',
-    // ),
-    // 'twig' => array(
-    //     '1.1.1' => 'twig', 
-    //     // '1.2.0' => 'twig', 
-    //     // '1.3.0' => 'twig', 
-    //     // '1.4.0' => 'twig', 
-    //     // '1.5.1' => 'twig', 
-    //     '1.6.3' => 'twig',
-    //     '1.6.5' => 'twig',
-    // ),
+    'raintpl' => array(
+        //'2.6.4' => 'raintpl', // Page will break here
+        '2.7.2' => 'raintpl',
+    ),
+    'savant' => array(
+        '3.0.1' => 'savant',
+    ),
+    'smarty' => array(
+        '2.6' => 'smarty2', 
+        '3.0' => 'smarty3', 
+        '3.1.8' => 'smarty3', 
+        // '3.2dev' => 'smarty3',
+    ),
+    'twig' => array(
+        '1.1.1' => 'twig', 
+        // '1.2.0' => 'twig', 
+        // '1.3.0' => 'twig', 
+        // '1.4.0' => 'twig', 
+        // '1.5.1' => 'twig', 
+        '1.6.3' => 'twig',
+        '1.6.5' => 'twig',
+    ),
 );
 
 /*
@@ -48,9 +48,9 @@ $distributions = array(
  */
 $tests = array(
     'Page' => array(1),
-    // 'Assign' => array(10, 100, 1000), // 10000
-    // 'Loop' => array(10, 100, 1000), // 10000
-    // 'Compile' => array(10, 100, 1000), // 10000
+    'Assign' => array(10, 100, 1000), // 10000
+    'Loop' => array(10, 100, 1000), // 10000
+    'Compile' => array(10, 100, 1000), // 10000
 
     // 'LoopInclude' => array(1, 10, 100),
     // 'TemplateInheritance' => array(1,2,3),
