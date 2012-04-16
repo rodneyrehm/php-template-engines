@@ -7,6 +7,7 @@
 * Output Caching (File, DB, ...) 
 * Selective Output Caching
 * multiple template sources (themes and stuff)
+* Concurrency control (race condition mitigation)
 
 i18n interface
 
