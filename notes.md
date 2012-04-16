@@ -1,5 +1,16 @@
 # Notes #
 
+---
+
+## PHPTAL ##
+
+* Caching is somewhat inconvenient, only within templates, with restrictions to template inheritance
+
+---
+
+## Twig ##
+
+* No output cache
 
 ---
 
@@ -10,6 +21,7 @@
 * no caching
 * no security
 * reads TPLs only from file system
+* No output cache
 
 
 ---
@@ -45,6 +57,11 @@ Parse error: syntax error, unexpected '}' in /path/foo.72140ddaa86134d7ec0ad5ad0
 * can read template source only from file system
 * can cache only on file system
 * has no *race condition protection* whatsoever
+
+### Cache ###
+
+* Output-Cache for complete output
+* apparently sub-templates may have individual cache-timeouts
 
 ### Security ###
 

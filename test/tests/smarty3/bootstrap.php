@@ -13,5 +13,9 @@ abstract class BenchmarkBase extends Benchmarker
         $this->smarty->setCompileDir(TMP_DIR . 'compiled/');
         $this->smarty->setCacheDir(TMP_DIR . 'cached/');
         $this->smarty->caching = 0;
+        
+        // if (isset($this->smarty->enable_traceback)) {
+        //     $this->smarty->enable_traceback = false;
+        // }
     }
 }

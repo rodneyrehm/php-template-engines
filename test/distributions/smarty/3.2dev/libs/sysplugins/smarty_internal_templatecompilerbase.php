@@ -251,10 +251,12 @@ abstract class Smarty_Internal_TemplateCompilerBase {
             $this->abort_and_recompile = false;
             // run prefilter if required
             if (isset($this->smarty->autoload_filters['pre']) || isset($this->smarty->registered_filters['pre'])) {
-                $template->source->content = Smarty_Internal_Filter_Handler::runFilter('pre', $template->source->content, $template);
+                $content = Smarty_Internal_Filter_Handler::runFilter('pre', $template->source->content, $template);
+            } else {
+                $content = $template->source->content;
             }
             // on empty template just return header
-            if ($template->source->content == '') {
+            if ($content == '') {
                 if ($this->suppressTemplatePropertyHeader) {
                     $code = '';
                 } else {
@@ -263,7 +265,7 @@ abstract class Smarty_Internal_TemplateCompilerBase {
                 return $code;
             }
             // call compiler
-            $_compiled_code = $this->doCompile($template->source->content);
+            $_compiled_code = $this->doCompile($content);
         } while ($this->abort_and_recompile);
         $this->template->source->filepath = $saved_filepath;
         // free memory

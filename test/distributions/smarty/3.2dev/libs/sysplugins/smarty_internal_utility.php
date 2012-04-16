@@ -88,6 +88,7 @@ class Smarty_Internal_Utility {
                     if ($_tpl->mustCompile()) {
                         $_tpl->compiler->compileTemplateSource($_tpl);
                         unset($_tpl->compiler);
+                        $_count++;
                         echo ' compiled in  ', microtime(true) - $_start_time, ' seconds';
                         flush();
                     } else {
@@ -151,6 +152,7 @@ class Smarty_Internal_Utility {
                     $_config = new Smarty_Internal_Config($_config_file, $smarty);
                     if ($_config->mustCompile()) {
                         $_config->compileConfigSource();
+                        $_count++;
                         echo ' compiled in  ', microtime(true) - $_start_time, ' seconds';
                         flush();
                     } else {

@@ -61,7 +61,13 @@ class Smarty_Internal_Compile_Assign extends Smarty_Internal_CompileBase {
         if (isset($parameter['smarty_internal_index'])) {
             $output = "<?php \$_smarty_tpl->_createLocalArrayVariable({$_attr['var']}, {$_nocache});\n\$_smarty_tpl->tpl_vars->{$var}['value']{$parameter['smarty_internal_index']} = {$_attr['value']};";
         } else {
-            $output = "<?php \$_smarty_tpl->tpl_vars->{$var} = array('value' => {$_attr['value']}, 'nocache' => {$_nocache});";
+            if ($compiler->template->smarty instanceof SmartyBC) {
+                $output = "<?php if (isset(\$_smarty_tpl->tpl_vars->{$var})) {";
+                $output .= "\n\$_smarty_tpl->tpl_vars->{$var}['value'] = {$_attr['value']}; \$_smarty_tpl->tpl_vars->{$var}['nocache'] = {$_nocache};";
+                $output .= "\n} else \$_smarty_tpl->tpl_vars->{$var} = array('value' => {$_attr['value']}, 'nocache' => {$_nocache});";
+            } else {
+                $output = "<?php \$_smarty_tpl->tpl_vars->{$var} = array('value' => {$_attr['value']}, 'nocache' => {$_nocache});";
+            }
         }
         if ($_scope == Smarty::SCOPE_PARENT) {
             $output .= "\nif (\$_smarty_tpl->parent != null) \$_smarty_tpl->parent->tpl_vars->{$var} = \$_smarty_tpl->tpl_vars->{$var};";

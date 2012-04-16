@@ -3,7 +3,7 @@
 /**
  * Project:     Smarty: the PHP compiling template engine
  * File:        Smarty.class.php
- * SVN:         $Id: Smarty.class.php 4572 2012-03-04 13:36:15Z uwe.tews@googlemail.com $
+ * SVN:         $Id: Smarty.class.php 4589 2012-03-30 20:18:28Z uwe.tews@googlemail.com $
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -925,7 +925,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
      * @param string  $type          resource type
      * @return integer number of cache files deleted
      */
-    public function clearCache($template_name, $cache_id = null, $compile_id = null, $exp_time = null, $type = null) {
+    public function clearCache($template_name = null, $cache_id = null, $compile_id = null, $exp_time = null, $type = null) {
         // load cache resource and call clear
         $_cache_resource = Smarty_CacheResource::load($this, $type);
         Smarty_CacheResource::invalidLoadedCache($this);
