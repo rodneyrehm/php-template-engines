@@ -1,6 +1,18 @@
 # Notes #
 
 
+---
+
+## Savant ##
+
+* practically plain PHP, thus no convenience whatsoever.
+* regular PHP errors, warnings, notices
+* no caching
+* no security
+* reads TPLs only from file system
+
+---
+
 ## RainTPL ##
 
 ### Error Handling ###
