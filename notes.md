@@ -67,3 +67,41 @@ Parse error: syntax error, unexpected '}' in /path/foo.72140ddaa86134d7ec0ad5ad0
 
 * no function white-list (only black-list)
 * [black_list](http://www.raintpl.com/Documentation/Documentation-for-PHP-developers/Methods/Configure/#black_list) doesn't differentiate between `{function="foo"}` and `{$foo}`.
+
+---
+
+# Integration #
+
+[PHP Framework MVC Benchmark](http://www.ruilog.com/blog/view/b6f0e42cf705.html)
+[PHP Frameworks](http://www.phpframeworks.com/)
+[PHP frameworks comparison](http://socialcompare.com/en/comparison/php-frameworks-comparison)
+
+
+## Smarty ##
+
+* [Symfony](https://github.com/noiselabs/SmartyBundle)
+* [Kohana](https://github.com/MrAnchovy/Kohana_Smarty3)
+* [CodeIgniter](https://github.com/Vheissu/Plenty-Parser)
+* [Zend Framework](http://www.gediminasm.org/article/smarty-3-extension-for-zend-framework)
+* [Yii Framework](https://github.com/yiiext/smarty-renderer)
+* [CakePHP](https://github.com/kanshin/CakeSmarty)
+
+## Twig ##
+
+* [Symfony](http://symfony.com/) ("native")
+* [Kohana](https://github.com/jonathangeiger/kohana-twig)
+* [CodeIgniter](https://github.com/Vheissu/Plenty-Parser)
+* [Zend Framework](http://code.google.com/p/zwig/)
+* [Yii Framework](https://github.com/yiiext/twig-renderer)
+* [CakePHP](https://github.com/m3nt0r/cakephp-twig-view)
+
+
+DRUPAL
+http://drupal.org/project/theme%20engines
+http://drupal.org/project/smarty
+
+Wordpress
+http://wordpress.org/extend/plugins/smarty-for-wordpress/
+www.dylanmccall.com/blog/2011/06/17/my-new-wordpress-blog-and-smarty/
+http://inchoo.net/wordpress/twig-wordpress-part2/
+http://wordpress.org/extend/plugins/ap-twig-bridge/

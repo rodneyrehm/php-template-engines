@@ -5,21 +5,21 @@
  */
 $distributions = array(
     'dwoo' => array(
-          '1.1.1' => 'dwoo',
-      ),
-      // 'opt' => array(
-      //     '2.0.6' => 'opt',
-      // ),
-      'phptal' => array(
-          '1.2.2' => 'phptal',
-      ),
-      'raintpl' => array(
-          //'2.6.4' => 'raintpl', // Page will break here
-          '2.7.2' => 'raintpl',
-      ),
-      'savant' => array(
-          '3.0.1' => 'savant',
-      ),
+        '1.1.1' => 'dwoo',
+    ),
+    // 'opt' => array(
+    //     '2.0.6' => 'opt',
+    // ),
+    'phptal' => array(
+        '1.2.2' => 'phptal',
+    ),
+    'raintpl' => array(
+        //'2.6.4' => 'raintpl', // Page will break here
+        '2.7.2' => 'raintpl',
+    ),
+    'savant' => array(
+        '3.0.1' => 'savant',
+    ),
     'smarty' => array(
         '2.6' => 'smarty2', 
         '3.0' => 'smarty3', 
@@ -27,14 +27,15 @@ $distributions = array(
         '3.2dev' => 'smarty3',
     ),
     'twig' => array(
-          '1.1.1' => 'twig', 
-          // '1.2.0' => 'twig', 
-          // '1.3.0' => 'twig', 
-          // '1.4.0' => 'twig', 
-          // '1.5.1' => 'twig', 
-          '1.6.3' => 'twig',
-          '1.6.5' => 'twig',
-      ),
+        '1.1.1' => 'twig', 
+        // '1.2.0' => 'twig', 
+        // '1.3.0' => 'twig', 
+        // '1.4.0' => 'twig', 
+        '1.5.1' => 'twig', 
+        '1.6.3' => 'twig',
+        '1.6.5' => 'twig',
+        '1.7.0' => 'twig',
+    ),
 );
 
 /*
@@ -52,19 +53,14 @@ $tests = array(
     'Assign' => array(10, 100, 1000), // 10000
     'Loop' => array(10, 100, 1000), // 10000
     'Compile' => array(10, 100, 1000), // 10000
-
-    // 'LoopInclude' => array(1, 10, 100),
-    // 'TemplateInheritance' => array(1,2,3),
 );
 
 $charttypes = array(
-    'Loop' => 'spline',
-    'Assign' => 'spline',
-    'Compile' => 'spline',
+    'Loop' => 'bar',
+    'Assign' => 'bar',
+    'Compile' => 'bar',
     'Page' => 'column',
     'PageCached' => 'column',
-    'LoopInclude' => 'spline',
-    'TemplateInheritance' => 'spline',
 );
 
 /*

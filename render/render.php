@@ -33,6 +33,7 @@ foreach ($tests as $test => $t) {
             $_data = array(
                 'memory' => array(),
                 'duration' => array(),
+                'factor' => array(),
             );
 
             foreach ($factors as $factor => $data) {
